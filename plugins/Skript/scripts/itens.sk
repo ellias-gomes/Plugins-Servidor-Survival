@@ -1,0 +1,92 @@
+# ============================================================================
+#  RELÍQUIAS DE AURELION - itens/armas/armaduras exclusivos dos bosses
+#  Conjunto "Fio de Ouro": 4 peças (elmo, peitoral, grevas, botas) com bônus progressivo.
+#  (Para o Ellias: ferramentas/armas novas; para o Pedro: armaduras novas para descobrir.)
+# ============================================================================
+
+function reliquia(id: text) :: item:
+    if {_id} is "lamina_musgo":
+        return diamond sword of sharpness 5 and looting 3 and unbreaking 3 and mending 1 named "&a&lLâmina do Musgo Eterno" with lore "&7Forjada nas raízes de Verdelith." and "&6Relíquia de Aurelion"
+    if {_id} is "elmo_musgo":
+        return netherite helmet of protection 4 and respiration 3 and aqua affinity 1 and unbreaking 3 and mending 1 named "&a&lElmo do Musgo" with lore "&7Conjunto: Fio de Ouro (1/4)" and "&6Relíquia de Aurelion"
+    if {_id} is "tridente_mares":
+        return trident of loyalty 3 and impaling 5 and channeling 1 and unbreaking 3 and mending 1 named "&b&lTridente de Thalassa" with lore "&7Canta como a maré antes da tempestade." and "&6Relíquia de Aurelion"
+    if {_id} is "peitoral_mares":
+        return netherite chestplate of protection 4 and thorns 3 and unbreaking 3 and mending 1 named "&b&lPeitoral das Marés" with lore "&7Conjunto: Fio de Ouro (2/4)" and "&6Relíquia de Aurelion"
+    if {_id} is "picareta_ferreiro":
+        return netherite pickaxe of efficiency 7 and fortune 3 and unbreaking 4 and mending 1 named "&c&lPicareta de Korvan" with lore "&7Ainda quente da forja." and "&6Relíquia de Aurelion"
+    if {_id} is "grevas_ferreiro":
+        return netherite leggings of protection 4 and swift sneak 3 and unbreaking 3 and mending 1 named "&c&lGrevas do Ferreiro" with lore "&7Conjunto: Fio de Ouro (3/4)" and "&6Relíquia de Aurelion"
+    if {_id} is "arco_oraculo":
+        return bow of power 6 and punch 2 and flame 1 and unbreaking 3 and mending 1 named "&d&lArco do Oráculo" with lore "&7Vê onde a flecha vai cair." and "&6Relíquia de Aurelion"
+    if {_id} is "botas_oraculo":
+        return netherite boots of protection 4 and feather falling 4 and depth strider 3 and soul speed 3 and unbreaking 3 and mending 1 named "&d&lBotas do Oráculo" with lore "&7Conjunto: Fio de Ouro (4/4)" and "&6Relíquia de Aurelion"
+    if {_id} is "lamina_eclipse":
+        return netherite sword of sharpness 7 and fire aspect 2 and looting 4 and sweeping edge 3 and unbreaking 5 and mending 1 named "&5&lLâmina do Eclipse" with lore "&7Corta a luz e a sombra." and "&6Relíquia de Aurelion" and "&8Chama-Coração (lasca)"
+    if {_id} is "coracao_chama":
+        return nether star named "&6&lCoração da Chama" with lore "&7Um fragmento ainda quente." and "&6Relíquia de Aurelion"
+    return stone
+
+function darDropsBoss(id: number, p: player, primeiraVez: boolean):
+    if {_id} is 1:
+        give reliquia("lamina_musgo") to {_p}
+        give reliquia("elmo_musgo") to {_p}
+    else if {_id} is 2:
+        give reliquia("tridente_mares") to {_p}
+        give reliquia("peitoral_mares") to {_p}
+    else if {_id} is 3:
+        give reliquia("picareta_ferreiro") to {_p}
+        give reliquia("grevas_ferreiro") to {_p}
+    else if {_id} is 4:
+        give reliquia("arco_oraculo") to {_p}
+        give reliquia("botas_oraculo") to {_p}
+    else:
+        give reliquia("lamina_eclipse") to {_p}
+        give reliquia("coracao_chama") to {_p}
+
+function ovoPet() :: item:
+    return turtle egg named "&d&lOvo de Pet" with lore "&7Clique com o botão direito para chocar." and "&8Ovo de Aurelion"
+
+# ---------- Bônus de conjunto (checa a cada 3s) ----------
+every 3 seconds:
+    loop all players:
+        set {_n} to 0
+        if "%lore of helmet of loop-player%" contains "Fio de Ouro":
+            add 1 to {_n}
+        if "%lore of chestplate of loop-player%" contains "Fio de Ouro":
+            add 1 to {_n}
+        if "%lore of leggings of loop-player%" contains "Fio de Ouro":
+            add 1 to {_n}
+        if "%lore of boots of loop-player%" contains "Fio de Ouro":
+            add 1 to {_n}
+        if {_n} >= 2:
+            aplicarEfeito(loop-player, "haste", 6, 1)
+        if {_n} >= 3:
+            aplicarEfeito(loop-player, "resistance", 6, 1)
+        if {_n} >= 4:
+            aplicarEfeito(loop-player, "strength", 6, 1)
+            aplicarEfeito(loop-player, "regeneration", 6, 1)
+            aplicarEfeito(loop-player, "night_vision", 15, 1)
+
+function contarReliquias(p: player) :: number:
+    set {_n} to 0
+    loop all items in inventory of {_p}:
+        if "%lore of loop-item%" contains "Relíquia de Aurelion":
+            add 1 to {_n}
+    if "%lore of helmet of {_p}%" contains "Relíquia de Aurelion":
+        add 1 to {_n}
+    if "%lore of chestplate of {_p}%" contains "Relíquia de Aurelion":
+        add 1 to {_n}
+    if "%lore of leggings of {_p}%" contains "Relíquia de Aurelion":
+        add 1 to {_n}
+    if "%lore of boots of {_p}%" contains "Relíquia de Aurelion":
+        add 1 to {_n}
+    return {_n}
+
+command /aurelion <text> [<text>]:
+    permission: aurelion.admin
+    trigger:
+        if arg-1 is "dar":
+            give reliquia(arg-2) to player
+        else if arg-1 is "ovo":
+            give ovoPet() to player

@@ -1,0 +1,5 @@
+[2026-10-17 23:01:06][DETALHADO] Loading BlueMap v5.29 (a61e143fe1e069c536159e0bc79410d5b6da3885) on spigot null ...
+[2026-10-17 23:01:06][ADVERTÊNCIA] BlueMap is missing important resources!
+[2026-10-17 23:01:06][ADVERTÊNCIA] You must accept the required file download in order for BlueMap to work!
+[2026-10-17 23:01:06][ADVERTÊNCIA] Please check: /media/elliasgomes/HD_1TB/apps/servidor_minecraft/plugins/BlueMap/core.conf
+[2026-10-17 23:01:06][INFORMAÇÕES] If you have changed the config you can simply reload the plugin using: /bluemap reload

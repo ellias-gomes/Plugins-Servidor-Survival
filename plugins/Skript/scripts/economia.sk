@@ -1,0 +1,503 @@
+# ============================================================================
+#  ECONOMIA DINÂMICA - Cinzas de Aurelion
+#  - Multiplicador global de preços (inflação/deflação automática diária)
+#  - Juros do banco reagem à inflação (política monetária)
+#  - Moedas Físicas de Aurelion (sacar/depositar, clique direito para creditar)
+#  - Sistema de Câmbio com Villagers (GUI interativa + comandos + aceita Moedas Físicas e Carteira)
+#  - Guia detalhado in-game de Lojas (/shop e /qs)
+#  - Provedor de moeda: EssentialsX + VaultUnlocked
+# ============================================================================
+
+on load:
+    if {eco::multi} is not set:
+        set {eco::multi} to 1
+    if {eco::juro} is not set:
+        set {eco::juro} to 0.5
+    if {eco::ultimo} is not set:
+        set {eco::ultimo} to now
+    if {eco::dia} is not set:
+        set {eco::dia} to 0
+    if {eco::tesouro} is not set:
+        set {eco::tesouro} to 0
+    if {eco::evento::preco} is not set:
+        set {eco::evento::preco} to 1
+    if {eco::evento::salario} is not set:
+        set {eco::evento::salario} to 1
+    if {eco::evento::juro} is not set:
+        set {eco::evento::juro} to 1
+    if {eco::evento::nome} is not set:
+        set {eco::evento::nome} to "Nenhum"
+    if {prog::bosses} is not set:
+        set {prog::bosses} to 0
+
+# ---------- Utilitário global de efeitos de poção (compatível com 26.3) ----------
+
+function aplicarEfeito(e: entity, ef: text, seg: number, nivel: number):
+    set {_amp} to {_nivel} - 1
+    if {_amp} < 0:
+        set {_amp} to 0
+    execute console command "effect give %uuid of {_e}% minecraft:%{_ef}% %{_seg}% %{_amp}% true"
+
+# ---------- Funções públicas (usadas por todos os outros scripts) ----------
+
+# Preço de um serviço/produto indexado à inflação e a eventos.
+function precoServico(base: number) :: number:
+    return round({_base} * {eco::multi} * {eco::evento::preco})
+
+# Salário (NÃO indexado à inflação: o poder de compra cai quando os preços sobem).
+function pagarSalario(p: player, valor: number):
+    set {_v} to round({_valor} * {eco::evento::salario})
+    if {_v} < 1:
+        set {_v} to 1
+    add {_v} to {_p}'s balance
+
+# Cobra até "valor" (nunca deixa saldo negativo). Retorna o que foi cobrado. Vai para o tesouro.
+function cobrar(p: player, valor: number) :: number:
+    set {_c} to {_valor}
+    if {_p}'s balance < {_c}:
+        set {_c} to round({_p}'s balance)
+    remove {_c} from {_p}'s balance
+    add {_c} to {eco::tesouro}
+    return {_c}
+
+function fmt(n: number) :: text:
+    return "%round({_n})%"
+
+function massaMonetaria() :: number:
+    set {_t} to 0
+    loop {saldo::*}:
+        add loop-value to {_t}
+    loop {banco::*}:
+        add loop-value to {_t}
+    return {_t}
+
+# Meta de massa monetária: cresce com a progressão do servidor (bosses derrotados).
+function metaMassa() :: number:
+    return 5000 + (20000 * {prog::bosses}) + (3000 * {eco::dia})
+
+# Cotação dinâmica da Esmeralda (moeda de câmbio com Villagers)
+function precoEsmeralda() :: number:
+    return max(10, round(25 * {eco::multi} * {eco::evento::preco}))
+
+# ---------- Moedas Físicas de Aurelion ----------
+
+function moedaAurelion(qtd: number) :: item:
+    return {_qtd} of gold nugget named "&6&lMoeda de Aurelion" with lore "&7Moeda oficial do Reino." and "&8Valor: 1 Ouro" and "&eClique direito para depositar ou use no /cambio."
+
+function lingoteAurelion(qtd: number) :: item:
+    return {_qtd} of gold ingot named "&6&lLingote Real de Aurelion" with lore "&7Cunhado na Casa da Moeda Real." and "&8Valor: 100 Ouros" and "&eClique direito para depositar ou use no /cambio."
+
+function darMoedasFisicas(p: player, valor: number):
+    set {_restante} to round({_valor})
+    if {_restante} <= 0:
+        stop
+    set {_lingotes} to floor({_restante} / 100)
+    set {_nuggets} to mod({_restante}, 100)
+    if {_lingotes} > 0:
+        give lingoteAurelion({_lingotes}) to {_p}
+    if {_nuggets} > 0:
+        give moedaAurelion({_nuggets}) to {_p}
+
+function ouroFisicoInventario(p: player) :: number:
+    set {_total} to 0
+    loop all items in inventory of {_p}:
+        if "%name of loop-item%" contains "Lingote Real de Aurelion":
+            set {_q} to item amount of loop-item
+            add ({_q} * 100) to {_total}
+        else if "%name of loop-item%" contains "Moeda de Aurelion":
+            set {_q} to item amount of loop-item
+            add {_q} to {_total}
+    return {_total}
+
+function removerMoedasFisicas(p: player) :: number:
+    set {_total} to 0
+    loop all items in inventory of {_p}:
+        if "%name of loop-item%" contains "Lingote Real de Aurelion":
+            set {_q} to item amount of loop-item
+            add ({_q} * 100) to {_total}
+            remove loop-item from inventory of {_p}
+        else if "%name of loop-item%" contains "Moeda de Aurelion":
+            set {_q} to item amount of loop-item
+            add {_q} to {_total}
+            remove loop-item from inventory of {_p}
+    return {_total}
+
+function esmeraldasInventario(p: player) :: number:
+    set {_total} to 0
+    loop all items in inventory of {_p}:
+        if type of loop-item is emerald:
+            add item amount of loop-item to {_total}
+    return {_total}
+
+# Clique direito com moeda física (fora de um aldeão) deposita na carteira virtual
+on right click with gold nugget:
+    if "%name of player's tool%" contains "Moeda de Aurelion":
+        if clicked entity is a villager:
+            cancel event
+            abrirMenuCambio(player)
+            stop
+        cancel event
+        set {_qtd} to item amount of player's tool
+        set player's tool to air
+        add {_qtd} to player's balance
+        send action bar "&a+%{_qtd}% Ouros depositados na sua carteira virtual!" to player
+        play sound "entity.experience_orb.pickup" to player
+
+on right click with gold ingot:
+    if "%name of player's tool%" contains "Lingote Real de Aurelion":
+        if clicked entity is a villager:
+            cancel event
+            abrirMenuCambio(player)
+            stop
+        cancel event
+        set {_qtd} to item amount of player's tool
+        set player's tool to air
+        set {_total} to {_qtd} * 100
+        add {_total} to player's balance
+        send action bar "&a+%{_total}% Ouros depositados na sua carteira virtual!" to player
+        play sound "entity.player.levelup" to player
+
+command /moeda [<text>] [<number>]:
+    aliases: /moedas, /sacarmoeda
+    description: Gerencie moedas físicas de Aurelion
+    trigger:
+        if arg-1 is not set:
+            send "&6&l=== Casa da Moeda de Aurelion ===" to player
+            send "&7Use moedas físicas para trocas diretas, câmbio com Villagers (/cambio) ou coleções." to player
+            send "&f/moeda sacar <quantidade> &7- Converte saldo da carteira em Moedas físicas" to player
+            send "&f/moeda depositar &7- Deposita todas as Moedas/Lingotes do inventário na carteira" to player
+            send "&7Dica: Se o seu dinheiro estiver no &f/banco&7, use &f/banco sacar <valor> &7primeiro!" to player
+            stop
+        if arg-1 is "sacar":
+            set {_val} to arg-2
+            if {_val} is not set:
+                send "&cUse /moeda sacar <quantidade de ouro>" to player
+                stop
+            if {_val} <= 0:
+                send "&cQuantidade inválida." to player
+                stop
+            if player's balance < {_val}:
+                set {_b} to {banco::%uuid of player%}
+                if {_b} is not set:
+                    set {_b} to 0
+                send "&cSaldo insuficiente na carteira (&e%round(player's balance)% Ouros&c). No banco você tem &e%round({_b})% Ouros &7(use /banco sacar)." to player
+                stop
+            remove {_val} from player's balance
+            darMoedasFisicas(player, {_val})
+            send "&aVocê sacou &f%{_val}% Ouros &aem moedas físicas!" to player
+            play sound "entity.item.pickup" to player
+        else if arg-1 is "depositar" or "banco" or "guardar":
+            set {_dep} to removerMoedasFisicas(player)
+            if {_dep} > 0:
+                add {_dep} to player's balance
+                send "&aDepositado: &f+%{_dep}% Ouros &ana sua carteira virtual!" to player
+                play sound "entity.player.levelup" to player
+            else:
+                send "&eVocê não possui Moedas de Aurelion no inventário para depositar." to player
+
+# ---------- Sistema de Câmbio de Villagers (Aldeões) ----------
+
+function comprarEsmeraldas(p: player, qtd: number):
+    if {_qtd} <= 0:
+        send "&cQuantidade inválida." to {_p}
+        stop
+    set {_cot} to precoEsmeralda()
+    set {_custo} to {_qtd} * {_cot}
+    set {_fisico} to ouroFisicoInventario({_p})
+    set {_carteira} to round({_p}'s balance)
+    if ({_fisico} + {_carteira}) < {_custo}:
+        send "&cOuro insuficiente para comprar &f%{_qtd}% Esmeralda(s)&c!" to {_p}
+        send "&7Custo: &e%{_custo}% Ouros &8(Cotação: 1 Esmeralda = %{_cot}% Ouros)" to {_p}
+        send "&7Você tem: &f%{_fisico}% em Moedas Físicas &7+ &f%{_carteira}% na Carteira&7." to {_p}
+        stop
+    # Prioriza consumir Moedas Físicas do inventário se o jogador tiver sacado moedas!
+    if {_fisico} >= {_custo}:
+        set {_removido} to removerMoedasFisicas({_p})
+        set {_troco} to {_removido} - {_custo}
+        if {_troco} > 0:
+            darMoedasFisicas({_p}, {_troco})
+        add {_custo} to {eco::tesouro}
+        give {_qtd} of emerald to {_p}
+        send "&a[Câmbio] Você trocou &6%{_custo}% Moedas de Aurelion &apor &2%{_qtd}% Esmeralda(s)&a! (Troco devolvido em moedas: %{_troco}%)" to {_p}
+        play sound "entity.villager.celebrate" to {_p}
+        stop
+    # Caso tenha parte em moedas físicas e parte na carteira (ou tudo na carteira)
+    if {_fisico} > 0:
+        set {_removido} to removerMoedasFisicas({_p})
+        set {_faltaCarteira} to {_custo} - {_removido}
+        remove {_faltaCarteira} from {_p}'s balance
+    else:
+        remove {_custo} from {_p}'s balance
+    add {_custo} to {eco::tesouro}
+    give {_qtd} of emerald to {_p}
+    send "&a[Câmbio] Você comprou &2%{_qtd}% Esmeralda(s) &apor &e%{_custo}% Ouros&a!" to {_p}
+    play sound "entity.villager.celebrate" to {_p}
+
+function venderEsmeraldas(p: player, qtd: number, emMoedaFisica: boolean):
+    if {_qtd} <= 0:
+        send "&cQuantidade inválida." to {_p}
+        stop
+    set {_tem} to esmeraldasInventario({_p})
+    if {_tem} < {_qtd}:
+        send "&cVocê não tem %{_qtd}% Esmeralda(s) no inventário (Você possui: %{_tem}%)." to {_p}
+        stop
+    set {_cot} to precoEsmeralda()
+    remove {_qtd} of emerald from inventory of {_p}
+    set {_venda} to round({_qtd} * {_cot} * 0.85)
+    if {_venda} < 1:
+        set {_venda} to 1
+    if {_emMoedaFisica} is true:
+        darMoedasFisicas({_p}, {_venda})
+        send "&a[Câmbio] Você trocou &2%{_qtd}% Esmeralda(s) &apor &6+%{_venda}% Moedas Físicas de Aurelion&a!" to {_p}
+    else:
+        add {_venda} to {_p}'s balance
+        send "&a[Câmbio] Você vendeu &2%{_qtd}% Esmeralda(s) &ae recebeu &e+%{_venda}% Ouros &ana carteira (&f/moeda sacar %{_venda}% &apara moedas físicas)!" to {_p}
+    play sound "entity.experience_orb.pickup" to {_p}
+
+function abrirMenuCambio(p: player):
+    set {_cot} to precoEsmeralda()
+    set {_vendaUnit} to round({_cot} * 0.85)
+    set {_fisico} to ouroFisicoInventario({_p})
+    set {_carteira} to round({_p}'s balance)
+    set {_esm} to esmeraldasInventario({_p})
+    set {_gui} to chest inventory with 3 rows named "&a&lCâmbio Real de Aldeões"
+    set slot 4 of {_gui} to gold block named "&6&lSeu Ouro Disponível" with lore "&7Moedas Físicas na mochila: &e%{_fisico}% Ouros" and "&7Saldo na Carteira (/money): &a%{_carteira}% Ouros" and "&7Esmeraldas na mochila: &2%{_esm}%" and "&8Cotação hoje: 1 Esmeralda = %{_cot}% Ouros"
+    set slot 10 of {_gui} to 1 of emerald named "&a&lComprar 1 Esmeralda" with lore "&7Custo: &e%{_cot}% Ouros" and "&7Aceita Moedas Físicas ou Carteira!" and "&eClique para trocar"
+    set slot 11 of {_gui} to 8 of emerald named "&a&lComprar 8 Esmeraldas" with lore "&7Custo: &e%8 * {_cot}% Ouros" and "&7Aceita Moedas Físicas ou Carteira!" and "&eClique para trocar"
+    set slot 12 of {_gui} to 16 of emerald named "&a&lComprar 16 Esmeraldas" with lore "&7Custo: &e%16 * {_cot}% Ouros" and "&7Aceita Moedas Físicas ou Carteira!" and "&eClique para trocar"
+    set slot 13 of {_gui} to 32 of emerald named "&a&lComprar 32 Esmeraldas" with lore "&7Custo: &e%32 * {_cot}% Ouros" and "&7Aceita Moedas Físicas ou Carteira!" and "&eClique para trocar"
+    set slot 14 of {_gui} to gold ingot named "&6&lTrocar TODAS as Moedas por Esmeraldas" with lore "&7Converte suas Moedas Físicas da mochila" and "&7no máximo possível de Esmeraldas + troco!" and "&eClique para converter tudo"
+    set slot 15 of {_gui} to gold nugget named "&e&lVender 1 Esmeralda por Moedas" with lore "&7Receba: &6+%{_vendaUnit}% Moedas Físicas" and "&8(Taxa de câmbio de 15%%)" and "&eClique para vender 1"
+    set slot 16 of {_gui} to chest named "&e&lVender TODAS as Esmeraldas por Moedas" with lore "&7Converte todas as suas &2%{_esm}% Esmeraldas" and "&7em &6Moedas Físicas de Aurelion&7!" and "&eClique para vender tudo"
+    open {_gui} to {_p}
+
+on inventory click:
+    if "%name of event-inventory%" contains "Câmbio Real de Aldeões":
+        cancel event
+        set {_idx} to index of clicked slot
+        if {_idx} is 10:
+            comprarEsmeraldas(player, 1)
+            abrirMenuCambio(player)
+        else if {_idx} is 11:
+            comprarEsmeraldas(player, 8)
+            abrirMenuCambio(player)
+        else if {_idx} is 12:
+            comprarEsmeraldas(player, 16)
+            abrirMenuCambio(player)
+        else if {_idx} is 13:
+            comprarEsmeraldas(player, 32)
+            abrirMenuCambio(player)
+        else if {_idx} is 14:
+            set {_fis} to ouroFisicoInventario(player)
+            set {_cot} to precoEsmeralda()
+            set {_maxQtd} to floor({_fis} / {_cot})
+            if {_maxQtd} <= 0:
+                send "&cVocê precisa de pelo menos &e%{_cot}% Moedas de Aurelion &cna mochila para converter em 1 Esmeralda!" to player
+                stop
+            comprarEsmeraldas(player, {_maxQtd})
+            abrirMenuCambio(player)
+        else if {_idx} is 15:
+            venderEsmeraldas(player, 1, true)
+            abrirMenuCambio(player)
+        else if {_idx} is 16:
+            set {_esm} to esmeraldasInventario(player)
+            if {_esm} <= 0:
+                send "&cVocê não tem nenhuma Esmeralda na mochila para vender!" to player
+                stop
+            venderEsmeraldas(player, {_esm}, true)
+            abrirMenuCambio(player)
+
+command /cambio [<text>] [<number>]:
+    aliases: /villager, /esmeraldas
+    description: Casa de Câmbio Imperial para comércio com Aldeões
+    trigger:
+        set {_cot} to precoEsmeralda()
+        if arg-1 is not set:
+            abrirMenuCambio(player)
+            send "&a&l=== Câmbio Real de Aldeões ===" to player
+            send "&7Cotação de hoje: &e1 Esmeralda = %{_cot}% Ouros de Aurelion" to player
+            send "&f/cambio comprar <qtd> &7- Troca Moedas Físicas ou Carteira por Esmeraldas" to player
+            send "&f/cambio vender <qtd> &7- Troca Esmeraldas por Moedas Físicas de Aurelion" to player
+            stop
+        if arg-1 is "menu" or "gui":
+            abrirMenuCambio(player)
+            stop
+        set {_qtd} to arg-2
+        if {_qtd} is not set:
+            set {_qtd} to 1
+        if arg-1 is "comprar":
+            comprarEsmeraldas(player, {_qtd})
+        else if arg-1 is "vender":
+            venderEsmeraldas(player, {_qtd}, true)
+        else:
+            abrirMenuCambio(player)
+
+# Ao interagir com Villager: se estiver agachado (Shift) ou segurando Moeda/Lingote de Aurelion, abre o menu de câmbio
+on right click on villager:
+    if player is sneaking:
+        cancel event
+        abrirMenuCambio(player)
+    else if "%name of player's tool%" contains "Moeda de Aurelion":
+        cancel event
+        abrirMenuCambio(player)
+    else if "%name of player's tool%" contains "Lingote Real de Aurelion":
+        cancel event
+        abrirMenuCambio(player)
+    else:
+        send action bar "&6[Aldeão] &eShift + Clique Direito &7(ou clique com Moedas de Aurelion) para abrir o &aCâmbio de Esmeraldas&7!" to player
+
+# ---------- Guia detalhado de Lojas in-game (/shop e /qs) ----------
+
+command /lojas:
+    aliases: /guia lojas, /loja, /ajuda lojas
+    description: Guia completo de como usar o mercado global e criar lojas privadas
+    trigger:
+        send "&6&l==============================================" to player
+        send "&e&l       GUIA DO COMÉRCIO DE AURELION" to player
+        send "&6&l==============================================" to player
+        send "" to player
+        send "&61. MERCADO CENTRAL DO REINO (&f/shop&6 e &f/sell&6):" to player
+        send "  &7• &f/shop&7: Abre o menu dinâmico de compras do servidor." to player
+        send "  &7• &fPreços Dinâmicos&7: Se você comprar muito, o preço sobe; se vender muito, o preço cai!" to player
+        send "  &7• &f/sell&7: Venda itens da sua mão ou use &f/sell gui &7para abrir o baú de venda rápida." to player
+        send "" to player
+        send "&62. LOJAS PRIVADAS ENTRE PLAYERS (&f/qs&6):" to player
+        send "  &7• Como o Pedro e o Ellias criam lojas para o co-op:" to player
+        send "  &7  1) Coloque um &fBaú&7 no chão." to player
+        send "  &7  2) Segure o item que deseja vender e &fbata no baú&7 com ele na mão." to player
+        send "  &7  3) Digite o preço unitário no chat (exemplo: &e50&7)." to player
+        send "  &7  4) Abasteça o baú com os itens. Pronto! Uma placa surgirá." to player
+        send "  &7• &fImposto de Transação&7: 5%% do valor vai para o Tesouro do Reino." to player
+        send "  &7• &f/qs staff&7: Permite gerenciar funcionários da loja." to player
+        send "" to player
+        send "&63. NEGOCIAÇÃO COM VILLAGERS (&f/cambio&6):" to player
+        send "  &7• Digite &f/cambio &7ou faça &fShift + Clique Direito &7em um Aldeão para abrir o Menu de Câmbio!" to player
+        send "  &7• Aceita tanto &6Moedas Físicas de Aurelion &7na mochila quanto saldo da carteira!" to player
+        send "&6&l==============================================" to player
+
+# ---------- Rotina diária da Economia (a cada 24h reais) ----------
+
+every 5 minutes:
+    loop all players:
+        set {saldo::%uuid of loop-player%} to round(loop-player's balance)
+    if difference between {eco::ultimo} and now is greater than 24 hours:
+        set {eco::ultimo} to now
+        diaEconomico()
+
+on quit:
+    set {saldo::%uuid of player%} to round(player's balance)
+
+function diaEconomico():
+    add 1 to {eco::dia}
+    set {_massa} to massaMonetaria()
+    set {_meta} to metaMassa()
+    set {_razao} to {_massa} / {_meta}
+    if {_razao} > 1.1:
+        add 0.02 to {eco::multi}
+        add 0.05 to {eco::juro}
+    else if {_razao} < 0.9:
+        subtract 0.01 from {eco::multi}
+        subtract 0.03 from {eco::juro}
+    else:
+        if {eco::multi} > 1:
+            subtract 0.005 from {eco::multi}
+        else if {eco::multi} < 1:
+            add 0.005 to {eco::multi}
+    if {eco::multi} > 2:
+        set {eco::multi} to 2
+    if {eco::multi} < 0.7:
+        set {eco::multi} to 0.7
+    if {eco::juro} > 1.5:
+        set {eco::juro} to 1.5
+    if {eco::juro} < 0.3:
+        set {eco::juro} to 0.3
+    if {eco::evento::fim_dia} is set:
+        if {eco::dia} >= {eco::evento::fim_dia}:
+            set {eco::evento::preco} to 1
+            set {eco::evento::salario} to 1
+            set {eco::evento::juro} to 1
+            set {eco::evento::nome} to "Nenhum"
+            delete {eco::evento::fim_dia}
+    if mod({eco::dia}, 7) is 0:
+        sortearEvento()
+    aplicarJurosBanco()
+    set {_m} to round({eco::multi} * 100) / 100
+    set {_j} to round({eco::juro} * 100) / 100
+    broadcast "&6[Economia] &7Dia %{eco::dia}% - preços x%{_m}% | juros %{_j}% pct/dia | evento: &e%{eco::evento::nome}%"
+
+function sortearEvento():
+    set {_r} to random integer between 1 and 5
+    set {eco::evento::fim_dia} to {eco::dia} + 3
+    set {eco::evento::preco} to 1
+    set {eco::evento::salario} to 1
+    set {eco::evento::juro} to 1
+    if {_r} is 1:
+        set {eco::evento::nome} to "Colheita Farta (-10%% nos preços)"
+        set {eco::evento::preco} to 0.9
+    else if {_r} is 2:
+        set {eco::evento::nome} to "Guerra nas Fronteiras (+15%% nos preços)"
+        set {eco::evento::preco} to 1.15
+    else if {_r} is 3:
+        set {eco::evento::nome} to "Corrida do Ouro (+25%% nos salários)"
+        set {eco::evento::salario} to 1.25
+    else if {_r} is 4:
+        set {eco::evento::nome} to "Pânico Bancário (juros pela metade)"
+        set {eco::evento::juro} to 0.5
+    else:
+        set {eco::evento::nome} to "Festival de Aurelion (-20%% preços, +10%% salários)"
+        set {eco::evento::preco} to 0.8
+        set {eco::evento::salario} to 1.1
+    broadcast "&6[Economia] &eEVENTO: &f%{eco::evento::nome}% &7(dura 3 dias)"
+
+# Imposto sobre riqueza: 0,5%/dia do que excede 100k na carteira
+on join:
+    set {saldo::%uuid of player%} to round(player's balance)
+    set {_ult} to {eco::imposto::%uuid of player%}
+    if {_ult} is not set:
+        set {_ult} to 0
+    if {_ult} < {eco::dia}:
+        set {_dias} to {eco::dia} - {_ult}
+        set {eco::imposto::%uuid of player%} to {eco::dia}
+        set {_exc} to round(player's balance) - 100000
+        if {_exc} > 0:
+            set {_imp} to round({_exc} * 0.005 * {_dias})
+            set {_imp} to cobrar(player, {_imp})
+            send "&6[Economia] &7Imposto sobre grandes fortunas: &c-%{_imp}%" to player
+    if {extrato::%uuid of player%} is set:
+        send {extrato::%uuid of player%} to player
+        delete {extrato::%uuid of player%}
+
+command /economia:
+    aliases: /eco, /inflacao
+    description: Painel econômico do reino
+    trigger:
+        set {_b} to {banco::%uuid of player%}
+        if {_b} is not set:
+            set {_b} to 0
+        set {_r} to {runas::%uuid of player%}
+        if {_r} is not set:
+            set {_r} to 0
+        set {_fis} to ouroFisicoInventario(player)
+        send "&6&l=== Banco Central de Aurelion ===" to player
+        send "&7Multiplicador de preços: &f%round({eco::multi} * 100) / 100%x &7(limites 0.7x - 2.0x)" to player
+        send "&7Juros base do banco: &f%round({eco::juro} * 100) / 100% &7pct ao dia" to player
+        send "&7Cotação Esmeralda (Aldeão): &e1 Esmeralda = %precoEsmeralda()% Ouros &8(/cambio)" to player
+        send "&7Massa monetária: &f%round(massaMonetaria())% &7/ meta &f%round(metaMassa())%" to player
+        send "&7Evento ativo: &e%{eco::evento::nome}%" to player
+        send "&7Tesouro do reino (impostos): &f%round({eco::tesouro})%" to player
+        send "&7Carteira: &a%round(player's balance)% &7| Moedas Físicas: &6%{_fis}% &7| Banco: &a%round({_b})% &7| Runas: &d%{_r}%" to player
+
+command /ecoadmin <text> [<number>]:
+    permission: aurelion.admin
+    trigger:
+        if arg-1 is "dia":
+            diaEconomico()
+        else if arg-1 is "evento":
+            sortearEvento()
+        else if arg-1 is "multi":
+            set {eco::multi} to arg-2
+            send "Multiplicador = %arg-2%" to player
+        else if arg-1 is "tesouro":
+            send "Tesouro: %{eco::tesouro}%" to player
+        else:
+            send "Uso: /ecoadmin <dia|evento|multi n|tesouro>" to player

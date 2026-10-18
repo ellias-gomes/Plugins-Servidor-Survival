@@ -1,0 +1,281 @@
+# ============================================================================
+#  SISTEMA DE BANCO DE DADOS E RESET DE AVANÇO - Cinzas de Aurelion
+#  - Função salvarBancoDados(motivo): consolida jogadores, economia, bosses,
+#    diário, caçadas e pets em registros estruturados + flush para disco/SQLite
+#  - Função resetarTodoAvanco(reiniciarInventario): zera toda a progressão do
+#    mapa (bosses, diário, caçadas, memórias, banco, economia, pets, runas)
+#  - Comandos: /salvarbanco, /db [<salvar|status|resetar>], /resetarprogresso
+# ============================================================================
+
+on load:
+    if {db::total_saves} is not set:
+        set {db::total_saves} to 0
+    if {db::ultimo_save} is not set:
+        set {db::ultimo_save} to "Nunca"
+    if {db::motivo_save} is not set:
+        set {db::motivo_save} to "Inicialização"
+
+# ---------- Função Principal: Salvar Informações no Banco de Dados ----------
+
+function salvarBancoDados(motivo: text):
+    add 1 to {db::total_saves}
+    set {db::ultimo_save} to "%now%"
+    set {db::motivo_save} to {_motivo}
+    # 1. Salva estado macroeconômico e de campanha global
+    set {db::estado::dia_economico} to {eco::dia}
+    set {db::estado::multiplicador_precos} to {eco::multi}
+    set {db::estado::taxa_juros} to {eco::juro}
+    set {db::estado::tesouro_reino} to round({eco::tesouro})
+    set {db::estado::evento_ativo} to {eco::evento::nome}
+    set {db::estado::bosses_derrotados} to {prog::bosses}
+    if {final::resolvido} is set:
+        set {db::estado::final_escolhido} to {final::resolvido}
+    else:
+        set {db::estado::final_escolhido} to "Em aberto"
+    # 2. Salva ficha completa de cada jogador online
+    loop all players:
+        salvarFichaJogador(loop-player)
+    # 3. Força flush de variáveis (10 mutações extras acionam o flush imediato do variables.csv)
+    loop 10 times:
+        set {db::flush_tick} to loop-number
+    # 4. Salva chunks e inventários do mundo no disco
+    execute console command "save-all"
+
+function salvarFichaJogador(p: player):
+    set {_u} to "%uuid of {_p}%"
+    if {db::jogadores::lista::*} does not contain {_u}:
+        add {_u} to {db::jogadores::lista::*}
+    set {db::jogador::%{_u}%::nome} to "%{_p}%"
+    set {db::jogador::%{_u}%::carteira} to round({_p}'s balance)
+    set {db::jogador::%{_u}%::moedas_fisicas} to ouroFisicoInventario({_p})
+    set {db::jogador::%{_u}%::esmeraldas} to esmeraldasInventario({_p})
+    set {_b} to {banco::%{_u}%}
+    if {_b} is not set:
+        set {_b} to 0
+    set {db::jogador::%{_u}%::banco_saldo} to round({_b})
+    set {_bn} to {banconivel::%{_u}%}
+    if {_bn} is not set:
+        set {_bn} to 1
+    set {db::jogador::%{_u}%::banco_nivel} to {_bn}
+    set {_r} to {runas::%{_u}%}
+    if {_r} is not set:
+        set {_r} to 0
+    set {db::jogador::%{_u}%::runas} to {_r}
+    set {db::jogador::%{_u}%::pets_total} to amount of {pets::%{_u}%::owned::*}
+    set {db::jogador::%{_u}%::biomas_total} to amount of {explo::%{_u}%::*}
+    set {_objCont} to 0
+    loop 10 times:
+        if {diario::%{_u}%::done::%loop-number%} is set:
+            add 1 to {_objCont}
+    set {db::jogador::%{_u}%::objetivos_concluidos} to {_objCont}
+    set {_cacCont} to 0
+    loop 4 times:
+        if {cacada::done::%{_u}%::%loop-number%} is set:
+            add 1 to {_cacCont}
+    set {db::jogador::%{_u}%::cacadas_concluidas} to {_cacCont}
+    set {db::jogador::%{_u}%::atualizado_em} to "%now%"
+    set {saldo::%{_u}%} to round({_p}'s balance)
+
+# Salvamento automático a cada 5 minutos e ao desconectar
+every 5 minutes:
+    salvarBancoDados("Auto-Save Periódico (5 min)")
+
+on quit:
+    salvarFichaJogador(player)
+    salvarBancoDados("Saída de %player%")
+
+# ---------- Função Principal: Resetar Todo o Avanço do Mapa ----------
+
+function resetarTodoAvanco(reiniciarKit: boolean):
+    # Salva snapshot antes de zerar
+    salvarBancoDados("Backup Automático Pré-Reset")
+    # 1. Remove modelos 3D, bosses e pilares ativos no mundo
+    execute console command "function aurelion:remover_todos"
+    loop 5 times:
+        limparPilares(loop-number)
+        delete {boss::ativo::%loop-number%}
+        delete {boss::escudo::%loop-number%}
+        delete {prog::boss::%loop-number%}
+    # 2. Limpa variáveis de progresso global e legado
+    delete {prog::*}
+    set {prog::bosses} to 0
+    delete {dungeon::*}
+    delete {final::*}
+    delete {temporada}
+    # 3. Limpa progresso individual de Diário, Caçadas, Memórias, Biomas, Pets, Runas e Lápides
+    delete {diario::*}
+    delete {cacada::*}
+    delete {memoria::*}
+    delete {explo::*}
+    delete {runas::*}
+    delete {lapide::*}
+    delete {cd::*}
+    # 4. Guarda e limpa todos os Pets
+    loop all players:
+        removerPet(loop-player)
+    delete {pets::*}
+    delete {pet::*}
+    # 5. Reseta Banco de Aurelion e Banco Central (Economia volta ao Dia 0)
+    delete {banco::*}
+    delete {banconivel::*}
+    delete {saldo::*}
+    delete {extrato::*}
+    delete {eco::imposto::*}
+    delete {eco::evento::fim_dia}
+    set {eco::dia} to 0
+    set {eco::multi} to 1
+    set {eco::juro} to 0.5
+    set {eco::tesouro} to 0
+    set {eco::ultimo} to now
+    set {eco::evento::preco} to 1
+    set {eco::evento::salario} to 1
+    set {eco::evento::juro} to 1
+    set {eco::evento::nome} to "Nenhum"
+    # 6. Reseta borda do mundo para o tamanho inicial (12.000 blocos)
+    execute console command "worldborder set 12000"
+    # 7. Reseta carteira e status dos jogadores online
+    loop all players:
+        set loop-player's balance to 0
+        set {saldo::%uuid of loop-player%} to 0
+        set compass target of loop-player to localBoss(1)
+        if {_reiniciarKit} is true:
+            clear inventory of loop-player
+            set level of loop-player to 0
+            heal loop-player
+            feed loop-player
+            give loop-player 16 bread
+            give loop-player 24 torch
+            give loop-player a compass
+            give loop-player a stone pickaxe
+            give loop-player a stone axe
+            darLivroLore(loop-player)
+    # 8. Persiste estado zerado no banco de dados
+    delete {db::jogador::*}
+    delete {db::jogadores::lista::*}
+    salvarBancoDados("Reset Completo de Avanço")
+    broadcast ""
+    broadcast "&c&l=============================================="
+    broadcast "&6&l   ✦ AVANÇO DO MAPA RESETADO DO ZERO! ✦"
+    broadcast "&7• Guardiões (0/5), Diário (0/10), Caçadas Skyrim (0/4)"
+    broadcast "&7• Memórias, Runas, Pets, Lápides e Banco zerados"
+    broadcast "&7• Economia restaurada para o Dia 0 (Inflação 1.0x)"
+    if {_reiniciarKit} is true:
+        broadcast "&7• Inventários reiniciados com o Kit Inicial + Livro de Lore!"
+    broadcast "&c&l=============================================="
+    broadcast ""
+    loop all players:
+        play sound "block.beacon.power_select" to loop-player
+
+# ---------- Interface Gráfica (GUI) de Banco de Dados e Reset ----------
+
+function abrirPainelBancoDados(p: player):
+    set {_gui} to chest inventory with 3 rows named "&6&lBanco de Dados & Reset"
+    set {_bosses} to {prog::bosses}
+    if {_bosses} is not set:
+        set {_bosses} to 0
+    set {_jogadoresReg} to amount of {db::jogadores::lista::*}
+    set slot 4 of {_gui} to beacon named "&b&lStatus do Banco de Dados" with lore "&7Total de Salvamentos: &f%{db::total_saves}%" and "&7Último Save: &e%{db::ultimo_save}%" and "&7Gatilho: &f%{db::motivo_save}%" and "&7Jogadores Registrados: &a%{_jogadoresReg}%" and "&7Guardiões Derrotados: &e%{_bosses}%/5"
+    set slot 11 of {_gui} to emerald block named "&a&lSalvar Informações Agora" with lore "&7Salva imediatamente todas as carteiras," and "&7contas bancárias, bosses, diário, pets," and "&7caçadas e mundo no Banco de Dados." and "&eClique para salvar tudo!"
+    set slot 13 of {_gui} to book named "&e&lRelatório dos Jogadores no DB" with lore "&7Exibe no chat todas as fichas salvas" and "&7no banco de dados com saldos e progresso." and "&eClique para consultar!"
+    set slot 15 of {_gui} to tnt named "&c&lResetar Todo o Avanço (Manter Itens)" with lore "&7Zera Bosses (0/5), Diário (0/10), Caçadas," and "&7Memórias, Runas, Pets, Banco e Economia," and "&7mas mantém seus itens e construções." and "&cClique para resetar o avanço!"
+    set slot 16 of {_gui} to nether star named "&4&lResetar Avanço + Reiniciar Kit Inicial" with lore "&7Zera todo o avanço do mapa E também" and "&7limpa o inventário, entregando o Kit Inicial" and "&7e o Livro Crônicas de Aurelion (como no 1º dia)." and "&4Clique para reset total de campanha!"
+    open {_gui} to {_p}
+
+on inventory click:
+    if "%name of event-inventory%" contains "Banco de Dados & Reset":
+        cancel event
+        set {_idx} to index of clicked slot
+        if {_idx} is 11:
+            close player's inventory
+            salvarBancoDados("Manual por %player%")
+            send "&a&l[Banco de Dados] &aTodas as informações do servidor e jogadores foram salvas com sucesso! (Save #%{db::total_saves}%)" to player
+            play sound "entity.player.levelup" to player
+        else if {_idx} is 13:
+            close player's inventory
+            mostrarRelatorioBancoDados(player)
+        else if {_idx} is 15:
+            close player's inventory
+            resetarTodoAvanco(false)
+        else if {_idx} is 16:
+            close player's inventory
+            resetarTodoAvanco(true)
+
+function mostrarRelatorioBancoDados(p: player):
+    salvarBancoDados("Consulta de Relatório")
+    send "&6&l==============================================" to {_p}
+    send "&e&l     BANCO DE DADOS DE AURELION (RELATÓRIO)" to {_p}
+    send "&6&l==============================================" to {_p}
+    send "&7Saves realizados: &f%{db::total_saves}% &7| Último: &e%{db::ultimo_save}%" to {_p}
+    send "&7Motivo do último save: &f%{db::motivo_save}%" to {_p}
+    send "&7Estado Global: &fDia %{db::estado::dia_economico}% &7| Preços: &fx%{db::estado::multiplicador_precos}% &7| Bosses: &e%{db::estado::bosses_derrotados}%/5 &7| Final: &d%{db::estado::final_escolhido}%" to {_p}
+    send "" to {_p}
+    send "&6&lFichas de Jogadores Salvas:" to {_p}
+    loop {db::jogadores::lista::*}:
+        set {_uid} to loop-value
+        set {_nm} to {db::jogador::%{_uid}%::nome}
+        set {_car} to {db::jogador::%{_uid}%::carteira}
+        set {_fis} to {db::jogador::%{_uid}%::moedas_fisicas}
+        set {_ban} to {db::jogador::%{_uid}%::banco_saldo}
+        set {_bnv} to {db::jogador::%{_uid}%::banco_nivel}
+        set {_run} to {db::jogador::%{_uid}%::runas}
+        set {_obj} to {db::jogador::%{_uid}%::objetivos_concluidos}
+        set {_cac} to {db::jogador::%{_uid}%::cacadas_concluidas}
+        set {_pet} to {db::jogador::%{_uid}%::pets_total}
+        set {_bio} to {db::jogador::%{_uid}%::biomas_total}
+        send "  &e• &f&l%{_nm}% &7(UUID: &8%{_uid}%&7)" to {_p}
+        send "    &7Ouro Carteira: &a%{_car}% &7| Moedas Físicas: &6%{_fis}% &7| Banco (Nv.%{_bnv}%): &a%{_ban}% &7| Runas: &d%{_run}%" to {_p}
+        send "    &7Diário: &e%{_obj}%/10 &7| Caçadas Skyrim: &c%{_cac}%/4 &7| Pets: &d%{_pet}%/11 &7| Biomas: &b%{_bio}%" to {_p}
+    send "&8Para exportar/sincronizar com o arquivo SQLite (dados/aurelion.db), rode: ./scripts/banco_dados.py salvar" to {_p}
+    send "&6&l==============================================" to {_p}
+
+# ---------- Comandos de Banco de Dados e Reset ----------
+
+command /salvarbanco:
+    aliases: /savedb, /salvarprogresso, /salvardados
+    permission: aurelion.admin
+    description: Salva todas as informações dos jogadores e do servidor no banco de dados
+    trigger:
+        salvarBancoDados("Comando /salvarbanco por %player%")
+        send "&a&l[Banco de Dados] &aTodas as informações de jogadores, economia, diário, bosses e mundo foram salvas! &7(Save #%{db::total_saves}%)" to player
+        play sound "entity.player.levelup" to player
+
+command /db [<text>]:
+    aliases: /bancodedados, /database
+    permission: aurelion.admin
+    description: Painel e gerenciamento do Banco de Dados de Aurelion
+    trigger:
+        if arg-1 is not set:
+            abrirPainelBancoDados(player)
+            stop
+        if arg-1 is "salvar" or "save":
+            salvarBancoDados("Comando /db salvar por %player%")
+            send "&a&l[Banco de Dados] &aInformações salvas com sucesso! (Save #%{db::total_saves}%)" to player
+            play sound "entity.player.levelup" to player
+        else if arg-1 is "status" or "info" or "relatorio":
+            mostrarRelatorioBancoDados(player)
+        else if arg-1 is "resetar":
+            abrirPainelBancoDados(player)
+        else:
+            abrirPainelBancoDados(player)
+
+command /resetarprogresso [<text>] [<text>]:
+    aliases: /resetaravanco, /aurelionreset, /zerarmapa
+    permission: aurelion.admin
+    description: Reseta todo o avanço do mapa (bosses, diário, caçadas, memórias, banco e economia)
+    trigger:
+        if arg-1 is not "confirmar":
+            send "&c&l=== ATENÇÃO: RESET DE AVANÇO DO MAPA ===" to player
+            send "&7Isso irá zerar todo o progresso da campanha:" to player
+            send "&7• &f5 Guardiões &7(volta ao 1º: Verdelith)" to player
+            send "&7• &f10 Objetivos do Diário &7e &f4 Caçadas de Skyrim" to player
+            send "&7• &fMemórias, Voto do Final, Pets, Runas, Lápides, Banco e Economia" to player
+            send "" to player
+            send "&eEscolha como deseja resetar:" to player
+            send "&f/resetarprogresso confirmar &7- Zera todo o avanço (mantém seus itens e construções)" to player
+            send "&f/resetarprogresso confirmar kit &7- Zera todo o avanço E reinicia o inventário com o Kit Inicial + Livro" to player
+            send "&8(Ou abra o menu visual digitando &f/db&8)" to player
+            stop
+        if arg-2 is "kit":
+            resetarTodoAvanco(true)
+        else:
+            resetarTodoAvanco(false)

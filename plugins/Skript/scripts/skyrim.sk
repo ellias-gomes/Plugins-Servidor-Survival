@@ -1,0 +1,371 @@
+# ============================================================================
+#  MISSÕES SECUNDÁRIAS ESTILO SKYRIM - Cinzas de Aurelion
+#  - Feitiços & Shouts ativáveis com cooldown (Fus-Ro-Dah, Bola de Fogo, Passo Espectral, etc.)
+#  - Armas com habilidades únicas (Sangramento, Martelo do Trovão, Arco de Vórtice)
+#  - 4 Semi-Bosses com Modelos 3D e Covis de Caçada no Mundo Aberto
+#  - Menu de Caçadas: /cacadas ou /missoes
+# ============================================================================
+
+# ---------- Itens: Feitiços e Shouts (Skyrim) ----------
+
+function feiticoFusRoDah() :: item:
+    return 1 of paper named "&b&lPergaminho: Fus-Ro-Dah" with lore "&7O lendário Grito de Força." and "&eClique direito para liberar uma onda sônica que arremessa inimigos a 15 blocos!" and "&8Tempo de recarga: 10 segundos"
+
+function feiticoBolaDeFogo() :: item:
+    return 1 of blaze rod named "&c&lCajado da Bola de Fogo" with lore "&7Magia de destruição pura." and "&eClique direito para disparar uma bola de fogo explosiva!" and "&8Tempo de recarga: 5 segundos"
+
+function feiticoPassoEspectral() :: item:
+    return 1 of phantom membrane named "&d&lPergaminho: Passo Espectral" with lore "&7Fique intangível como um fantasma." and "&eClique direito para receber imunidade e velocidade extrema por 4s!" and "&8Tempo de recarga: 20 segundos"
+
+function feiticoCuraRapida() :: item:
+    return 1 of book named "&a&lGrimório da Restauração" with lore "&7Escola de restauração sagrada." and "&eClique direito para curar 4 corações e purificar venenos!" and "&8Tempo de recarga: 12 segundos"
+
+function feiticoTempestadeRaios() :: item:
+    return 1 of amethyst shard named "&e&lCristal da Ira do Trovão" with lore "&7Convoque a fúria dos céus." and "&eClique direito para atingir monstros ao redor com raios devastadores!" and "&8Tempo de recarga: 15 segundos"
+
+# ---------- Armas Únicas de Aventureiro ----------
+
+function armaLaminaSangrenta() :: item:
+    return diamond sword of sharpness 5 and unbreaking 3 named "&c&lLâmina Sangrenta de Valdric" with lore "&7Forjada em aço negro." and "&6Habilidade: &eCausa sangramento contínuo por 4s a cada acerto." and "&8Artefato de Skyrim"
+
+function armaMarteloTrovao() :: item:
+    return netherite axe of efficiency 5 and sharpness 4 named "&e&lMartelo do Trovão Nórdico" with lore "&7Empunhado pelos antigos anões." and "&6Habilidade: &eBata agachado para liberar uma descarga elétrica no chão." and "&8Artefato de Skyrim"
+
+function armaArcoVortice() :: item:
+    return bow of power 5 and flame 1 named "&b&lArco do Vendaval Uivante" with lore "&7Suas flechas controlam o vento." and "&6Habilidade: &eFlechas puxam todos os monstros para o ponto do impacto." and "&8Artefato de Skyrim"
+
+function armaEscudoRunico() :: item:
+    return shield named "&6&lEscudo Rúnico do Caçador" with lore "&7Inscrito com runas de proteção." and "&6Habilidade: &eBloquear ataques atordoa o inimigo e reflete 35%% do dano." and "&8Artefato de Skyrim"
+
+# ---------- Execução dos Feitiços no Clique Direito ----------
+
+on right click with paper:
+    if "%name of player's tool%" contains "Fus-Ro-Dah":
+        cancel event
+        set {_u} to "%uuid of player%"
+        if {cd::fusrodah::%{_u}%} is set:
+            if difference between {cd::fusrodah::%{_u}%} and now is less than 10 seconds:
+                send action bar "&cRecarregando Grito... aguarde!" to player
+                stop
+        set {cd::fusrodah::%{_u}%} to now
+        play sound "entity.warden.sonic_charge" with volume 1.5 and pitch 1.6 at player
+        send action bar "&b&lFUS... RO DAH!" to player
+        wait 4 ticks
+        # Dispara o feixe visual de anéis sônicos do Warden (2m até 18m na direção da mira)
+        execute console command "execute as %uuid of player% at @s anchored eyes run function aurelion:fus_ro_dah"
+        clear {_atingidos::*}
+        set {_alvosCont} to 0
+        # Raycast físico ao longo da linha de visão (de 2 até 18 blocos à frente dos olhos do jogador)
+        loop 9 times:
+            set {_dist} to loop-number * 2
+            set {_ponto} to location {_dist} meters in front of player's eyes
+            loop all living entities in radius 3.2 of {_ponto}:
+                if loop-entity is not player:
+                    set {_nomeAlvo} to "%name of loop-entity%"
+                    if {_nomeAlvo} does not contain "(Pet de":
+                        if loop-entity is not an armor stand:
+                            set {_idAlvo} to "%uuid of loop-entity%"
+                            if {_atingidos::*} does not contain {_idAlvo}:
+                                add {_idAlvo} to {_atingidos::*}
+                                add 1 to {_alvosCont}
+                                damage loop-entity by 14
+                                push loop-entity in direction of player at speed 2.6
+                                push loop-entity upwards at speed 0.55
+        if {_alvosCont} > 0:
+            send action bar "&b&lFUS-RO-DAH! &f%{_alvosCont}% alvo(s) atingido(s) pelo feixe sônico!" to player
+
+on right click with blaze rod:
+    if "%name of player's tool%" contains "Cajado da Bola de Fogo":
+        cancel event
+        set {_u} to "%uuid of player%"
+        if {cd::fireball::%{_u}%} is set:
+            if difference between {cd::fireball::%{_u}%} and now is less than 5 seconds:
+                send action bar "&cRecarregando Cajado..." to player
+                stop
+        set {cd::fireball::%{_u}%} to now
+        shoot a fireball from player at speed 1.8
+        play sound "entity.blaze.shoot" to player
+
+on right click with phantom membrane:
+    if "%name of player's tool%" contains "Passo Espectral":
+        cancel event
+        set {_u} to "%uuid of player%"
+        if {cd::espectral::%{_u}%} is set:
+            if difference between {cd::espectral::%{_u}%} and now is less than 20 seconds:
+                send action bar "&cRecarregando Passo Espectral..." to player
+                stop
+        set {cd::espectral::%{_u}%} to now
+        aplicarEfeito(player, "invisibility", 4, 1)
+        aplicarEfeito(player, "speed", 4, 3)
+        aplicarEfeito(player, "resistance", 4, 5)
+        play sound "entity.illusioner.mirror_move" to player
+        send action bar "&d&lPasso Espectral ativado (Intangível por 4s)!" to player
+
+on right click with book:
+    if "%name of player's tool%" contains "Grimório da Restauração":
+        cancel event
+        set {_u} to "%uuid of player%"
+        if {cd::cura::%{_u}%} is set:
+            if difference between {cd::cura::%{_u}%} and now is less than 12 seconds:
+                send action bar "&cRecarregando Grimório..." to player
+                stop
+        set {cd::cura::%{_u}%} to now
+        heal player by 4
+        execute console command "effect clear %uuid of player% minecraft:poison"
+        execute console command "effect clear %uuid of player% minecraft:wither"
+        play sound "entity.player.levelup" to player
+        send action bar "&a&l+4 Corações restaurados e purificados!" to player
+
+on right click with amethyst shard:
+    if "%name of player's tool%" contains "Ira do Trovão":
+        cancel event
+        set {_u} to "%uuid of player%"
+        if {cd::trovao::%{_u}%} is set:
+            if difference between {cd::trovao::%{_u}%} and now is less than 15 seconds:
+                send action bar "&cRecarregando Ira do Trovão..." to player
+                stop
+        set {cd::trovao::%{_u}%} to now
+        loop all monsters in radius 16 of player:
+            strike lightning effect at loop-monster
+            damage loop-monster by 12
+        play sound "entity.lightning_bolt.thunder" to player
+        send action bar "&e&lA fúria dos céus atinge os seus inimigos!" to player
+
+# ---------- Efeitos das Armas Únicas ----------
+
+on damage of monster:
+    if attacker is a player:
+        if "%name of attacker's tool%" contains "Lâmina Sangrenta":
+            aplicarEfeito(victim, "wither", 4, 1)
+            send action bar "&cInimigo sangrando..." to attacker
+        if "%name of attacker's tool%" contains "Martelo do Trovão":
+            if attacker is sneaking:
+                strike lightning effect at victim
+                loop all monsters in radius 5 of victim:
+                    damage loop-monster by 6
+                    push loop-monster upwards at speed 0.4
+                play sound "item.trident.thunder" to attacker
+
+on projectile hit:
+    if projectile is an arrow:
+        if shooter is a player:
+            if "%name of shooter's tool%" contains "Vendaval Uivante":
+                set {_loc} to location of projectile
+                loop all monsters in radius 10 of {_loc}:
+                    push loop-monster towards {_loc} at speed 1.5
+                play sound "entity.breeze.wind_burst" at {_loc}
+
+on damage of player:
+    if victim is blocking:
+        set {_temEscudo} to false
+        if "%name of victim's offhand tool%" contains "Escudo Rúnico":
+            set {_temEscudo} to true
+        else if "%name of victim's tool%" contains "Escudo Rúnico":
+            set {_temEscudo} to true
+        if {_temEscudo} is true:
+            if attacker is a monster:
+                damage attacker by (damage * 0.35)
+                push attacker away from victim at speed 1.2
+                aplicarEfeito(attacker, "slowness", 3, 2)
+                play sound "item.shield.block" to victim
+
+# ---------- 4 Semi-Bosses de Covil / Caçada (Skyrim) ----------
+
+function nomeSemiBoss(n: number) :: text:
+    if {_n} is 1:
+        return "&c&lThorgar, o Carniceiro dos Ermos"
+    if {_n} is 2:
+        return "&9&lMorvath, o Necromante da Cripta"
+    if {_n} is 3:
+        return "&6&lGólem Esquecido de Basalto"
+    return "&5&lValeria, a Lâmina Sombria"
+
+function ehSemiBoss(n: text) :: boolean:
+    if {_n} contains "Thorgar":
+        return true
+    if {_n} contains "Morvath":
+        return true
+    if {_n} contains "Gólem Esquecido de Basalto":
+        return true
+    if {_n} contains "Valeria":
+        return true
+    return false
+
+function biomaSemiBoss(n: number) :: text:
+    if {_n} is 1:
+        return "Planaltos e Savanas (Ermos Secos)"
+    if {_n} is 2:
+        return "Pântanos e Criptas Subterrâneas"
+    if {_n} is 3:
+        return "Cavernas Profundas e Forjas de Basalto"
+    return "Florestas Nebulosas e Bosques Escuros"
+
+function recompensaSemiBoss(p: player, n: number):
+    set {_u} to "%uuid of {_p}%"
+    set {cacada::done::%{_u}%::%{_n}%} to true
+    pagarSalario({_p}, 1500)
+    add 15 to {runas::%{_u}%}
+    give ovoPet() to {_p}
+    if {_n} is 1:
+        give armaLaminaSangrenta() to {_p}
+        give feiticoFusRoDah() to {_p}
+    else if {_n} is 2:
+        give armaMarteloTrovao() to {_p}
+        give feiticoTempestadeRaios() to {_p}
+    else if {_n} is 3:
+        give armaEscudoRunico() to {_p}
+        give feiticoPassoEspectral() to {_p}
+    else:
+        give armaArcoVortice() to {_p}
+        give feiticoBolaDeFogo() to {_p}
+    send "" to {_p}
+    send "&6&l★ CAÇADA CONCLUÍDA: %nomeSemiBoss({_n})% ★" to {_p}
+    send "&7Você recebeu &e1.500 Ouros&7, &d15 Runas&7, &51 Ovo de Pet&7 e &aArma/Feitiço Lendário&7!" to {_p}
+    broadcast "&6[Caçadas] &e%{_p}% &7derrotou o temido foragido %nomeSemiBoss({_n})%!"
+    play sound "ui.toast.challenge_complete" to {_p}
+    salvarBancoDados("Caçada Skyrim #%{_n}% por %{_p}%")
+
+function invocarSemiBoss(p: player, n: number):
+    set {_loc} to location 5 blocks in front of {_p}
+    if {_n} is 1:
+        spawn 1 piglin brute at {_loc}
+        set {_e} to last spawned entity
+        set max health of {_e} to 180
+        heal {_e}
+        set name of {_e} to nomeSemiBoss(1)
+        aplicarEfeito({_e}, "speed", 3600, 1)
+        anexarModelo({_e}, 6)
+    else if {_n} is 2:
+        spawn 1 evoker at {_loc}
+        set {_e} to last spawned entity
+        set max health of {_e} to 150
+        heal {_e}
+        set name of {_e} to nomeSemiBoss(2)
+        anexarModelo({_e}, 7)
+    else if {_n} is 3:
+        spawn 1 iron golem at {_loc}
+        set {_e} to last spawned entity
+        set max health of {_e} to 250
+        heal {_e}
+        set name of {_e} to nomeSemiBoss(3)
+        aplicarEfeito({_e}, "resistance", 3600, 2)
+        anexarModelo({_e}, 8)
+    else:
+        spawn 1 wither skeleton at {_loc}
+        set {_e} to last spawned entity
+        set max health of {_e} to 160
+        heal {_e}
+        set name of {_e} to nomeSemiBoss(4)
+        aplicarEfeito({_e}, "speed", 3600, 2)
+        anexarModelo({_e}, 9)
+    broadcast "&c[Aviso de Caçada] %nomeSemiBoss({_n})% &cfoi desafiado por %{_p}%!"
+    semiBossLoop({_n}, {_e})
+
+function semiBossLoop(n: number, e: livingentity):
+    set {_t} to 0
+    while {_e} is alive:
+        wait 1 second
+        add 1 to {_t}
+        # 1. Thorgar: Salto do Carniceiro + Golpe de Machado Duplo a cada 6s
+        if {_n} is 1:
+            if mod({_t}, 6) is 0:
+                animar({_e}, 5)
+                loop all players in radius 18 of {_e}:
+                    push {_e} towards loop-player at speed 1.3
+                    push {_e} upwards at speed 0.45
+                    play sound "entity.ravager.roar" at {_e}
+                    send action bar "&c&lThorgar salta com seu Machado de Carniceiro!" to loop-player
+                    wait 12 ticks
+                    animar({_e}, 4)
+                    loop all players in radius 5 of {_e}:
+                        damage loop-player-2 by 6
+                        push loop-player-2 away from {_e} at speed 1.1
+                    play sound "entity.zombie.attack_iron_door" at {_e}
+                    stop loop
+        # 2. Morvath: Ritual Necromântico + Dreno de Almas a cada 7s
+        else if {_n} is 2:
+            if mod({_t}, 7) is 0:
+                animar({_e}, 5)
+                play sound "entity.evoker.prepare_summon" at {_e}
+                spawn 1 skeleton at location of {_e}
+                set name of last spawned entity to "&9Acólito Ossudo de Morvath"
+                loop all players in radius 16 of {_e}:
+                    damage loop-player by 4
+                    heal {_e} by 4
+                    aplicarEfeito(loop-player, "darkness", 3, 1)
+                    send action bar "&9&lMorvath ergue seu cajado de crânio e drena sua energia vital!" to loop-player
+        # 3. Gólem Esquecido de Basalto: Esmagamento Sísmico de Magma a cada 6s
+        else if {_n} is 3:
+            if mod({_t}, 6) is 0:
+                animar({_e}, 5)
+                play sound "block.anvil.land" with volume 1.5 and pitch 0.6 at {_e}
+                loop all players in radius 9 of {_e}:
+                    damage loop-player by 7
+                    push loop-player upwards at speed 0.85
+                    ignite loop-player for 3 seconds
+                    send action bar "&6&lO Gólem de Basalto esmaga o solo em erupção!" to loop-player
+        # 4. Valeria, a Lâmina Sombria: Passo das Sombras + Corte Duplo a cada 5s
+        else if {_n} is 4:
+            if mod({_t}, 5) is 0:
+                animar({_e}, 5)
+                loop all players in radius 18 of {_e}:
+                    teleport {_e} to location 2 blocks behind loop-player
+                    play sound "entity.enderman.teleport" at {_e}
+                    send action bar "&5&lValeria surge das sombras atrás de você!" to loop-player
+                    wait 6 ticks
+                    animar({_e}, 4)
+                    damage loop-player by 5
+                    play sound "entity.player.attack.sweep" at {_e}
+                    stop loop
+
+on damage of player:
+    set {_na} to "%name of attacker%"
+    if ehSemiBoss({_na}) is true:
+        animar(attacker, 4)
+
+on death of living entity:
+    set {_nv} to "%name of victim%"
+    if {_nv} contains "Thorgar":
+        if attacker is a player:
+            recompensaSemiBoss(attacker, 1)
+    else if {_nv} contains "Morvath":
+        if attacker is a player:
+            recompensaSemiBoss(attacker, 2)
+    else if {_nv} contains "Gólem Esquecido de Basalto":
+        if attacker is a player:
+            recompensaSemiBoss(attacker, 3)
+    else if {_nv} contains "Valeria":
+        if attacker is a player:
+            recompensaSemiBoss(attacker, 4)
+
+command /cacadas [<text>] [<number>]:
+    aliases: /missoes, /secundarias, /skyrim
+    description: Mural de Caçadas e Missões Secundárias de Skyrim
+    trigger:
+        if arg-1 is "desafiar":
+            set {_n} to arg-2
+            if {_n} is not set:
+                set {_n} to 1
+            if {_n} < 1:
+                send "&cEscolha uma caçada entre 1 e 4." to player
+                stop
+            if {_n} > 4:
+                send "&cEscolha uma caçada entre 1 e 4." to player
+                stop
+            invocarSemiBoss(player, {_n})
+            stop
+        send "&6&l==============================================" to player
+        send "&e&l       MURAL DE CAÇADAS DE AURELION (SKYRIM)" to player
+        send "&6&l==============================================" to player
+        send "&7Explore o mundo para caçar foragidos, aprender feitiços e coletar artefatos:" to player
+        send "" to player
+        loop 4 times:
+            set {_status} to "&e[ABERTA]"
+            if {cacada::done::%uuid of player%::%loop-number%} is set:
+                set {_status} to "&a✔ [CONCLUÍDA]"
+            send "&6#%loop-number% %nomeSemiBoss(loop-number)% %{_status}%" to player
+            send "   &7Habita em: &f%biomaSemiBoss(loop-number)%" to player
+            send "   &8Para desafiar no local do covil: /cacadas desafiar %loop-number%" to player
+            send "" to player
+        send "&7Ao vencer, ganhe Ovos de Pet, Feitiços ativáveis e Armas com habilidades únicas!" to player
+        send "&6&l==============================================" to player

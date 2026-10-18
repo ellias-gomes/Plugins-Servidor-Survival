@@ -1,0 +1,127 @@
+# ============================================================================
+#  LÁPIDES / RESGATE - o Pedro NUNCA perde itens. A punição é financeira.
+#  - Ao morrer: nada cai no chão; tudo vai para uma lápide guardada em variável (à prova de lava/void/despawn).
+#  - Taxa de resgate: 4% do saldo (-0,5 pct por boss derrotado, mínimo 2%), com piso/teto indexados à inflação.
+#  - Resgate presencial (a até 5 blocos): taxa normal.  Resgate remoto (/lapide resgatar de qualquer lugar): taxa dobrada.
+#  - Se o saldo não cobre a taxa, cobra o que houver (nunca bloqueia o resgate).
+# ============================================================================
+
+function taxaLapide(p: player) :: number:
+    set {_b} to {prog::bosses}
+    if {_b} is not set:
+        set {_b} to 0
+    set {_pct} to 4 - (0.5 * {_b})
+    if {_pct} < 2:
+        set {_pct} to 2
+    set {_t} to round({_p}'s balance * {_pct} / 100)
+    set {_min} to precoServico(50)
+    set {_max} to precoServico(5000)
+    if {_t} < {_min}:
+        set {_t} to {_min}
+    if {_t} > {_max}:
+        set {_t} to {_max}
+    if {lapide::selo::%uuid of {_p}%} is set:
+        if difference between {lapide::selo::%uuid of {_p}%} and now is less than 24 hours:
+            set {_t} to round({_t} / 2)
+        else:
+            delete {lapide::selo::%uuid of {_p}%}
+    return {_t}
+
+function resgatar(p: player, id: number, remoto: boolean):
+    set {_u} to "%uuid of {_p}%"
+    if {lapide::%{_u}%::%{_id}%::itens::*} is not set:
+        if {lapide::%{_u}%::%{_id}%::xp} is not set:
+            send "&cEssa lápide não existe." to {_p}
+            stop
+    set {_taxa} to taxaLapide({_p})
+    if {_remoto} is true:
+        set {_taxa} to {_taxa} * 2
+    set {_pago} to cobrar({_p}, {_taxa})
+    give {lapide::%{_u}%::%{_id}%::itens::*} to {_p}
+    set {_xp} to {lapide::%{_u}%::%{_id}%::xp}
+    if {_xp} is not set:
+        set {_xp} to 0
+    if {_xp} > 0:
+        add {_xp} to level of {_p}
+    set {_loc} to {lapide::%{_u}%::%{_id}%::loc}
+    if {_loc} is set:
+        set block at {_loc} to air
+    delete {lapide::%{_u}%::%{_id}%::itens::*}
+    delete {lapide::%{_u}%::%{_id}%::xp}
+    delete {lapide::%{_u}%::%{_id}%::loc}
+    remove {_id} from {lapide::%{_u}%::ids::*}
+    send "&6[Lápide] &aTodos os itens recuperados! &7Taxa paga: &c-%{_pago}% Ouros" to {_p}
+    set {diario::%{_u}%::lapide} to true
+    play sound "entity.player.levelup" to {_p}
+
+on death of player:
+    set {_u} to "%uuid of victim%"
+    set {_items::*} to drops
+    if {_items::*} is not set:
+        if level of victim <= 0:
+            stop
+    add 1 to {lapide::contador}
+    set {_id} to {lapide::contador}
+    set {lapide::%{_u}%::%{_id}%::itens::*} to {_items::*}
+    set {lapide::%{_u}%::%{_id}%::xp} to level of victim
+    set {lapide::%{_u}%::%{_id}%::loc} to location of victim
+    add {_id} to {lapide::%{_u}%::ids::*}
+    clear drops
+    set level of victim to 0
+    set {_l} to location of victim
+    if y-coordinate of {_l} < 5:
+        stop
+    set block at {_l} to cobbled deepslate wall
+
+on respawn:
+    set {_u} to "%uuid of player%"
+    if {lapide::%{_u}%::ids::*} is set:
+        set {_id} to last element of {lapide::%{_u}%::ids::*}
+        set {_loc} to {lapide::%{_u}%::%{_id}%::loc}
+        set compass target of player to {_loc}
+        wait 1 second
+        send "&6[Lápide] &7Seus itens estão seguros. Lápide #%{_id}% em &f%rounded x-coordinate of {_loc}%, %rounded y-coordinate of {_loc}%, %rounded z-coordinate of {_loc}% &7(sua bússola aponta para lá)." to player
+        send "&7Use &f/lapide &7para ver detalhes. Taxa estimada: &c%taxaLapide(player)%" to player
+
+on right click on cobbled deepslate wall:
+    set {_u} to "%uuid of player%"
+    loop {lapide::%{_u}%::ids::*}:
+        set {_loc} to {lapide::%{_u}%::%loop-value%::loc}
+        if distance between {_loc} and location of clicked block is less than 1.5:
+            cancel event
+            resgatar(player, loop-value, false)
+            stop
+
+command /lapide [<text>] [<number>]:
+    aliases: /grave, /resgate
+    description: Gerencia suas lápides de morte
+    trigger:
+        set {_u} to "%uuid of player%"
+        if {lapide::%{_u}%::ids::*} is not set:
+            send "&7Você não tem lápides pendentes." to player
+            stop
+        if arg-1 is not set:
+            send "&6&l=== Suas lápides ===" to player
+            loop {lapide::%{_u}%::ids::*}:
+                set {_loc} to {lapide::%{_u}%::%loop-value%::loc}
+                send "&e#%loop-value% &7em &f%rounded x-coordinate of {_loc}%, %rounded y-coordinate of {_loc}%, %rounded z-coordinate of {_loc}% &7(%world of {_loc}%)" to player
+            send "&7Taxa presencial: &c%taxaLapide(player)% &7| remota (dobro): &c%taxaLapide(player) * 2%" to player
+            send "&7/lapide resgatar [#] (presencial se a até 5 blocos, senão remoto) | /lapide bussola [#]" to player
+            stop
+        set {_id} to arg-2
+        if {_id} is not set:
+            set {_id} to last element of {lapide::%{_u}%::ids::*}
+        if arg-1 is "bussola":
+            set compass target of player to {lapide::%{_u}%::%{_id}%::loc}
+            send "&aBússola apontada para a lápide #%{_id}%." to player
+        else if arg-1 is "resgatar":
+            set {_loc} to {lapide::%{_u}%::%{_id}%::loc}
+            if world of {_loc} is world of player:
+                if distance between {_loc} and player is less than 6:
+                    resgatar(player, {_id}, false)
+                    stop
+            resgatar(player, {_id}, true)
+
+# Selo da Lápide (comprado com runas): metade da taxa por 24h
+function darSeloLapide(p: player):
+    set {lapide::selo::%uuid of {_p}%} to now

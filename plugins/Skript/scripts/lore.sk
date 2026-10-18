@@ -1,0 +1,159 @@
+# ============================================================================
+#  LORE - "As Cinzas de Aurelion"
+#  - Livro Físico Oficial: "Crônicas de Aurelion" entregue no 1º join ou via /lore livro
+#  - Explicação solene e detalhada dos desfechos: RESTAURAR vs LIBERTAR
+#  - Pergaminhos de Memória Ancestral entregues após cada Guardião
+#  - Comandos /lore, /memorias, /mentor e /final
+# ============================================================================
+
+function darLivroLore(p: player):
+    execute console command "execute as %uuid of {_p}% run function aurelion:dar_livro_lore"
+
+function pergaminhoMemoria(id: number) :: item:
+    set {_nome} to "&6&lMemória Ancestral #%{_id}%"
+    set {_l1} to "&7Fragmento da alma do guardião."
+    set {_l2} to "&eClique com botão direito para escutar a voz do passado."
+    if {_id} is 1:
+        return 1 of paper named {_nome} with lore {_l1} and "&2Voz de Verdelith" and {_l2}
+    else if {_id} is 2:
+        return 1 of paper named {_nome} with lore {_l1} and "&bVoz de Thalassa" and {_l2}
+    else if {_id} is 3:
+        return 1 of paper named {_nome} with lore {_l1} and "&cVoz de Korvan" and {_l2}
+    else if {_id} is 4:
+        return 1 of paper named {_nome} with lore {_l1} and "&dVoz de Seraphel" and {_l2}
+    return 1 of paper named {_nome} with lore {_l1} and "&5Voz do Eclipse" and {_l2}
+
+function lembranca(id: number) :: text:
+    if {_id} is 1:
+        return "&2[Verdelith] &7'Eu vi quando a torre ruiu. O Cartógrafo gritava: Não toque na Chama! Ela vai nos devorar! Mas o Estrategista estava de joelhos, tentando salvar o velho mestre... Nenhum dos dois estava errado. Por que lutaram?'"
+    if {_id} is 2:
+        return "&b[Thalassa] &7'As ondas engoliram o cais naquele dia. O Cartógrafo implorava: Deixe o mestre descansar em paz, irmão! E o Estrategista respondia: Ele nos deu tudo! Não vou virar as costas agora! Foi a última vez que se olharam nos olhos.'"
+    if {_id} is 3:
+        return "&c[Korvan] &7'Eu forjei duas lâminas sagradas para os irmãos. Mas na hora da fúria, o ouro se manchou com o sangue fraterno. Vocês sentem a cicatriz na palma da mão? Ela ainda queima com a dor daquela noite.'"
+    if {_id} is 4:
+        return "&d[Seraphel] &7'Eu avisei às estrelas: Um de vós abandonará o outro no abismo, e esse abandono ganhará corpo e sombra. Vós me chamastes de louco... mas a sombra nasceu e se chama Eclipse.'"
+    return "&5[O Eclipse] &7'Eu sou a vossa dor encarnada. A culpa do Pedro por ter duvidado. O rancor do Ellias por ter sido atacado. Enquanto não perdoardes um ao outro, eu serei eterno!'"
+
+function registrarMemoria(p: player, id: number):
+    set {memoria::%uuid of {_p}%::%{_id}%} to true
+    give pergaminhoMemoria({_id}) to {_p}
+    send "" to {_p}
+    send "&6&l✦ MEMÓRIA ANCESTRAL RECUPERADA ✦" to {_p}
+    send lembranca({_id}) to {_p}
+    send "&7(Um pergaminho foi colocado em seu inventário. Releia com &f/memorias&7)" to {_p}
+    play sound "block.enchantment_table.use" to {_p}
+
+on right click with paper:
+    if "%name of player's tool%" contains "Memória Ancestral":
+        cancel event
+        loop 5 times:
+            if "%name of player's tool%" contains "#%loop-number%":
+                send "" to player
+                send "&6&l=== MEMÓRIA DO PASSADO #%loop-number% ===" to player
+                send lembranca(loop-number) to player
+                play sound "item.book.page_turn" to player
+                stop
+
+on first join:
+    set {_u} to "%uuid of player%"
+    give player 16 bread
+    give player 24 torch
+    give player a compass
+    give player a stone pickaxe
+    give player a stone axe
+    wait 2 seconds
+    darLivroLore(player)
+    send title "&6&lCinzas de Aurelion" with subtitle "&7Você acorda marcado pelo Fio Dourado..." to player for 6 seconds
+    wait 4 seconds
+    send "&6&l=== AS CINZAS DE AURELION ===" to player
+    send "&7Você e seu parceiro acordaram marcados pelo &6Fio de Ouro&7." to player
+    send "&eUm livro com as Crônicas Antigas foi colocado em suas mãos! &7Abra-o para ler." to player
+    send "&7Digite &f/diario &7para suas missões, &f/mentor &7para conselhos e &f/lojas &7para o comércio." to player
+
+command /lore [<text>]:
+    aliases: /historia, /cronicas
+    description: A história sagrada de Aurelion
+    trigger:
+        if arg-1 is "livro":
+            darLivroLore(player)
+            send "&aVocê recebeu um novo exemplar das &6Crônicas de Aurelion&a!" to player
+            play sound "item.book.put" to player
+            stop
+        send "&6&l=== As Cinzas de Aurelion ===" to player
+        send "&7Mil anos após a Grande Cisão, os Gêmeos da Ordem despertam para reunir os 5 Fragmentos." to player
+        send "&f/lore livro &7- Receba o Livro Escrito oficial com todas as páginas e detalhes!" to player
+        send "&f/memorias &7- Releia as vozes dos guardiões derrotados." to player
+        send "&f/mentor &7- Ouça o conselho do eco de Valdric sobre o próximo passo." to player
+
+command /memorias:
+    aliases: /lembrancas
+    trigger:
+        set {_n} to 0
+        send "&6&l=== Memórias Desbloqueadas dos Guardiões ===" to player
+        loop 5 times:
+            if {memoria::%uuid of player%::%loop-number%} is set:
+                add 1 to {_n}
+                send "" to player
+                send lembranca(loop-number) to player
+        if {_n} is 0:
+            send "&7Nenhuma memória recuperada ainda. Desbrave os Santuários e vença os Guardiões." to player
+
+command /mentor:
+    aliases: /guia
+    description: Conselho do Alquimista-Rei Valdric
+    trigger:
+        set {diario::%uuid of player%::mentor} to true
+        set {_o} to proximoObjetivo(player)
+        send "&6[Eco de Valdric] &7A marca em sua mão aquece e você escuta a voz de seu mestre:" to player
+        if {_o} is 0:
+            send "&a'Meus filhos... vós superastes a escuridão. O destino do mundo agora repousa em vossas mãos: /final.'" to player
+        else:
+            send "&e'Vossa próxima provação: &f%tituloObj({_o})%&e.'" to player
+            send "&7%descObj({_o})%" to player
+
+command /final <text>:
+    description: Escolha o destino da Chama-Coração (restaurar | libertar) - decisão mútua obrigatória
+    trigger:
+        if {prog::boss::5} is not set:
+            send "&cO Eclipse ainda não foi derrotado nas profundezas." to player
+            stop
+        if {final::resolvido} is set:
+            send "&7O destino de Aurelion já foi selado: &f%{final::resolvido}%" to player
+            stop
+        if arg-1 is not "restaurar":
+            if arg-1 is not "libertar":
+                send "&cEscolha entre os dois caminhos sagrados:" to player
+                send "&6/final restaurar &7- Reerguer o Império de Aurelion como Novos Reis da Ordem." to player
+                send "&5/final libertar &7- Despedaçar a Chama e libertar o mundo de todo e qualquer trono." to player
+                send "&8(Consulte seu livro em /lore livro para entender o impacto de cada escolha!)" to player
+                stop
+        set {final::%uuid of player%} to arg-1
+        broadcast "&6[Aurelion] &e%player% &7votou por: &f%arg-1%. &7Aguardando a confirmação do seu irmão..."
+        set {_acordo} to true
+        set {_conta} to 0
+        loop all players:
+            add 1 to {_conta}
+            if {final::%uuid of loop-player%} is not arg-1:
+                set {_acordo} to false
+        if {_conta} < 2:
+            set {_acordo} to false
+        if {_acordo} is true:
+            set {final::resolvido} to arg-1
+            add 1 to {temporada}
+            execute console command "worldborder add 10000 180"
+            if arg-1 is "restaurar":
+                broadcast ""
+                broadcast "&6&l✦ A CHAMA-CORAÇÃO RENASCE PURIFICADA ✦"
+                broadcast "&eO Império de Aurelion ergue-se das cinzas! Ellias e Pedro são coroados os Reis da Nova Ordem."
+                broadcast "&7A fronteira do mundo expandiu em +10.000 blocos e a prosperidade brilha eternamente."
+                broadcast ""
+            else:
+                broadcast ""
+                broadcast "&5&l✦ O MUNDO É LIVRE DO JUGO DA CHAMA ✦"
+                broadcast "&dO cristal foi despedaçado! Ninguém mais será escravo da ambição de governar."
+                broadcast "&7A fronteira do mundo expandiu em +10.000 blocos para vocês explorarem como homens livres."
+                broadcast ""
+            loop all players:
+                give loop-player 1 beacon named "&6&lSelo da Nova Era"
+                add 100 to {runas::%uuid of loop-player%}
+                play sound "ui.toast.challenge_complete" to loop-player

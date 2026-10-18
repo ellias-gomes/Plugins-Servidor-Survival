@@ -1,0 +1,109 @@
+# ============================================================================
+#  BANCO DE AURELION - depósitos, rendimentos diários, níveis e impostos
+#  Rendimento diário = juro base (dinâmico, ver economia.sk) x bônus de nível, sobre o depósito
+#  até o limite do nível. IR de 10% sobre o rendimento + taxa de custódia 0,1%/dia -> tesouro.
+# ============================================================================
+
+function limiteBanco(n: number) :: number:
+    if {_n} is 1:
+        return 20000
+    if {_n} is 2:
+        return 100000
+    return 500000
+
+function aplicarJurosBanco():
+    loop {banco::*}:
+        set {_u} to loop-index
+        set {_dep} to loop-value
+        if {_dep} > 0:
+            set {_nivel} to {banconivel::%{_u}%}
+            if {_nivel} is not set:
+                set {_nivel} to 1
+            set {_base} to min({_dep}, limiteBanco({_nivel}))
+            set {_taxa} to {eco::juro} * {eco::evento::juro} * (1 + 0.25 * ({_nivel} - 1)) / 100
+            set {_rend} to round({_base} * {_taxa})
+            set {_ir} to round({_rend} * 0.1)
+            set {_cust} to round({_dep} * 0.001)
+            set {_liq} to {_rend} - {_ir} - {_cust}
+            add {_ir} + {_cust} to {eco::tesouro}
+            add {_liq} to {banco::%{_u}%}
+            set {extrato::%{_u}%} to "&6[Banco] &7Rendimento do dia: &a+%{_rend}% &7| IR: &c-%{_ir}% &7| custódia: &c-%{_cust}% &7| líquido: &f%{_liq}%"
+            loop all players:
+                if "%uuid of loop-player%" is {_u}:
+                    send {extrato::%{_u}%} to loop-player
+                    delete {extrato::%{_u}%}
+
+command /banco [<text>] [<number>]:
+    aliases: /bank
+    description: Banco de Aurelion
+    trigger:
+        set {_u} to "%uuid of player%"
+        set {_nivel} to {banconivel::%{_u}%}
+        if {_nivel} is not set:
+            set {_nivel} to 1
+        set {_dep} to {banco::%{_u}%}
+        if {_dep} is not set:
+            set {_dep} to 0
+        set {_lim} to limiteBanco({_nivel})
+        if arg-1 is not set:
+            send "&6&l=== Banco de Aurelion (nível %{_nivel}%) ===" to player
+            send "&7Depósito: &a%round({_dep})% &7/ limite que rende: &f%{_lim}%" to player
+            send "&7Carteira: &a%round(player's balance)%" to player
+            send "&7Juros hoje: &f%round({eco::juro} * {eco::evento::juro} * (1 + 0.25 * ({_nivel} - 1)) * 100) / 100% pct/dia &8(IR 10%% + custódia 0,1%%)" to player
+            send "&7Comandos: &f/banco depositar <valor> | sacar <valor> | upgrade" to player
+            stop
+        if arg-1 is "depositar":
+            set {_val} to arg-2
+            if {_val} is not set:
+                send "&cUse /banco depositar <valor>" to player
+                stop
+            if {_val} <= 0:
+                send "&cValor inválido." to player
+                stop
+            if player's balance < {_val}:
+                send "&cSaldo insuficiente na carteira." to player
+                stop
+            remove {_val} from player's balance
+            add {_val} to {banco::%{_u}%}
+            send "&aDepositado: &f%{_val}% Ouros" to player
+            if {_dep} + {_val} > {_lim}:
+                send "&eAviso: o que passa de %{_lim}% não rende juros. Suba o nível do banco." to player
+            set {diario::%{_u}%::banco} to true
+        else if arg-1 is "sacar":
+            set {_val} to arg-2
+            if {_val} is not set:
+                send "&cUse /banco sacar <valor>" to player
+                stop
+            if {_val} <= 0:
+                send "&cValor inválido." to player
+                stop
+            if {_dep} < {_val}:
+                send "&cDepósito insuficiente." to player
+                stop
+            remove {_val} from {banco::%{_u}%}
+            add {_val} to player's balance
+            send "&aSacado para a sua carteira: &f%{_val}% Ouros &7(use &f/moeda sacar %{_val}% &7se quiser em moedas físicas)." to player
+        else if arg-1 is "upgrade":
+            if {_nivel} >= 3:
+                send "&eSeu banco já está no nível máximo." to player
+                stop
+            if {_nivel} is 1:
+                if {prog::boss::2} is not set:
+                    send "&cNível 2 exige que o Guardião das Marés (Thalassa) tenha sido derrotado." to player
+                    stop
+                set {_custo} to precoServico(5000)
+            else:
+                if {prog::boss::4} is not set:
+                    send "&cNível 3 exige que o Oráculo Quebrado (Seraphel) tenha sido derrotado." to player
+                    stop
+                set {_custo} to precoServico(25000)
+            if player's balance < {_custo}:
+                send "&cCusto do upgrade: %{_custo}% (saldo insuficiente)." to player
+                stop
+            remove {_custo} from player's balance
+            add {_custo} to {eco::tesouro}
+            set {_novo} to {_nivel} + 1
+            set {banconivel::%{_u}%} to {_novo}
+            send "&6Banco melhorado para o nível %{_novo}%! Limite e juros aumentaram." to player
+        else:
+            send "&cUse /banco, /banco depositar, sacar ou upgrade." to player

@@ -1,0 +1,1044 @@
+[23:00:49] [ServerMain/INFO]: [bootstrap] Running Java 25 (OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu; Ubuntu null) on Linux 7.2.6-76070206-generic (amd64)
+[23:00:49] [ServerMain/INFO]: [bootstrap] Loading Paper 26.3-202-main@29aeb60 (2026-10-17T14:15:06Z) for Minecraft 26.3
+[23:00:49] [ServerMain/INFO]: [PluginInitializerManager] Initializing plugins...
+[23:00:49] [ServerMain/INFO]: [PluginInitializerManager] Initialized 11 plugins
+[23:00:49] [ServerMain/INFO]: [PluginInitializerManager] Bukkit plugins (11):
+ - BlueMap (5.29), Chunky (1.5.3), DynamicShop (3.0.7), Essentials (2.22.0), EssentialsSpawn (2.22.0), GriefPrevention (16.18.7), LuckPerms (5.5.71), PlaceholderAPI (2.12.3), QuickShop-Hikari (6.3.0.3), Skript (2.17.0), Vault (2.20.3)
+[23:00:52] [DataConverter MCTypeRegistry init thread/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Initialising converters for DataConverter...
+[23:00:52] [ServerMain/INFO]: [com.destroystokyo.paper.profile.PaperServicesDiscoveryService] Environment: Environment[discoveryUrl=https://discovery.minecraftservices.com/minecraft/client, name=PROD]
+[23:00:52] [DataConverter MCTypeRegistry init thread/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Finished initialising converters for DataConverter in 281,6ms
+[23:00:54] [Worker-Main-3/INFO]: Loaded 1866 advancements
+[23:00:54] [Server thread/INFO]: Starting minecraft server version 26.3
+[23:00:54] [Server thread/INFO]: Loading properties
+[23:00:54] [Server thread/INFO]: This server is running Paper version 26.3-202-main@29aeb60 (2026-10-17T14:15:06Z) (Implementing API version 26.3.build.202-stable)
+[23:00:54] [Server thread/INFO]: [spark] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
+[23:00:54] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[23:00:54] [Server thread/INFO]: Using 4 threads for Netty based IO
+[23:00:55] [Server thread/INFO]: [MoonriseCommon] Paper is using 3 worker threads, 1 I/O threads
+[23:00:55] [Server thread/INFO]: Default game type: SURVIVAL
+[23:00:55] [Server thread/INFO]: Generating keypair
+[23:00:55] [Server thread/INFO]: Starting Minecraft server on *:25565
+[23:00:55] [Server thread/INFO]: Paper: Using libdeflate (Linux x86_64) compression from Velocity.
+[23:00:55] [Server thread/INFO]: Paper: Using OpenSSL 3.x.x (Linux x86_64) cipher from Velocity.
+[23:00:55] [Server thread/ERROR]: [ModernPluginLoadingStrategy] Could not load 'plugins/DynamicShop-3.0.7.jar' in 'plugins'
+org.bukkit.plugin.UnknownDependencyException: Unknown/missing dependency plugins: [ProtocolLib]. Please download and install these plugins to run 'DynamicShop'.
+	at io.papermc.paper.plugin.entrypoint.strategy.modern.ModernPluginLoadingStrategy.loadProviders(ModernPluginLoadingStrategy.java:82) ~[paper-26.3.jar:26.3-202-29aeb60]
+	at io.papermc.paper.plugin.storage.SimpleProviderStorage.enter(SimpleProviderStorage.java:38) ~[paper-26.3.jar:26.3-202-29aeb60]
+	at io.papermc.paper.plugin.entrypoint.LaunchEntryPointHandler.enter(LaunchEntryPointHandler.java:39) ~[paper-26.3.jar:26.3-202-29aeb60]
+	at org.bukkit.craftbukkit.CraftServer.loadPlugins(CraftServer.java:530) ~[paper-26.3.jar:26.3-202-29aeb60]
+	at net.minecraft.server.dedicated.DedicatedServer.initServer(DedicatedServer.java:297) ~[paper-26.3.jar:26.3-202-29aeb60]
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1248) ~[paper-26.3.jar:26.3-202-29aeb60]
+	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:298) ~[paper-26.3.jar:26.3-202-29aeb60]
+	at java.base/java.lang.Thread.run(Thread.java:1474) ~[?:?]
+[23:00:55] [Server thread/WARN]: [BlueMap] This seems to be a PAPER-based server, but you are using the SPIGOT version of BlueMap.
+Things will likely not work correctly!
+Consider switching to BlueMap's paper version:
+https://modrinth.com/plugin/bluemap/versions?l=paper
+[23:00:55] [Server thread/WARN]: [BlueMap] Failed to detect the minecraft version of this server! Using latest version.
+[23:00:55] [Server thread/INFO]: [PlaceholderAPI] Loading server plugin PlaceholderAPI v2.12.3
+[23:00:56] [Server thread/INFO]: [LuckPerms] Loading server plugin LuckPerms v5.5.71
+[23:00:56] [Server thread/INFO]: [LuckPerms] Loading configuration...
+[23:00:56] [Server thread/INFO]: [Vault] Loading server plugin Vault v2.20.3
+[23:00:56] [Server thread/INFO]: [GriefPrevention] Loading server plugin GriefPrevention v16.18.7
+[23:00:56] [Server thread/INFO]: [Essentials] Loading server plugin Essentials v2.22.0
+[23:00:56] [Server thread/INFO]: [BlueMap] Loading server plugin BlueMap v5.29
+[23:00:56] [Server thread/INFO]: [Skript] Loading server plugin Skript v2.17.0
+[23:00:56] [Server thread/INFO]: [QuickShop-Hikari] Loading server plugin QuickShop-Hikari v6.3.0.3
+[23:00:56] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> Execute the initialization sequence
+[23:00:56] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Bootloader preparing for startup, please wait...
+[23:00:56] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Initializing libraries...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Maven repository mirror test result:
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] [US] APACHE: 68ms
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] [US] CENTRAL: 76ms
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] [CN] TENCENT: 492ms
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] [CN] ALIYUN: 519ms
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] [CN] HUAWEI: 949ms
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] [EU] GOOGLE: 1378ms
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading 9 libraries (0 skipped libraries)...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library org.apache.commons:commons-lang3:3.18.0 [1/9]
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library org.apache.commons:commons-compress:1.25.0 [2/9]
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.rollbar:rollbar-java:1.9.0 [3/9]
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.h2database:h2:2.1.214 [4/9]
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.konghq:unirest-java:3.14.5 [5/9]
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library net.sourceforge.csvjdbc:csvjdbc:1.0.42 [6/9]
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library org.dom4j:dom4j:2.1.4 [7/9]
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.vdurmont:semver4j:3.1.0 [8/9]
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.ghostchu.crowdin:crowdinota:1.0.3 [9/9]
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Initialing Unirest...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Initializing platform...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Platform detected: Paper
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Slf4jLogger initialized
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Platform initialized: com.ghostchu.quickshop.platform.paper.PaperPlatform
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Boot QuickShop instance...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Creating QuickShop instance...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Registering Bukkit Service: com.ghostchu.quickshop.api.QuickShopProvider
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Reading the configuration...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] QuickShop Hikari - Early boot step - Booting up
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Self testing...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Setting up privacy controller...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Setting up QuickShop registry....
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Setting up metrics manager...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Initializing bStats....
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Initializing FastStats....
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Registering bStats....
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Registering FastStats....
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Loading player name and unique id mapping...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Loading translations (This may take a while)...
+[23:00:58] [Server thread/INFO]: [QuickShop-Hikari] Please wait us fetch the translation updates from Crowdin OTA service...
+[23:00:58] [Server thread/INFO]: [CrowdinOTA] Downloading Crowdin distribution manifest from remote server...
+[23:00:59] [Server thread/INFO]: [OTAFileInstance-0] Downloading translations for 0 locales...
+[23:00:59] [Server thread/INFO]: [OTAFileInstance-1] Downloading translations for 0 locales...
+[23:00:59] [Server thread/INFO]: [QuickShop-Hikari] Loading up translations from Crowdin OTA, this may take a while...
+[23:01:00] [Server thread/INFO]: [QuickShop-Hikari] Register InventoryWrapper...
+[23:01:00] [Server thread/INFO]: [QuickShop-Hikari] QuickShop Hikari - Early boot step - Complete
+[23:01:00] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> Complete (3398ms). Waiting for enable...
+[23:01:00] [Server thread/INFO]: [EssentialsSpawn] Loading server plugin EssentialsSpawn v2.22.0
+[23:01:00] [Server thread/INFO]: [Chunky] Loading server plugin Chunky v1.5.3
+[23:01:00] [Server thread/INFO]: [LuckPerms] Enabling LuckPerms v5.5.71
+[23:01:00] [Server thread/INFO]:         __    
+[23:01:00] [Server thread/INFO]:   |    |__)   LuckPerms v5.5.71
+[23:01:00] [Server thread/INFO]:   |___ |      Running on Bukkit - Paper
+[23:01:00] [Server thread/INFO]: 
+[23:01:00] [Server thread/INFO]: [LuckPerms] Loading storage provider... [H2]
+[23:01:01] [Server thread/INFO]: [LuckPerms] Loading internal permission managers...
+[23:01:01] [Server thread/INFO]: [LuckPerms] Performing initial data load...
+[23:01:01] [Server thread/INFO]: [LuckPerms] Successfully enabled. (took 1094ms)
+[23:01:01] [Server thread/INFO]: [Vault] Enabling Vault v2.20.3
+[23:01:01] [Server thread/INFO]: [Vault] Enabled Version 2.20.3
+[23:01:01] [Server thread/INFO]: [LuckPerms] Registered Vault permission & chat hook.
+[23:01:01] [Server thread/INFO]: Preparing level "world"
+[23:01:01] [Server thread/INFO]: Loading 0 persistent chunks for level 'minecraft:overworld'...
+[23:01:01] [Server thread/INFO]: Preparing spawn area: 100%
+[23:01:01] [Server thread/INFO]: Prepared spawn area in 1 ms
+[23:01:01] [Server thread/INFO]: Loading 0 persistent chunks for level 'minecraft:the_nether'...
+[23:01:01] [Server thread/INFO]: Prepared spawn area in 0 ms
+[23:01:01] [Server thread/INFO]: Loading 0 persistent chunks for level 'minecraft:the_end'...
+[23:01:01] [Server thread/INFO]: Prepared spawn area in 0 ms
+[23:01:01] [Server thread/INFO]: Done preparing level "world" (0.343s)
+[23:01:01] [Server thread/INFO]: [PlaceholderAPI] Enabling PlaceholderAPI v2.12.3
+[23:01:01] [Server thread/INFO]: [PlaceholderAPI] Fetching available expansion information...
+[23:01:01] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: vaultunlocked [2.13.1]
+[23:01:01] [Server thread/INFO]: [GriefPrevention] Enabling GriefPrevention v16.18.7
+[23:01:01] [Server thread/INFO]: [GriefPrevention] Finished loading configuration.
+[23:01:01] [Server thread/INFO]: [GriefPrevention] 0 total claims loaded.
+[23:01:01] [Server thread/INFO]: [GriefPrevention] Customizable messages loaded.
+[23:01:01] [Server thread/INFO]: [GriefPrevention] Finished loading data (File Mode).
+[23:01:01] [Server thread/INFO]: [GriefPrevention] Boot finished.
+[23:01:01] [Server thread/INFO]: [Essentials] Enabling Essentials v2.22.0
+[23:01:02] [Server thread/ERROR]: [Essentials] You are running an unsupported server version!
+[23:01:02] [Server thread/INFO]: [Essentials] Attempting to convert old kits in config.yml to new kits.yml
+[23:01:02] [Server thread/INFO]: [Essentials] No kits found to migrate.
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.20.4+ Damage Event Provider as the provider for DamageEventProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.11+ Item Unbreakable Provider as the provider for ItemUnbreakableProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.13+ Spawn Egg Provider as the provider for SpawnEggProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.8.3+ Spawner Item Provider as the provider for SpawnerItemProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected Paper Server State Provider as the provider for ServerStateProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected Legacy Biome Name Provider as the provider for BiomeNameProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.21+ InventoryView Interface ABI Provider as the provider for InventoryViewProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.20.5+ Banner Data Provider as the provider for BannerDataProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.14.4+ Persistent Data Container Provider as the provider for PersistentDataProvider
+[23:01:02] [Server thread/INFO]: [Essentials] No provider found for BiomeKeyProvider, but it is nullable
+[23:01:02] [Server thread/INFO]: [Essentials] Selected Paper Known Commands Provider as the provider for KnownCommandsProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected Reflection Formatted Command Alias Provider as the provider for FormattedCommandAliasProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.17.1+ World Info Provider as the provider for WorldInfoProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected Paper Material Tag Provider as the provider for MaterialTagProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected Paper Tick Count Provider as the provider for TickCountProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.12+ Spawner Block Provider as the provider for SpawnerBlockProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected Paper Container Provider as the provider for ContainerProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected Reflection Online Mode Provider as the provider for OnlineModeProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected Paper Serialization Provider as the provider for SerializationProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.20.6+ Potion Meta Provider as the provider for PotionMetaProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.12.2+ Player Locale Provider as the provider for PlayerLocaleProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.14+ Sign Data Provider as the provider for SignDataProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected Paper 1.13+ Tile Entity Provider as the provider for TileEntityProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Selected 1.21.4+ Sync Commands Provider as the provider for SyncCommandsProvider
+[23:01:02] [Server thread/INFO]: [Essentials] Loaded 46312 items from items.json.
+[23:01:02] [Server thread/INFO]: [Essentials] Using locale pt_BR
+[23:01:02] [Server thread/INFO]: [Essentials] ServerListPingEvent: Spigot iterator API
+[23:01:02] [Server thread/INFO]: [Essentials] Starting Metrics. Opt-out using the global bStats config.
+[23:01:02] [Server thread/INFO]: [Essentials] Using Vault based permissions (LuckPerms)
+[23:01:02] [Server thread/INFO]: [BlueMap] Enabling BlueMap v5.29
+[23:01:02] [Server thread/INFO]: [BlueMap] Saving all worlds once, to make sure all required world-properties are present...
+[23:01:02] [Server thread/WARN]: A manual (plugin-induced) save has been detected while server is configured to auto-save. This may affect performance.
+[23:01:02] [Server thread/INFO]: [Skript] Enabling Skript v2.17.0
+[23:01:03] [ForkJoinPool.commonPool-worker-7/INFO]: [Skript] You're currently running the latest stable version of Skript.
+[23:01:05] [Server thread/INFO]: [Skript] Loaded 5998 aliases in 706ms
+[23:01:05] [Server thread/INFO]: [Skript]  ~ created by & © Peter Güttinger aka Njol ~
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Enabling QuickShop-Hikari v6.3.0.3
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> Execute the enable sequence
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] QuickShop Hikari
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Registering Bukkit Service: com.ghostchu.quickshop.api.QuickShopProvider
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Starting plugin self-test, please wait...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] Old QuickShop Test
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] ModdedServer Based Test
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] ModdedServer Database Driver Test
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] CoreSupport Test
+[23:01:05] [Server thread/WARN]: [QuickShop-Hikari] [WARN] Virtual DisplayItem Support Test: ProtocolLib and packetevents are not installed on your server, Virtual DisplayItem will not work, resetting to no display items..
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] ProtocolLib Incorrect Locate Test
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] GameVersion supporting Test
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] Permission Manager Test
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] PacketListenerAPI Conflict Test
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] Reremake Test
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] Disable Item Move
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] End of life Test
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Reading the configuration...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Contributors: Ghost_chu, PotatoCraft Studio, Netherfoam, Timtower, KaiNoMood (KaiKikuchi), sandtechnology, jho5245, cakoyo, Andre601, Ectabro, Chris6ix, portlek, log4b0at, deadman96385, tiararinne, DoctaEnkoda, CarmJos, YuanYuanOwO, Mgazul, mart-r, Tim269, raphtaliapt, creatorfromhell, LoneDev6, Steven-OS, confuxeon, ibmibmibm, judgetread, mfnalex, Warriorrrr, PyvesB, yannicklamprecht, ORelio, RMSCA, Starmism, yiwenwang2090, PaulBGD, Nlkomaru, harry0198, Draesia, wunanc, golovin12, ExyiN, Euphillya, GeorgeV220, 4drian3d, ericlmao, AsOne2020, Golfing7, SrBedrock, bennycallanan, MidSpike, SpigotRCE, ReconXMaverick, James-P-Bennett, killerprojecte, adabugra, casperwtf, R00tB33rMan, galacticwarrior9, SarahGreyWolf, maxcom1, wling-art, BlvckBytes, TauCu, ItsJuls, bridgelol, YusakiDev, FEZfan, NamiUni, GoodrichDev, Localized community members on Crowdin
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Original author: Netherfoam, Timtower, KaiNoMood, sandtechnology
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Let's start loading the plugin
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Setting up ItemExpressionRegistry...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Setting up database...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Create database backup...
+[23:01:05] [Server thread/INFO]: [com.ghostchu.quickshop.shade.carm.easysql.hikari.HikariDataSource] HikariPool-1 - Starting...
+[23:01:05] [Server thread/INFO]: [com.ghostchu.quickshop.shade.carm.easysql.hikari.HikariDataSource] HikariPool-1 - Start completed.
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Checking and updating database columns, it may take a while...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Database upgrade script running... Current Database Version: 21
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Finished!
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Selected permission provider: Bukkit
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Registering commands...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Loaded 1 rules for listener blacklist.
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] EventManager selected: QSEventManager
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Loading shops from database...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Used 9ms to fetch 1 shops from database.
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Loading shops into memory...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Used 15ms to load 0 shops into memory (1 shops will be loaded after chunks/world loaded).
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Loading shop tags...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Registering listeners...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Registering DisplayCheck task....
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Cleaning MsgUtils...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Cleaning purchase messages from the database that are over a week old...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Log actions is enabled. Actions will be logged in the qs.log file!
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [Shop Purger] Purge not enabled!
+[23:01:05] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: qs [6.3.0.3]
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Successfully loaded PlaceHolderAPI support!
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] Virtual DisplayItem Support Test
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] [OK] Deprecated Item Matcher Check
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari] Initializing built-in hooks...
+[23:01:05] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> All Complete. (688ms)
+[23:01:05] [Server thread/INFO]: [EssentialsSpawn] Enabling EssentialsSpawn v2.22.0
+[23:01:05] [Server thread/INFO]: [EssentialsSpawn] Starting Metrics. Opt-out using the global bStats config.
+[23:01:05] [Server thread/INFO]: [Chunky] Enabling Chunky v1.5.3
+[23:01:05] [Server thread/INFO]: [spark] Starting background profiler...
+[23:01:06] [Server thread/INFO]: [PlaceholderAPI] Placeholder expansion registration initializing...
+[23:01:06] [Server thread/INFO]: 0 placeholder hook(s) registered!
+[23:01:06] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[23:01:06] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[23:01:06] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[23:01:06] [Server thread/INFO]: Running delayed init tasks
+[23:01:06] [Server thread/INFO]: [Essentials] Essentials found a compatible payment resolution method: Vault Compatibility Layer (v2.20.3)!
+[23:01:06] [Craft Scheduler Thread - 1 - QuickShop-Hikari/INFO]: [QuickShop-Hikari] Start to caching usernames (async)...
+[23:01:06] [Craft Scheduler Thread - 2 - BlueMap/INFO]: [BlueMap] Loading...
+[23:01:06] [Craft Scheduler Thread - 3 - Essentials/INFO]: [Essentials] Buscando informações da versão...
+[23:01:06] [Server thread/INFO]: [Skript]     Loaded regions hook for GriefPrevention. Please note that Skript's region hooks are deprecated and will be removed in a future release. For WorldGuard support, we recommend using skript-worldguard: https://github.com/SkriptLang/skript-worldguard
+[23:01:06] [Server thread/INFO]: [Skript] Loading variables...
+[23:01:06] [Server thread/INFO]: [Skript] Loaded 85 variables in 0.0 seconds
+[23:01:06] [Craft Scheduler Thread - 2 - BlueMap/WARN]: [BlueMap] BlueMap is missing important resources!
+[23:01:06] [Craft Scheduler Thread - 2 - BlueMap/WARN]: [BlueMap] You must accept the required file download in order for BlueMap to work!
+[23:01:06] [Craft Scheduler Thread - 2 - BlueMap/WARN]: [BlueMap] Please check: /media/elliasgomes/HD_1TB/apps/servidor_minecraft/plugins/BlueMap/core.conf
+[23:01:06] [Craft Scheduler Thread - 2 - BlueMap/INFO]: [BlueMap] If you have changed the config you can simply reload the plugin using: /bluemap reload
+[23:01:07] [Server thread/INFO]: [Skript] All scripts loaded without errors.
+[23:01:07] [Server thread/INFO]: [Skript] Loaded 11 scripts with a total of 146 structures in 1.72 seconds
+[23:01:07] [Server thread/INFO]: [Skript] Finished loading.
+[23:01:07] [Server thread/INFO]: [QuickShop-Hikari] Using economy system: EssentialsX Economy
+[23:01:07] [Server thread/WARN]: [QuickShop-Hikari] QuickShop detected that no tax account exists and will try to create one. If you see any errors, please change the shop-tax.account value in the config.yml to that of the Server owner.
+[23:01:07] [Server thread/INFO]: [Essentials] Created a User for Tax (2c5f00ba-902c-411b-b9b9-9261cf43aee1) for non Bukkit type: com.earth2me.essentials.OfflinePlayerStub
+[23:01:08] [Server thread/INFO]: [QuickShop-Hikari] Tax account created.
+[23:01:08] [Server thread/INFO]: [QuickShop-Hikari] Selected economy bridge: BuiltIn-Vault
+[23:01:08] [Server thread/INFO]: Done (19.262s)! For help, type "help"
+[23:01:08] [Paper Async Task Handler Thread - 1/INFO]: *** Currently you are 3 builds behind ***
+[23:01:08] [Paper Async Task Handler Thread - 1/INFO]: *** It is highly recommended to download the latest build from https://papermc.io/downloads/paper ***
+[23:01:17] [User Authenticator #0/INFO]: UUID of player ellipw is c590e823-958d-46b0-9e41-fff1a88c3f49
+[23:01:17] [Server thread/INFO]: [HorriblePlayerLoginEventHack] You have plugins listening to the PlayerLoginEvent, this will cause re-configuration APIs to be unavailable: [LuckPerms, GriefPrevention]
+[23:01:18] [Server thread/INFO]: System chat: ellipw joined the game
+[23:01:18] [Server thread/INFO]: ellipw[/127.0.0.1:43496] logged in with entity id 1 at ([minecraft:overworld]3.261129565294844, 65.0, 29.475031930151857)
+[23:01:18] [Server thread/WARN]: ellipw moved too quickly! 3.261129565294844,65.0,29.475031930151857
+[23:01:19] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:01:19] [Server thread/INFO]: System chat: Unable to apply this effect (target is either immune to effects, or has something stronger)
+[23:01:19] [Server thread/INFO]: System chat: Applied effect Strength to ellipw
+[23:01:19] [Server thread/INFO]: System chat: Applied effect Regeneration to ellipw
+[23:01:19] [Server thread/INFO]: System chat: Applied effect Night Vision to ellipw
+[23:01:22] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:01:22] [Server thread/INFO]: System chat: Applied effect Resistance to ellipw
+[23:01:22] [Server thread/INFO]: System chat: Applied effect Strength to ellipw
+[23:01:22] [Server thread/INFO]: System chat: Applied effect Regeneration to ellipw
+[23:01:22] [Server thread/INFO]: System chat: Applied effect Night Vision to ellipw
+[23:01:23] [Server thread/INFO]: ellipw issued server command: /db
+[23:01:25] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:01:25] [Server thread/INFO]: System chat: Applied effect Resistance to ellipw
+[23:01:25] [Server thread/INFO]: System chat: Applied effect Strength to ellipw
+[23:01:25] [Server thread/INFO]: System chat: Applied effect Regeneration to ellipw
+[23:01:25] [Server thread/INFO]: System chat: Applied effect Night Vision to ellipw
+[23:01:28] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:01:28] [Server thread/INFO]: System chat: Applied effect Resistance to ellipw
+[23:01:28] [Server thread/INFO]: System chat: Applied effect Strength to ellipw
+[23:01:28] [Server thread/INFO]: System chat: Applied effect Regeneration to ellipw
+[23:01:28] [Server thread/INFO]: System chat: Applied effect Night Vision to ellipw
+[23:01:29] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:01:29] [Server thread/INFO]: System chat: Saved the game
+[23:01:32] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:01:32] [Server thread/INFO]: System chat: Applied effect Resistance to ellipw
+[23:01:32] [Server thread/INFO]: System chat: Applied effect Strength to ellipw
+[23:01:32] [Server thread/INFO]: System chat: Applied effect Regeneration to ellipw
+[23:01:32] [Server thread/INFO]: System chat: Applied effect Night Vision to ellipw
+[23:01:35] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:01:35] [Server thread/INFO]: System chat: Applied effect Resistance to ellipw
+[23:01:35] [Server thread/INFO]: System chat: Applied effect Strength to ellipw
+[23:01:35] [Server thread/INFO]: System chat: Applied effect Regeneration to ellipw
+[23:01:35] [Server thread/INFO]: System chat: Applied effect Night Vision to ellipw
+[23:01:37] [Server thread/INFO]: ellipw issued server command: /db
+[23:01:38] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:01:38] [Server thread/INFO]: System chat: Applied effect Resistance to ellipw
+[23:01:38] [Server thread/INFO]: System chat: Applied effect Strength to ellipw
+[23:01:38] [Server thread/INFO]: System chat: Applied effect Regeneration to ellipw
+[23:01:38] [Server thread/INFO]: System chat: Applied effect Night Vision to ellipw
+[23:01:41] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:01:41] [Server thread/INFO]: System chat: Applied effect Resistance to ellipw
+[23:01:41] [Server thread/INFO]: System chat: Applied effect Strength to ellipw
+[23:01:41] [Server thread/INFO]: System chat: Applied effect Regeneration to ellipw
+[23:01:41] [Server thread/INFO]: System chat: Applied effect Night Vision to ellipw
+[23:01:42] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:01:43] [Server thread/INFO]: System chat: Saved the game
+[23:01:43] [Server thread/INFO]: System chat: Running function aurelion:remover_todos
+[23:01:43] [Server thread/INFO]: System chat: Nothing changed. The world border is already that size
+[23:01:43] [Server thread/INFO]: System chat: Running function aurelion:dar_livro_lore
+[23:01:43] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:01:43] [Server thread/INFO]: System chat: Saved the game
+[23:01:43] [Server thread/INFO]: 
+[23:01:43] [Server thread/INFO]: ==============================================
+[23:01:43] [Server thread/INFO]:    ✦ AVANÇO DO MAPA RESETADO DO ZERO! ✦
+[23:01:43] [Server thread/INFO]: • Guardiões (0/5), Diário (0/10), Caçadas Skyrim (0/4)
+[23:01:43] [Server thread/INFO]: • Memórias, Runas, Pets, Lápides e Banco zerados
+[23:01:43] [Server thread/INFO]: • Economia restaurada para o Dia 0 (Inflação 1.0x)
+[23:01:43] [Server thread/INFO]: • Inventários reiniciados com o Kit Inicial + Livro de Lore!
+[23:01:43] [Server thread/INFO]: ==============================================
+[23:01:43] [Server thread/INFO]: 
+[23:01:59] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:02:01] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:02:11] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:02:16] [Server thread/INFO]: ellipw issued server command: /gamemode creative
+[23:02:41] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:03:03] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:03:16] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:03:22] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:03:29] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:03:34] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:03:46] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:03:49] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:03:55] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:03:55] [Server thread/INFO]: 
+[23:03:55] [Server thread/INFO]: ✦ O GUARDIÃO DESPERTOU: Verdelith, o Guardião do Musgo ✦
+[23:03:55] [Server thread/INFO]: Confrontado por ellipw em world (846, 650)!
+[23:03:55] [Server thread/INFO]: 
+[23:03:55] [Server thread/INFO]: System chat: Running function aurelion:attach/verdelith
+[23:04:02] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:04:09] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:04:13] [Server thread/INFO]: ellipw issued server command: /setspawn ellipw
+[23:04:16] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:04:23] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:04:26] [Server thread/INFO]: System chat: ellipw has made the advancement [Cover Me with Diamonds]
+[23:04:30] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:04:37] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:04:44] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:04:51] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:04:52] [Server thread/INFO]: ellipw issued server command: /gamemode survival
+[23:04:58] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:05:00] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:05:00] [Server thread/INFO]: System chat: ellipw was slain by Verdelith, o Guardião do Musgo
+[23:05:00] [Server thread/INFO]: O combate contra Verdelith, o Guardião do Musgo foi interrompido por ausência de heróis.
+[23:05:00] [Server thread/INFO]: Named entity IronGolem['Verdelith, o Guardião do Musgo'/2333, uuid='237830f9-0427-4ca6-bde0-4d7dba43d323', l='ServerLevel[world]', x=844.96, y=69.00, z=658.31, cpos=[52, 41], tl=1299, v=true] died: Verdelith, o Guardião do Musgo was killed while fighting ellipw
+[23:05:12] [Server thread/INFO]: ellipw issued server command: /spawn
+[23:05:20] [Server thread/INFO]: ellipw issued server command: /lapide
+[23:05:28] [Server thread/INFO]: ellipw issued server command: /lapide resgatar
+[23:05:28] [Server thread/INFO]: [Diário] ellipw concluiu o objetivo: A Lápide Sagrada!
+[23:05:37] [Server thread/INFO]: ellipw issued server command: /spawnpoint
+[23:05:37] [Server thread/INFO]: System chat: [ellipw: Set spawn point to -1, 76, -1 [0.0, 0.0] in minecraft:overworld for ellipw]
+[23:05:53] [Server thread/INFO]: ellipw issued server command: /tp ellipw 843 69 656
+[23:05:55] [Server thread/INFO]: ellipw issued server command: /gamemode creative
+[23:06:05] [Server thread/INFO]: ellipw issued server command: /spawnpoint ellipw
+[23:06:05] [Server thread/INFO]: System chat: [ellipw: Set spawn point to 845, 72, 658 [0.0, 0.0] in minecraft:overworld for ellipw]
+[23:06:08] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:06:09] [Server thread/INFO]: System chat: Saved the game
+[23:06:11] [Server thread/INFO]: ellipw issued server command: /spawnpoint ellipw 841 69 658
+[23:06:11] [Server thread/INFO]: System chat: [ellipw: Set spawn point to 841, 69, 658 [0.0, 0.0] in minecraft:overworld for ellipw]
+[23:06:15] [Server thread/INFO]: ellipw issued server command: /gamemode survival
+[23:06:22] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:06:22] [Server thread/INFO]: 
+[23:06:22] [Server thread/INFO]: ✦ O GUARDIÃO DESPERTOU: Verdelith, o Guardião do Musgo ✦
+[23:06:22] [Server thread/INFO]: Confrontado por ellipw em world (845, 658)!
+[23:06:22] [Server thread/INFO]: 
+[23:06:22] [Server thread/INFO]: System chat: Running function aurelion:attach/verdelith
+[23:06:29] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:06:36] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:06:36] [Server thread/INFO]: O combate contra Verdelith, o Guardião do Musgo foi interrompido por ausência de heróis.
+[23:06:36] [Server thread/INFO]: Named entity IronGolem['Verdelith, o Guardião do Musgo'/3042, uuid='6b1f503d-1db7-48a2-b37d-ae2f3b65ce69', l='ServerLevel[world]', x=837.29, y=65.00, z=659.33, cpos=[52, 41], tl=279, v=true] died: Verdelith, o Guardião do Musgo was killed
+[23:06:44] [Server thread/INFO]: ellipw issued server command: /tp ellipw 843 69 656
+[23:06:53] [Server thread/INFO]: ellipw issued server command: /sethome boss 1
+[23:06:55] [Server thread/INFO]: ellipw issued server command: /sethome boss1
+[23:06:58] [Server thread/INFO]: ellipw issued server command: /homes
+[23:07:06] [Server thread/INFO]: ellipw issued server command: /time set day
+[23:07:09] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:07:09] [Server thread/INFO]: 
+[23:07:09] [Server thread/INFO]: ✦ O GUARDIÃO DESPERTOU: Verdelith, o Guardião do Musgo ✦
+[23:07:09] [Server thread/INFO]: Confrontado por ellipw em world (840, 658)!
+[23:07:09] [Server thread/INFO]: 
+[23:07:09] [Server thread/INFO]: System chat: Running function aurelion:attach/verdelith
+[23:07:16] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:07:23] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:07:30] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:07:37] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:07:44] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:07:51] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:07:58] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:08:05] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:08:12] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:08:19] [Server thread/INFO]: ellipw issued server command: /kit
+[23:08:19] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:08:24] [Server thread/INFO]: ellipw issued server command: /kit notch
+[23:08:26] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:08:33] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:08:34] [Server thread/INFO]: ellipw issued server command: /kit notch dtools
+[23:08:39] [Server thread/INFO]: ellipw issued server command: /kit Dtools
+[23:08:39] [Server thread/INFO]: [Essentials] CONSOLE issued server command: /broadcast ellipw just got some fancy tools!
+[23:08:40] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:08:44] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:08:44] [Server thread/INFO]: System chat: Running function aurelion:attach/pilar_raiz
+[23:08:44] [Server thread/INFO]: System chat: Running function aurelion:attach/pilar_raiz
+[23:08:44] [Server thread/INFO]: System chat: Running function aurelion:attach/pilar_raiz
+[23:08:47] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:08:49] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:08:54] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:08:55] [Server thread/INFO]: ellipw issued server command: /kit firework
+[23:08:59] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:09:01] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:09:05] [Server thread/INFO]: ellipw issued server command: /kit tools
+[23:09:08] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:09:09] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:09:15] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:09:19] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:09:22] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:09:29] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:09:29] [Server thread/INFO]: System chat: ellipw died
+[23:09:29] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:09:29] [Server thread/INFO]: O combate contra Verdelith, o Guardião do Musgo foi interrompido por ausência de heróis.
+[23:09:29] [Server thread/INFO]: Um pilar de sustentação foi destruído!
+[23:09:29] [Server thread/INFO]: Um pilar de sustentação foi destruído!
+[23:09:29] [Server thread/INFO]: Um pilar de sustentação foi destruído!
+[23:09:30] [Server thread/INFO]: O ESCUDO DO CHEFE CAIU! ATAQUEM COM TUDO!
+[23:09:30] [Server thread/INFO]: O ESCUDO DO CHEFE CAIU! ATAQUEM COM TUDO!
+[23:09:30] [Server thread/INFO]: O ESCUDO DO CHEFE CAIU! ATAQUEM COM TUDO!
+[23:09:35] [Server thread/INFO]: ellipw issued server command: /home
+[23:10:08] [Server thread/INFO]: ellipw issued server command: /enchant protection 4
+[23:10:10] [Server thread/INFO]: ellipw issued server command: /enchant protection 4
+[23:10:12] [Server thread/INFO]: ellipw issued server command: /enchant protection 4
+[23:10:14] [Server thread/INFO]: ellipw issued server command: /enchant protection 4
+[23:10:20] [Server thread/INFO]: ellipw issued server command: /enchant sharpness 5
+[23:10:26] [Server thread/INFO]: ellipw issued server command: /enchant infinity
+[23:10:30] [Server thread/INFO]: ellipw issued server command: /enchant power 4
+[23:10:36] [Server thread/INFO]: ellipw issued server command: /money
+[23:10:39] [Server thread/INFO]: ellipw issued server command: /banco
+[23:10:51] [Server thread/INFO]: ellipw issued server command: /banco depositar
+[23:10:57] [Server thread/INFO]: ellipw issued server command: /banco depositar 1336
+[23:10:59] [Server thread/INFO]: [Diário] ellipw concluiu o objetivo: Primeiro Ouro!
+[23:11:02] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:11:02] [Server thread/INFO]: 
+[23:11:02] [Server thread/INFO]: ✦ O GUARDIÃO DESPERTOU: Verdelith, o Guardião do Musgo ✦
+[23:11:02] [Server thread/INFO]: Confrontado por ellipw em world (840, 663)!
+[23:11:02] [Server thread/INFO]: 
+[23:11:02] [Server thread/INFO]: System chat: Running function aurelion:attach/verdelith
+[23:11:09] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:11:09] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:11:10] [Server thread/INFO]: System chat: Saved the game
+[23:11:17] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:11:24] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:11:31] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:11:38] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:11:41] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:11:41] [Server thread/INFO]: System chat: Running function aurelion:attach/pilar_raiz
+[23:11:41] [Server thread/INFO]: System chat: Running function aurelion:attach/pilar_raiz
+[23:11:41] [Server thread/INFO]: System chat: Running function aurelion:attach/pilar_raiz
+[23:11:43] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:11:43] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:11:45] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:11:52] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:11:53] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:11:53] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:11:59] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:12:03] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:12:06] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:12:06] [Server thread/INFO]: Um pilar de sustentação foi destruído!
+[23:12:13] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:12:13] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:12:20] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:12:23] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:12:27] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:12:28] [Server thread/INFO]: Um pilar de sustentação foi destruído!
+[23:12:33] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:12:34] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:12:41] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:12:43] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:12:48] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:12:53] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:12:55] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:13:02] [Server thread/INFO]: ellipw issued server command: /gamemode creative
+[23:13:02] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:13:03] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:13:09] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:13:11] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:13:13] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:13:13] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:13:16] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:13:23] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:13:23] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:13:23] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:13:30] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:13:33] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:13:33] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:13:37] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:13:39] [Server thread/INFO]: Um pilar de sustentação foi destruído!
+[23:13:40] [Server thread/INFO]: O ESCUDO DO CHEFE CAIU! ATAQUEM COM TUDO!
+[23:13:43] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:13:43] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:13:44] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:13:51] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:13:53] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:13:53] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:13:58] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:14:03] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:14:03] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:14:05] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:14:12] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:14:13] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:14:13] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:14:19] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:14:23] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:14:23] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:14:26] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:14:33] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:14:33] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:14:33] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:14:40] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:14:43] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:14:43] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:14:47] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:14:53] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:14:54] [Server thread/INFO]: ellipw issued server command: /gamemode survival
+[23:14:54] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:15:01] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:15:03] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:15:08] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:15:13] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:15:15] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:15:22] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:15:22] [Server thread/INFO]: ellipw issued server command: /kit
+[23:15:23] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:15:28] [Server thread/INFO]: ellipw issued server command: /kit tools
+[23:15:29] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:15:33] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:15:36] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:15:43] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:15:43] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:15:50] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:15:53] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:15:57] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:03] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:16:04] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:10] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:16:10] [Server thread/INFO]: System chat: Saved the game
+[23:16:12] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:14] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:16:19] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:24] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:16:24] [Server thread/INFO]: System chat: Applied effect Slowness to ellipw
+[23:16:25] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:26] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:33] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:34] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:16:34] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:16:40] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:44] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:16:47] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:54] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:54] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 5
+[23:16:57] [Server thread/INFO]: System chat: Set [aur_anim] for Verdelith, o Guardião do Musgo to 4
+[23:16:57] [Server thread/INFO]: Named entity IronGolem['Verdelith, o Guardião do Musgo'/4138, uuid='aaa1340c-5abb-41cd-9a31-92163c1cf3bc', l='ServerLevel[world]', x=831.84, y=69.00, z=665.57, cpos=[51, 41], tl=7056, v=true] died: Verdelith, o Guardião do Musgo was slain by ellipw
+[23:16:57] [Server thread/INFO]: 
+[23:16:57] [Server thread/INFO]: ✦ VITÓRIA ÉPICA: Verdelith, o Guardião do Musgo FOI DERROTADO! ✦
+[23:16:57] [Server thread/INFO]: A Chama de Aurelion recupera mais uma parte de sua antiga luz.
+[23:16:57] [Server thread/INFO]: 
+[23:16:57] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:16:57] [Server thread/INFO]: System chat: Saved the game
+[23:17:01] [Server thread/INFO]: [Diário] ellipw concluiu o objetivo: Verdelith no Bosque!
+[23:17:53] [Server thread/INFO]: ellipw issued server command: /give ellipw 10cd
+[23:18:01] [Server thread/INFO]: ellipw issued server command: /give ellipw meet
+[23:18:11] [Server thread/INFO]: ellipw issued server command: /give ellipw cooked_beef 64
+[23:18:18] [Server thread/INFO]: ellipw issued server command: /fly
+[23:18:23] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:18:32] [Server thread/INFO]: ellipw issued server command: /banco
+[23:18:38] [Server thread/INFO]: ellipw issued server command: /banco depositar *
+[23:18:39] [Server thread/INFO]: ellipw issued server command: /banco depositar
+[23:18:46] [Server thread/INFO]: ellipw issued server command: /banco depositar 5300
+[23:19:02] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:19:23] [Server thread/INFO]: ellipw issued server command: /tp ellipw -1200 ~ 1400
+[23:19:39] [Server thread/INFO]: ellipw issued server command: /sethome boss 2
+[23:19:41] [Server thread/INFO]: ellipw issued server command: /sethome boss2
+[23:19:53] [Server thread/INFO]: ellipw issued server command: /sethome boss2
+[23:20:09] [Server thread/INFO]: ellipw issued server command: /setblock ~ ~ ~ minecraft:acacia_wood
+[23:20:09] [Server thread/INFO]: System chat: [ellipw: Changed the block at -1191, 64, 1400]
+[23:20:15] [Server thread/INFO]: ellipw issued server command: /gamemode creative
+[23:20:26] [Server thread/INFO]: ellipw issued server command: /sethome boss2
+[23:20:30] [Server thread/INFO]: ellipw issued server command: /gamemode survival
+[23:20:33] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:20:33] [Server thread/INFO]: 
+[23:20:33] [Server thread/INFO]: ✦ O GUARDIÃO DESPERTOU: Thalassa, Rainha das Marés ✦
+[23:20:33] [Server thread/INFO]: Confrontado por ellipw em world (-1189, 1401)!
+[23:20:33] [Server thread/INFO]: 
+[23:20:33] [Server thread/INFO]: System chat: Running function aurelion:attach/thalassa
+[23:20:41] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:20:49] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:20:57] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:21:05] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:21:11] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:21:12] [Server thread/INFO]: System chat: Saved the game
+[23:21:14] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:21:21] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:21:22] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:21:30] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:21:38] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:21:46] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:21:54] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:02] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:08] [Server thread/INFO]: ellipw issued server command: /gamemode creative
+[23:22:10] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:18] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:26] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:28] [Server thread/INFO]: ellipw issued server command: /gamemode survival
+[23:22:34] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:42] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:44] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:50] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:54] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:55] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:57] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:22:58] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:23:05] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:23:06] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:23:14] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:23:22] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:23:30] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:23:38] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:23:46] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:23:54] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:24:02] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:24:07] [Server thread/INFO]: ellipw issued server command: /home boss2
+[23:24:10] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:24:11] [Server thread/INFO]: ellipw issued server command: /home boss2
+[23:24:18] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:24:26] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:24:28] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:24:34] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:24:42] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:24:50] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:24:57] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:24:58] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:25:04] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:25:06] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:25:11] [Server thread/INFO]: ellipw issued server command: /home boss2
+[23:25:14] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:25:19] [Server thread/INFO]: ellipw issued server command: /give ellipw trident
+[23:25:22] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:25:30] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:25:38] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:25:46] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:25:48] [Server thread/INFO]: ellipw issued server command: /time set day
+[23:25:54] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:26:02] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:26:10] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:26:12] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:26:12] [Server thread/INFO]: System chat: Saved the game
+[23:26:19] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:26:27] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:26:29] [Server thread/INFO]: ellipw issued server command: /enchant
+[23:26:33] [Server thread/INFO]: ellipw issued server command: /enchant channelling
+[23:26:35] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:26:43] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:26:51] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:26:59] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:27:07] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:27:15] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:27:23] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:27:31] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:27:39] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:27:47] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:27:55] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:28:03] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:28:11] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:28:19] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:28:27] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:28:35] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:28:43] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:28:51] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:28:59] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:29:07] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:29:15] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:29:23] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:29:31] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:29:39] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:29:47] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:29:55] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:30:03] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:30:11] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:30:19] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:30:27] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:30:35] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:30:43] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:30:43] [Server thread/INFO]: ellipw issued server command: /enchant loyalty
+[23:30:51] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:30:56] [Server thread/INFO]: ellipw issued server command: /enchant impaling
+[23:30:59] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:31:07] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:31:13] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:31:13] [Server thread/INFO]: System chat: Saved the game
+[23:31:14] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:31:15] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:31:23] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:31:31] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:31:39] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:31:47] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:31:49] [Server thread/INFO]: ellipw issued server command: /enchant sharpness 5
+[23:31:55] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:32:03] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:32:08] [Server thread/INFO]: ellipw issued server command: /enchant loyalty 3
+[23:32:11] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:32:19] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:32:27] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:32:35] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:32:36] [Server thread/INFO]: O combate contra Thalassa, Rainha das Marés foi interrompido por ausência de heróis.
+[23:32:36] [Server thread/INFO]: Named entity Drowned['Thalassa, Rainha das Marés'/5689, uuid='0d73711e-b982-4282-991e-109e20a6e03f', l='ServerLevel[world]', x=-1199.81, y=50.05, z=1348.09, cpos=[-75, 84], tl=14419, v=true] died: Thalassa, Rainha das Marés was killed
+[23:32:49] [Server thread/INFO]: ellipw issued server command: /home boss2
+[23:33:01] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:33:01] [Server thread/INFO]: 
+[23:33:01] [Server thread/INFO]: ✦ O GUARDIÃO DESPERTOU: Thalassa, Rainha das Marés ✦
+[23:33:01] [Server thread/INFO]: Confrontado por ellipw em world (-1190, 1401)!
+[23:33:01] [Server thread/INFO]: 
+[23:33:01] [Server thread/INFO]: System chat: Running function aurelion:attach/thalassa
+[23:33:07] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:33:09] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:33:17] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:33:25] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:33:33] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:33:41] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:33:49] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:33:57] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:34:05] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:34:12] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:34:13] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:34:21] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:34:29] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:34:37] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:34:40] [Server thread/INFO]: O combate contra Thalassa, Rainha das Marés foi interrompido por ausência de heróis.
+[23:34:40] [Server thread/INFO]: Named entity Drowned['Thalassa, Rainha das Marés'/7450, uuid='78bd8886-e11f-4bb1-8f48-3d7d89d6a65b', l='ServerLevel[world]', x=-1255.52, y=51.06, z=1399.82, cpos=[-79, 87], tl=1979, v=true] died: Thalassa, Rainha das Marés was killed while fighting ellipw
+[23:34:59] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:34:59] [Server thread/INFO]: 
+[23:34:59] [Server thread/INFO]: ✦ O GUARDIÃO DESPERTOU: Thalassa, Rainha das Marés ✦
+[23:34:59] [Server thread/INFO]: Confrontado por ellipw em world (-1228, 1392)!
+[23:34:59] [Server thread/INFO]: 
+[23:34:59] [Server thread/INFO]: System chat: Running function aurelion:attach/thalassa
+[23:35:03] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:35:04] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:35:07] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:35:10] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:35:15] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:35:23] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:35:31] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:35:39] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 5
+[23:35:39] [Server thread/INFO]: System chat: Applied effect Levitation to ellipw
+[23:35:39] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:35:41] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:35:43] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 5
+[23:35:47] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:35:54] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 5
+[23:35:55] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:36:03] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:36:05] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 5
+[23:36:07] [Server thread/INFO]: System chat: ellipw was impaled by Drowned
+[23:36:07] [Server thread/INFO]: O combate contra Thalassa, Rainha das Marés foi interrompido por ausência de heróis.
+[23:36:07] [Server thread/INFO]: Named entity Drowned['Thalassa, Rainha das Marés'/7748, uuid='fd8977f9-0c8d-4bfc-a914-73ea1987e420', l='ServerLevel[world]', x=-1224.43, y=10.11, z=1392.57, cpos=[-77, 87], tl=1359, v=true] died: Thalassa, Rainha das Marés was killed while fighting ellipw
+[23:36:13] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:36:14] [Server thread/INFO]: System chat: Saved the game
+[23:36:15] [Server thread/INFO]: ellipw issued server command: /home boss2
+[23:36:20] [Server thread/INFO]: ellipw issued server command: /lapide
+[23:36:27] [Server thread/INFO]: ellipw issued server command: /lapide resgatar
+[23:36:39] [Server thread/INFO]: ellipw issued server command: /gamemode creative
+[23:37:55] [Server thread/INFO]: ellipw issued server command: /time set day
+[23:38:28] [Server thread/INFO]: ellipw issued server command: /gamemode survival
+[23:38:30] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:38:30] [Server thread/INFO]: 
+[23:38:30] [Server thread/INFO]: ✦ O GUARDIÃO DESPERTOU: Thalassa, Rainha das Marés ✦
+[23:38:30] [Server thread/INFO]: Confrontado por ellipw em world (-1219, 1404)!
+[23:38:30] [Server thread/INFO]: 
+[23:38:30] [Server thread/INFO]: System chat: Running function aurelion:attach/thalassa
+[23:38:38] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:38:46] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:38:46] [Server thread/WARN]: ellipw moved wrongly!
+[23:38:54] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:39:02] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:39:10] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:39:18] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:39:26] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:39:31] [Server thread/INFO]: O combate contra Thalassa, Rainha das Marés foi interrompido por ausência de heróis.
+[23:39:31] [Server thread/INFO]: Named entity Drowned['Thalassa, Rainha das Marés'/8352, uuid='1aad3245-bbd2-443a-98d4-86f5c3be1b1d', l='ServerLevel[world]', x=-1223.67, y=1.00, z=1409.50, cpos=[-77, 88], tl=1219, v=true] died: Thalassa, Rainha das Marés was killed
+[23:39:48] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:39:48] [Server thread/INFO]: 
+[23:39:48] [Server thread/INFO]: ✦ O GUARDIÃO DESPERTOU: Thalassa, Rainha das Marés ✦
+[23:39:48] [Server thread/INFO]: Confrontado por ellipw em world (-1221, 1408)!
+[23:39:48] [Server thread/INFO]: 
+[23:39:48] [Server thread/INFO]: System chat: Running function aurelion:attach/thalassa
+[23:39:51] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:39:56] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:04] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:06] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:12] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:15] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:20] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:24] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:25] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:26] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:27] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:28] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:31] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:36] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:44] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:47] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 5
+[23:40:47] [Server thread/INFO]: System chat: Applied effect Levitation to ellipw
+[23:40:48] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:49] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:51] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:52] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:40:54] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 5
+[23:41:00] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:41:05] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 5
+[23:41:08] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 5
+[23:41:08] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:41:14] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:41:14] [Server thread/INFO]: System chat: Saved the game
+[23:41:17] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:41:17] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 5
+[23:41:20] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:41:22] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:41:25] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:41:28] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 5
+[23:41:30] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:41:31] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:41:33] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:41:35] [Server thread/INFO]: System chat: Set [aur_anim] for Thalassa, Rainha das Marés to 4
+[23:41:36] [Server thread/INFO]: Named entity Drowned['Thalassa, Rainha das Marés'/8592, uuid='48b8412c-6aaf-43ee-9b92-02fdcb3c6ca3', l='ServerLevel[world]', x=-1228.41, y=6.05, z=1408.41, cpos=[-77, 88], tl=2140, v=true] died: Thalassa, Rainha das Marés was slain by ellipw using [Lâmina do Musgo Eterno]
+[23:41:37] [Server thread/INFO]: 
+[23:41:37] [Server thread/INFO]: ✦ VITÓRIA ÉPICA: Thalassa, Rainha das Marés FOI DERROTADO! ✦
+[23:41:37] [Server thread/INFO]: A Chama de Aurelion recupera mais uma parte de sua antiga luz.
+[23:41:37] [Server thread/INFO]: 
+[23:41:37] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:41:37] [Server thread/INFO]: System chat: Saved the game
+[23:41:45] [Server thread/INFO]: [Diário] ellipw concluiu o objetivo: Thalassa nas Profundezas!
+[23:41:48] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:41:51] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:41:54] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:41:57] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:00] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:03] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:06] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:06] [Server thread/INFO]: ellipw issued server command: /home boss2
+[23:42:09] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:42:09] [Server thread/INFO]: The script 'bosses.sk' encountered an error while executing the 'Distance' expression:
+[23:42:09] [Server thread/INFO]:     Cannot calculate the distance between locations from two different worlds! (world and world_nether)
+[23:42:09] [Server thread/INFO]:     Line 86: set {_dist} to round(distance between player and {_loc})
+[23:42:09] [Server thread/INFO]:  
+[23:42:09] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:12] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:15] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:18] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:19] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:42:19] [Server thread/INFO]: The script 'bosses.sk' encountered an error while executing the 'Distance' expression:
+[23:42:19] [Server thread/INFO]:     Cannot calculate the distance between locations from two different worlds! (world and world_nether)
+[23:42:19] [Server thread/INFO]:     Line 86: set {_dist} to round(distance between player and {_loc})
+[23:42:19] [Server thread/INFO]:  
+[23:42:21] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:23] [Server thread/INFO]: ellipw issued server command: /spawn
+[23:42:24] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:24] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:42:24] [Server thread/INFO]: The script 'bosses.sk' encountered an error while executing the 'Distance' expression:
+[23:42:24] [Server thread/INFO]:     Cannot calculate the distance between locations from two different worlds! (world and world_nether)
+[23:42:24] [Server thread/INFO]:     Line 86: set {_dist} to round(distance between player and {_loc})
+[23:42:24] [Server thread/INFO]:  
+[23:42:27] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:30] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:33] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:36] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:39] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:42] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:44] [Server thread/INFO]: ellipw issued server command: /give ellipw obsidian
+[23:42:44] [Server thread/INFO]: System chat: ellipw has made the advancement [Ice Bucket Challenge]
+[23:42:45] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:48] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:49] [Server thread/INFO]: ellipw issued server command: /give ellipw flint_and_steel
+[23:42:51] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:54] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:42:57] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:00] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:03] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:06] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:09] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:12] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:15] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:18] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:20] [Server thread/INFO]: System chat: ellipw has made the advancement [We Need to Go Deeper]
+[23:43:21] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:24] [Server thread/INFO]: ellipw issued server command: /bussola
+[23:43:24] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:27] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:30] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:33] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:34] [Server thread/INFO]: ellipw issued server command: /effect give ellipw minecraft:fire_resistance infinite
+[23:43:34] [Server thread/INFO]: System chat: [ellipw: Applied effect Fire Resistance to ellipw]
+[23:43:36] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:39] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:42] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:45] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:45] [Server thread/INFO]: ellipw issued server command: /effect give ellipw minecraft:strength infinite 2
+[23:43:45] [Server thread/INFO]: System chat: [ellipw: Applied effect Strength to ellipw]
+[23:43:48] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:51] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:54] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:43:57] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:00] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:03] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:06] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:08] [Server thread/INFO]: ellipw issued server command: /tp ellipw 450 ~ -350
+[23:44:09] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:12] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:15] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:18] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:21] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:24] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:27] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:30] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:33] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:36] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:39] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:42] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:45] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:48] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:51] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:54] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:56] [Server thread/INFO]: ellipw issued server command: /sethome 3
+[23:44:57] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:44:58] [Server thread/INFO]: ellipw issued server command: /sethome b3
+[23:45:00] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:03] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:06] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:09] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:11] [Server thread/INFO]: ellipw issued server command: /despertar
+[23:45:11] [Server thread/INFO]: 
+[23:45:11] [Server thread/INFO]: ✦ O GUARDIÃO DESPERTOU: Korvan, o Ferreiro Caído ✦
+[23:45:11] [Server thread/INFO]: Confrontado por ellipw em world_nether (454, -348)!
+[23:45:11] [Server thread/INFO]: 
+[23:45:11] [Server thread/INFO]: System chat: Running function aurelion:attach/korvan
+[23:45:12] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:15] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:18] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:18] [Server thread/INFO]: System chat: Set [aur_anim] for Korvan, o Ferreiro Caído to 4
+[23:45:21] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:24] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:26] [Server thread/INFO]: System chat: Set [aur_anim] for Korvan, o Ferreiro Caído to 4
+[23:45:27] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:30] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:31] [Server thread/INFO]: System chat: Set [aur_anim] for Korvan, o Ferreiro Caído to 5
+[23:45:33] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:34] [Server thread/INFO]: System chat: Set [aur_anim] for Korvan, o Ferreiro Caído to 4
+[23:45:34] [Server thread/INFO]: System chat: Set [aur_anim] for Korvan, o Ferreiro Caído to 5
+[23:45:36] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:39] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:42] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:42] [Server thread/INFO]: System chat: Set [aur_anim] for Korvan, o Ferreiro Caído to 4
+[23:45:45] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:46] [Server thread/INFO]: System chat: Set [aur_anim] for Korvan, o Ferreiro Caído to 5
+[23:45:48] [Server thread/INFO]: System chat: Applied effect Haste to ellipw
+[23:45:50] [Server thread/INFO]: System chat: Set [aur_anim] for Korvan, o Ferreiro Caído to 4
+[23:45:51] [Server thread/INFO]: System chat: ellipw died
+[23:45:51] [Server thread/INFO]: O combate contra Korvan, o Ferreiro Caído foi interrompido por ausência de heróis.
+[23:45:51] [Server thread/INFO]: Named entity WitherSkeleton['Korvan, o Ferreiro Caído'/9686, uuid='9cb27861-5412-420b-91e4-b9bd34ca19c6', l='ServerLevel[world]', x=446.93, y=22.00, z=-356.20, cpos=[27, -23], tl=799, v=true] died: Korvan, o Ferreiro Caído was killed while fighting ellipw
+[23:45:57] [Server thread/INFO]: ellipw issued server command: /lapide resgatar
+[23:46:15] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:46:15] [Server thread/INFO]: System chat: Saved the game
+[23:46:16] [Server thread/INFO]: ellipw issued server command: /lapide resgatar
+[23:50:01] [Server thread/INFO]: System chat: ellipw was slain by Zombie
+[23:51:16] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:51:16] [Server thread/INFO]: System chat: Saved the game
+[23:53:21] [Server thread/INFO]: ellipw lost connection: Disconnected
+[23:53:21] [Server thread/INFO]: System chat: Saving the game (this may take a moment!)
+[23:53:21] [Server thread/INFO]: System chat: Saved the game
+[23:53:21] [Server thread/INFO]: System chat: ellipw left the game
+[23:53:24] [Server thread/INFO]: Stopping server
+[23:53:24] [Server thread/INFO]: [Chunky] Disabling Chunky v1.5.3
+[23:53:24] [Server thread/INFO]: [EssentialsSpawn] Disabling EssentialsSpawn v2.22.0
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Disabling QuickShop-Hikari v6.3.0.3
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> Execute the shutdown sequence
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] QuickShop is finishing remaining work, this may need a while...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Shutting down error reporter...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Unregistering PlaceHolderAPI hooks...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Successfully unregistered PlaceholderAPI hook!
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Unloading all loaded shops...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Stopping shop auto save...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Saving all in-memory changed shops...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Shops needed saved: 0
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Cleaning up shop manager...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Unloading loaded shops...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Saving shops, please allow up to 30 seconds for flush changes into database...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Stopping log watcher...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Shutting down scheduled timers...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Shutting down update watcher...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Shutting down 3rd-party integrations...
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Unload PlaceHolderAPI module successfully!
+[23:53:24] [Server thread/INFO]: [QuickShop-Hikari] Shutting down database connections...
+[23:53:24] [Server thread/INFO]: [com.ghostchu.quickshop.shade.carm.easysql.hikari.HikariDataSource] HikariPool-1 - Shutdown initiated...
+[23:53:25] [Server thread/INFO]: [com.ghostchu.quickshop.shade.carm.easysql.hikari.HikariDataSource] HikariPool-1 - Shutdown completed.
+[23:53:25] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Cleaning up resources...
+[23:53:25] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> All Complete (305ms)
+[23:53:25] [Server thread/INFO]: [Skript] Disabling Skript v2.17.0
+[23:53:25] [Server thread/INFO]: [BlueMap] Disabling BlueMap v5.29
+[23:53:25] [Server thread/INFO]: [BlueMap] Stopping...
+[23:53:25] [Server thread/INFO]: [BlueMap] Saved and stopped!
+[23:53:25] [Server thread/INFO]: [Essentials] Disabling Essentials v2.22.0
+[23:53:25] [Server thread/INFO]: [GriefPrevention] Disabling GriefPrevention v16.18.7
+[23:53:25] [Server thread/INFO]: [GriefPrevention] GriefPrevention disabled.
+[23:53:25] [Server thread/INFO]: [Vault] Disabling Vault v2.20.3
+[23:53:25] [Server thread/INFO]: [LuckPerms] Disabling LuckPerms v5.5.71
+[23:53:25] [Server thread/INFO]: [LuckPerms] Starting shutdown process...
+[23:53:25] [Server thread/INFO]: [LuckPerms] Closing storage...
+[23:53:25] [Server thread/INFO]: [LuckPerms] Goodbye!
+[23:53:25] [Server thread/INFO]: [PlaceholderAPI] Disabling PlaceholderAPI v2.12.3
+[23:53:25] [Server thread/INFO]: Saving players
+[23:53:25] [Server thread/INFO]: Saving worlds
+[23:53:25] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[23:53:25] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'minecraft:overworld'
+[23:53:25] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'minecraft:overworld'
+[23:53:25] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'minecraft:overworld'
+[23:53:25] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:overworld' in 0,08s
+[23:53:25] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'minecraft:overworld'
+[23:53:25] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'minecraft:overworld'
+[23:53:26] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[23:53:26] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'minecraft:the_nether'
+[23:53:26] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'minecraft:the_nether'
+[23:53:26] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'minecraft:the_nether'
+[23:53:27] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:the_nether' in 0,06s
+[23:53:27] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'minecraft:the_nether'
+[23:53:27] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'minecraft:the_nether'
+[23:53:27] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[23:53:27] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'minecraft:the_end'
+[23:53:27] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'minecraft:the_end'
+[23:53:27] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'minecraft:the_end'
+[23:53:27] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:the_end' in 0,00s
+[23:53:27] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'minecraft:the_end'
+[23:53:27] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'minecraft:the_end'
+[23:53:27] [Server thread/INFO]: Waiting for all RegionFile I/O tasks to complete...
+[23:53:27] [Server thread/INFO]: All RegionFile I/O tasks to complete
+[23:53:27] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of worker pool for up to 60s...
+[23:53:27] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of I/O pool for up to 60s...

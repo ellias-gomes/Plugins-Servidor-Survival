@@ -1,0 +1,73 @@
+# ============================================================================
+#  MODELOS CUSTOMIZADOS - ponte entre Skript e o datapack "aurelion_modelos"
+#  Cada boss/semi-boss/pilar é um mob "base" invisível (IA, vida, hitbox) + modelo 3D feito de
+#  display entities animadas (andar, idle, ataque, especial, dano e colapso na morte).
+#  Modelos: 1 Verdelith, 2 Thalassa, 3 Korvan, 4 Seraphel, 5 Eclipse, 6 Thorgar, 7 Morvath,
+#           8 Gólem de Basalto, 9 Valeria, 10 Pilar de Raiz, 11 Forja, 12 Pilar do Vazio
+# ============================================================================
+
+function nomeModelo(m: number) :: text:
+    if {_m} is 1:
+        return "verdelith"
+    if {_m} is 2:
+        return "thalassa"
+    if {_m} is 3:
+        return "korvan"
+    if {_m} is 4:
+        return "seraphel"
+    if {_m} is 5:
+        return "eclipse"
+    if {_m} is 6:
+        return "thorgar"
+    if {_m} is 7:
+        return "morvath"
+    if {_m} is 8:
+        return "golem"
+    if {_m} is 9:
+        return "valeria"
+    if {_m} is 10:
+        return "pilar_raiz"
+    if {_m} is 11:
+        return "forja"
+    return "pilar_vazio"
+
+# Anexa o modelo 3D ao mob base (substitui a aparência vanilla)
+function anexarModelo(e: entity, m: number):
+    execute console command "execute as %uuid of {_e}% at @s run function aurelion:attach/%nomeModelo({_m})%"
+
+# Dispara uma animação: 4 = ataque (golpe/rasante), 5 = habilidade especial
+function animar(e: entity, a: number):
+    if {_e} is alive:
+        execute console command "scoreboard players set %uuid of {_e}% aur_anim %{_a}%"
+
+command /modelos [<text>] [<number>]:
+    permission: aurelion.admin
+    description: Utilidades dos modelos customizados 3D
+    trigger:
+        if arg-1 is "limpar":
+            execute console command "function aurelion:remover_todos"
+            send "&aTodos os modelos customizados foram removidos." to player
+        else if arg-1 is "teste" or "testar":
+            set {_m} to arg-2
+            if {_m} is not set:
+                set {_m} to 1
+            if {_m} < 1:
+                set {_m} to 1
+            if {_m} > 12:
+                set {_m} to 12
+            set {_loc} to location 4 blocks in front of player
+            if {_m} >= 10:
+                spawn 1 armor stand at {_loc}
+            else:
+                spawn 1 iron golem at {_loc}
+            set {_e} to last spawned entity
+            set name of {_e} to "&6&lTeste 3D: %nomeModelo({_m})%"
+            anexarModelo({_e}, {_m})
+            send "&aModelo 3D #%{_m}% (&e%nomeModelo({_m})%&a) invocado! Use &f/modelos limpar &apara remover." to player
+            wait 2 seconds
+            animar({_e}, 4)
+            wait 2 seconds
+            animar({_e}, 5)
+        else:
+            send "&6/modelos teste [1..12] &7- invoca um modelo 3D (1=Verdelith, 2=Thalassa, 3=Korvan, 4=Seraphel, 5=Eclipse, 6..9=Semi-Bosses, 10..12=Pilares)" to player
+            send "&6/modelos limpar &7- remove todas as peças 3D ativas" to player

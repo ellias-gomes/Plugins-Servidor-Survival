@@ -1,0 +1,182 @@
+# ============================================================================
+#  DIÁRIO DE BORDO - Missões Principais da Chama & Caçadas de Skyrim
+#  - 10 Grandes Provações da Campanha Principal
+#  - Acesso direto ao Mural de Caçadas e Feitiços Secundários (/cacadas)
+#  - GUI interativa (/diario) com rastreamento automático
+# ============================================================================
+
+function tituloObj(n: number) :: text:
+    if {_n} is 1:
+        return "Marca de Ouro"
+    if {_n} is 2:
+        return "Primeiro Ouro"
+    if {_n} is 3:
+        return "A Lápide Sagrada"
+    if {_n} is 4:
+        return "Verdelith no Bosque"
+    if {_n} is 5:
+        return "A Vila dos Irmãos"
+    if {_n} is 6:
+        return "Thalassa nas Profundezas"
+    if {_n} is 7:
+        return "Coleção de Pets & Relíquias"
+    if {_n} is 8:
+        return "A Forja de Korvan"
+    if {_n} is 9:
+        return "O Oráculo Seraphel"
+    return "O Eclipse & O Desfecho"
+
+function descObj(n: number) :: text:
+    if {_n} is 1:
+        return "Sobreviva à primeira noite dormindo em uma cama e consulte o /mentor."
+    if {_n} is 2:
+        return "Acumule 1.000 Ouros (carteira + banco) e faça um depósito com /banco."
+    if {_n} is 3:
+        return "Morra em um local seguro e resgate seus itens com /lapide resgatar. Confie no cofre!"
+    if {_n} is 4:
+        return "Siga a /bussola até o Altar do Bosque e derrote Verdelith quebrando seus pilares."
+    if {_n} is 5:
+        return "Pedro constrói, Ellias decora: abram 3 lojas de jogadores (/qs) e digitem /diario confirmar."
+    if {_n} is 6:
+        return "Siga a /bussola até o oceano e derrote Thalassa (libera o Nível 2 do Banco)."
+    if {_n} is 7:
+        return "Colecione 5 pets diferentes (/pet) e porte pelo menos 2 Relíquias de Aurelion."
+    if {_n} is 8:
+        return "Vá ao Nether, encontre a Forja com a /bussola e derrote Korvan."
+    if {_n} is 9:
+        return "Suba aos Picos Congelados e vença o Oráculo Seraphel desfazendo suas ilusões."
+    return "Desça ao Deep Dark, vença o Eclipse e decidam em consenso: /final restaurar | libertar."
+
+function faixaObj(n: number) :: text:
+    if {_n} <= 3:
+        return "&aINÍCIO"
+    if {_n} <= 7:
+        return "&eMEIO"
+    return "&cFIM"
+
+function objetivoCompleto(p: player, n: number) :: boolean:
+    set {_u} to "%uuid of {_p}%"
+    if {_n} is 1:
+        if {diario::%{_u}%::dormiu} is set:
+            if {diario::%{_u}%::mentor} is set:
+                return true
+    else if {_n} is 2:
+        if {diario::%{_u}%::banco} is set:
+            set {_b} to {banco::%{_u}%}
+            if {_b} is not set:
+                set {_b} to 0
+            set {_tot} to round({_p}'s balance) + {_b}
+            if {_tot} >= 1000:
+                return true
+    else if {_n} is 3:
+        if {diario::%{_u}%::lapide} is set:
+            return true
+    else if {_n} is 4:
+        if {prog::boss::1} is set:
+            return true
+    else if {_n} is 5:
+        if amount of {diario::conf5::*} >= 2:
+            return true
+    else if {_n} is 6:
+        if {prog::boss::2} is set:
+            return true
+    else if {_n} is 7:
+        if amount of {pets::%{_u}%::owned::*} >= 5:
+            if contarReliquias({_p}) >= 2:
+                return true
+    else if {_n} is 8:
+        if {prog::boss::3} is set:
+            return true
+    else if {_n} is 9:
+        if {prog::boss::4} is set:
+            return true
+    else:
+        if {prog::boss::5} is set:
+            if {final::resolvido} is set:
+                return true
+    return false
+
+function proximoObjetivo(p: player) :: number:
+    loop 10 times:
+        if {diario::%uuid of {_p}%::done::%loop-number%} is not set:
+            return loop-number
+    return 0
+
+function recompensaObj(p: player, n: number):
+    set {_din} to 500
+    set {_r} to 5
+    if {_n} is 2:
+        set {_din} to 800
+    else if {_n} is 3:
+        set {_din} to 800
+    else if {_n} is 4:
+        set {_din} to 2500
+        set {_r} to 15
+    else if {_n} is 5:
+        set {_din} to 3000
+        set {_r} to 15
+    else if {_n} is 6:
+        set {_din} to 5000
+        set {_r} to 20
+    else if {_n} is 7:
+        set {_din} to 4000
+        set {_r} to 15
+    else if {_n} is 8:
+        set {_din} to 9000
+        set {_r} to 30
+    else if {_n} is 9:
+        set {_din} to 12000
+        set {_r} to 40
+    else if {_n} is 10:
+        set {_din} to 50000
+        set {_r} to 100
+    add {_din} to {_p}'s balance
+    add {_r} to {runas::%uuid of {_p}%}
+    send "" to {_p}
+    send "&6&l★ OBJETIVO CONCLUÍDO: %tituloObj({_n})% ★" to {_p}
+    send "&7Recompensa: &e+%{_din}% Ouros &7e &d+%{_r}% Fragmentos Rúnicos!" to {_p}
+    play sound "ui.toast.challenge_complete" to {_p}
+    broadcast "&6[Diário] &e%{_p}% &7concluiu o objetivo: &f%tituloObj({_n})%!"
+
+every 10 seconds:
+    loop all players:
+        loop 10 times:
+            if {diario::%uuid of loop-player%::done::%loop-number%} is not set:
+                if objetivoCompleto(loop-player, loop-number) is true:
+                    set {diario::%uuid of loop-player%::done::%loop-number%} to true
+                    recompensaObj(loop-player, loop-number)
+
+on bed enter:
+    set {diario::%uuid of player%::dormiu} to true
+
+command /diario [<text>] [<number>]:
+    aliases: /objetivos, /journal, /quest
+    description: Diário de Bordo e Missões do Servidor
+    trigger:
+        if arg-1 is "confirmar":
+            set {diario::conf5::%uuid of player%} to true
+            send "&aVocê confirmou a fundação da Vila! Quando seu parceiro confirmar, o objetivo #5 será concluído." to player
+            stop
+        if arg-1 is "secundarias" or "skyrim":
+            execute player command "cacadas"
+            stop
+        set {_gui} to chest inventory with 4 rows named "&6&lDiário de Bordo de Aurelion"
+        set {_slots::*} to 10, 11, 12, 13, 14, 19, 20, 21, 22 and 23
+        loop 10 times:
+            set {_faixa} to faixaObj(loop-number)
+            set {_desc} to descObj(loop-number)
+            set {_l::*} to {_faixa} and "&7%{_desc}%"
+            if {diario::%uuid of player%::done::%loop-number%} is set:
+                set {_i} to emerald block named "&a✔ %loop-number%. %tituloObj(loop-number)%" with lore {_l::*}
+            else:
+                set {_i} to paper named "&e%loop-number%. %tituloObj(loop-number)%" with lore {_l::*}
+            set slot {_slots::%loop-number%} of {_gui} to {_i}
+        set slot 31 of {_gui} to nether star named "&b&lMural de Caçadas (Skyrim)" with lore "&7Clique para ver as missões secundárias," and "&7semi-bosses e feitiços únicos!" and "&eComando direto: /cacadas"
+        open {_gui} to player
+
+on inventory click:
+    if "%name of event-inventory%" contains "Diário de Bordo":
+        cancel event
+        if index of clicked slot is 31:
+            close player's inventory
+            execute player command "cacadas"

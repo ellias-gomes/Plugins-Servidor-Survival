@@ -1,0 +1,401 @@
+# ============================================================================
+#  GUARDIÕES DE AURELION - Bosses Naturais com Mecânicas Avançadas e Modelos 3D
+#  - Spawns no Mundo Natural (sem arenas artificiais no céu)
+#  - Bússola Rúnica dos Guardiões (/guardioes ou /bussola) orienta a exploração na ordem
+#  - Pilares de Invulnerabilidade, Chuva de Raios, Maremotos, Rasantes e Blecaute
+#  - Ordem Estrita de Progressão com Altares Rúnicos no Mundo
+# ============================================================================
+
+function localBoss(id: number) :: location:
+    if {_id} is 1:
+        return location(850, 75, 650, world("world"))
+    if {_id} is 2:
+        return location(-1200, 50, 1400, world("world"))
+    if {_id} is 3:
+        return location(450, 70, -350, world("world_nether"))
+    if {_id} is 4:
+        return location(2100, 160, -1800, world("world"))
+    return location(0, -42, -2500, world("world"))
+
+function nomeBoss(id: number) :: text:
+    if {_id} is 1:
+        return "&a&lVerdelith, o Guardião do Musgo"
+    if {_id} is 2:
+        return "&b&lThalassa, Rainha das Marés"
+    if {_id} is 3:
+        return "&c&lKorvan, o Ferreiro Caído"
+    if {_id} is 4:
+        return "&d&lSeraphel, o Oráculo Quebrado"
+    return "&5&lO Eclipse"
+
+function ehBoss(n: text) :: boolean:
+    if {_n} contains "Verdelith":
+        return true
+    if {_n} contains "Thalassa":
+        return true
+    if {_n} contains "Korvan":
+        return true
+    if {_n} contains "Seraphel":
+        return true
+    if {_n} contains "O Eclipse":
+        return true
+    return false
+
+function ehPilar(n: text) :: boolean:
+    if {_n} contains "Pilar de Raiz Ancestral":
+        return true
+    if {_n} contains "Forja Incandescente":
+        return true
+    if {_n} contains "Pilar do Vazio":
+        return true
+    return false
+
+function biomaDescricao(id: number) :: text:
+    if {_id} is 1:
+        return "Bosques Ancestrais e Taigas Nebulosas (Overworld ~ X: 850, Z: 650)"
+    if {_id} is 2:
+        return "Abismo Oceânico e Ruínas Submersas (Overworld ~ X: -1200, Z: 1400)"
+    if {_id} is 3:
+        return "Deltas de Basalto e Forjas de Lava (Nether ~ X: 450, Z: -350)"
+    if {_id} is 4:
+        return "Picos Congelados e Torres Celestes (Overworld ~ X: 2100, Z: -1800)"
+    return "Santuário da Ruptura nas Profundezas (Deep Dark ~ X: 0, Z: -2500)"
+
+# ---------- Bússola Rúnica dos Guardiões ----------
+
+function proximoBossNecessario() :: number:
+    loop 5 times:
+        if {prog::boss::%loop-number%} is not set:
+            return loop-number
+    return 5
+
+command /guardioes:
+    aliases: /bussola, /guardiao, /rastrear
+    description: Sintoniza sua bússola com o próximo Guardião de Aurelion
+    trigger:
+        set {_id} to proximoBossNecessario()
+        set {_loc} to localBoss({_id})
+        set compass target of player to {_loc}
+        send "&6&l=== Bússola Rúnica dos Guardiões ===" to player
+        if {prog::boss::5} is set:
+            send "&aTodos os 5 Guardiões foram derrotados! Vão para o Altar da Chama: &f/final." to player
+            stop
+        send "&7Sua bússola ressoa com a energia rúnica e aponta para:" to player
+        send "&e#%{_id}% %nomeBoss({_id})%" to player
+        send "&7Localização: &f%biomaDescricao({_id})%" to player
+        set {_dist} to round(distance between player and {_loc})
+        send "&7Distância aproximada: &e%{_dist}% blocos" to player
+        send "&8Ao chegar nas imediações do Altar natural, digite &f/despertar &8para confrontar o Guardião!" to player
+        play sound "item.lodestone_compass.lock" to player
+
+# ---------- Altar e Invocação Natural ----------
+
+command /despertar:
+    description: Desperta o Guardião no Altar natural correspondente
+    trigger:
+        set {_id} to proximoBossNecessario()
+        set {_loc} to localBoss({_id})
+        if world of player is not world of {_loc}:
+            send "&cVocê está na dimensão errada! Este guardião habita no %world of {_loc}%." to player
+            stop
+        set {_dist} to distance between player and {_loc}
+        if {_dist} > 60:
+            send "&cVocê ainda está longe do Altar! Siga a &f/bussola &c(Distância restante: %round({_dist})% blocos)." to player
+            stop
+        if {boss::ativo::%{_id}%} is set:
+            send "&cO Guardião já está despertado neste local!" to player
+            stop
+        iniciarBatalhaBoss({_id}, player)
+
+function iniciarBatalhaBoss(id: number, invocador: player):
+    set {_c} to location of {_invocador}
+    set {boss::ativo::%{_id}%} to true
+    strike lightning effect at {_c}
+    broadcast ""
+    broadcast "&4&l✦ O GUARDIÃO DESPERTOU: %nomeBoss({_id})% ✦"
+    broadcast "&eConfrontado por %{_invocador}% em %world of {_c}% (%rounded x-coordinate of {_c}%, %rounded z-coordinate of {_c}%)!"
+    broadcast ""
+    play sound "entity.wither.spawn" with volume 2 at {_c}
+    set {_loc} to location 8 blocks in front of {_invocador}
+    set {_hp} to 350 + (100 * {_id})
+    if {_id} is 1:
+        spawn 1 iron golem at {_loc}
+    else if {_id} is 2:
+        spawn 1 drowned at {_loc}
+    else if {_id} is 3:
+        spawn 1 wither skeleton at {_loc}
+    else if {_id} is 4:
+        spawn 1 evoker at {_loc}
+    else:
+        spawn 1 warden at {_loc}
+        set {_hp} to 750
+    set {_b} to last spawned entity
+    set max health of {_b} to {_hp}
+    heal {_b}
+    set name of {_b} to nomeBoss({_id})
+    anexarModelo({_b}, {_id})
+    set {_titulo} to nomeBoss({_id})
+    loop all players in radius 40 of {_c}:
+        send title {_titulo} with subtitle "&7Preparem-se para a batalha!" to loop-player for 4 seconds
+    bossFightLoop({_id}, {_b}, {_c})
+
+# ---------- Loop de Combate e Mecânicas Interativas ----------
+
+function bossFightLoop(id: number, b: livingentity, c: location):
+    set {_fase} to 1
+    set {_t} to 0
+    delete {boss::escudo::%{_id}%}
+    delete {boss::pilares::%{_id}%::*}
+    while {_b} is alive:
+        wait 1 second
+        add 1 to {_t}
+        set {_pct} to health of {_b} / max health of {_b}
+        if {_fase} is 1:
+            if {_pct} < 0.66:
+                set {_fase} to 2
+                animar({_b}, 5)
+                avisoFase({_id}, 2, {_c})
+                ativarMecanicaFase2({_id}, {_b}, {_c})
+        if {_fase} is 2:
+            if {_pct} < 0.33:
+                set {_fase} to 3
+                animar({_b}, 5)
+                avisoFase({_id}, 3, {_c})
+                ativarMecanicaFase3({_id}, {_b}, {_c})
+        set {_p100} to round({_pct} * 100)
+        set {_escudoMsg} to ""
+        if {boss::escudo::%{_id}%} is true:
+            set {_escudoMsg} to " &e[ESCUDO ATIVO: Destrua os Pilares!]"
+            heal {_b} by 1
+        loop all players in radius 50 of {_c}:
+            send action bar "%nomeBoss({_id})% &f%{_p100}% pct &7(Fase %{_fase}%)%{_escudoMsg}%" to loop-player
+        executarHabilidadesBoss({_id}, {_b}, {_fase}, {_t}, {_c})
+        if semJogadoresPorPerto({_c}) is true:
+            broadcast "&7O combate contra %nomeBoss({_id})% foi interrompido por ausência de heróis."
+            kill {_b}
+            limparPilares({_id})
+            delete {boss::ativo::%{_id}%}
+            stop
+    vitoriaGuardião({_id}, {_c})
+
+function avisoFase(id: number, fase: number, c: location):
+    loop all players in radius 50 of {_c}:
+        send "&e&l%nomeBoss({_id})% &eENTRA NA FASE %{_fase}%!" to loop-player
+        play sound "entity.ender_dragon.growl" to loop-player
+
+function semJogadoresPorPerto(c: location) :: boolean:
+    loop all players in radius 55 of {_c}:
+        if loop-player is alive:
+            return false
+    return true
+
+function limparPilares(id: number):
+    loop {boss::pilares::%{_id}%::*}:
+        kill loop-value
+    delete {boss::pilares::%{_id}%::*}
+    delete {boss::escudo::%{_id}%}
+
+# ---------- Ativação de Pilares e Mecânicas de Fase ----------
+
+function ativarMecanicaFase2(id: number, b: livingentity, c: location):
+    if {_id} is 1:
+        set {boss::escudo::1} to true
+        loop 3 times:
+            set {_ang} to loop-number * 120
+            set {_px} to (x-coordinate of {_b}) + (8 * sin({_ang}))
+            set {_pz} to (z-coordinate of {_b}) + (8 * cos({_ang}))
+            set {_ploc} to location({_px}, y-coordinate of {_b}, {_pz}, world of {_b})
+            spawn 1 armor stand at {_ploc}
+            set {_pilar} to last spawned entity
+            set name of {_pilar} to "&a&lPilar de Raiz Ancestral"
+            anexarModelo({_pilar}, 10)
+            set max health of {_pilar} to 30
+            heal {_pilar}
+            add {_pilar} to {boss::pilares::1::*}
+        loop all players in radius 50 of {_c}:
+            send "&a&lVerdelith canalizou 3 Pilares de Madeira Viva! Destruam os pilares para quebrar sua invulnerabilidade!" to loop-player
+            play sound "entity.zombie.break_wooden_door" to loop-player
+    else if {_id} is 2:
+        loop all players in radius 30 of {_b}:
+            aplicarEfeito(loop-player, "levitation", 4, 1)
+            send "&b&lThalassa te aprisionou numa Bolha d'Água! Seu parceiro precisa te libertar com ataque!" to loop-player
+
+function ativarMecanicaFase3(id: number, b: livingentity, c: location):
+    if {_id} is 3:
+        set {boss::escudo::3} to true
+        loop 2 times:
+            set {_px} to (x-coordinate of {_b}) + (10 * (loop-number - 1.5))
+            set {_ploc} to location({_px}, y-coordinate of {_b}, z-coordinate of {_b}, world of {_b})
+            spawn 1 armor stand at {_ploc}
+            set {_forja} to last spawned entity
+            set name of {_forja} to "&c&lForja Incandescente"
+            anexarModelo({_forja}, 11)
+            set max health of {_forja} to 40
+            heal {_forja}
+            add {_forja} to {boss::pilares::3::*}
+        loop all players in radius 50 of {_c}:
+            send "&c&lKorvan superaqueceu sua armadura com 2 Forjas! Golpeiem ou apaguem as forjas!" to loop-player
+    else if {_id} is 5:
+        set {boss::escudo::5} to true
+        loop all players in radius 50 of {_c}:
+            aplicarEfeito(loop-player, "darkness", 8, 2)
+            send title "&5&lECLIPSE TOTAL" with subtitle "&7As sombras devoram a luz..." to loop-player for 3 seconds
+            play sound "entity.warden.heartbeat" to loop-player
+        loop 4 times:
+            set {_ang} to loop-number * 90
+            set {_px} to (x-coordinate of {_b}) + (10 * sin({_ang}))
+            set {_pz} to (z-coordinate of {_b}) + (10 * cos({_ang}))
+            set {_ploc} to location({_px}, y-coordinate of {_b}, {_pz}, world of {_b})
+            spawn 1 armor stand at {_ploc}
+            set {_pilar} to last spawned entity
+            set name of {_pilar} to "&5&lPilar do Vazio"
+            anexarModelo({_pilar}, 12)
+            set max health of {_pilar} to 35
+            heal {_pilar}
+            add {_pilar} to {boss::pilares::5::*}
+
+# Proteção contra dano enquanto houver escudo de pilares ativo e animação de golpe dos bosses
+on damage:
+    set {_nv} to "%name of victim%"
+    if ehBoss({_nv}) is true:
+        loop 5 times:
+            if {boss::escudo::%loop-number%} is true:
+                cancel event
+                if attacker is a player:
+                    send action bar "&cO chefe está invulnerável! Destrua os pilares de suporte!" to attacker
+                    play sound "block.anvil.hit" to attacker
+    set {_na} to "%name of attacker%"
+    if ehBoss({_na}) is true:
+        animar(attacker, 4)
+
+on death of armor stand:
+    set {_nv} to "%name of victim%"
+    if ehPilar({_nv}) is true:
+        broadcast "&aUm pilar de sustentação foi destruído!"
+        wait 1 second
+        set {_restantes} to 0
+        loop all armor stands in radius 35 of location of victim:
+            if ehPilar("%name of loop-entity%") is true:
+                add 1 to {_restantes}
+        if {_restantes} is 0:
+            delete {boss::escudo::1}
+            delete {boss::escudo::3}
+            delete {boss::escudo::5}
+            broadcast "&e&lO ESCUDO DO CHEFE CAIU! ATAQUEM COM TUDO!"
+            play sound "block.beacon.deactivate" at location of victim
+
+# ---------- Habilidades Ativas durante o Combate ----------
+
+function executarHabilidadesBoss(id: number, b: livingentity, fase: number, t: number, c: location):
+    # ---------- 1. VERDELITH: Tremor de Terra e Raízes ----------
+    if {_id} is 1:
+        if mod({_t}, 7) is 0:
+            animar({_b}, 4)
+            loop all players in radius 14 of {_b}:
+                send "&2Verdelith estremece o solo!" to loop-player
+                damage loop-player by 6
+                push loop-player upwards at speed 0.9
+                play sound "entity.iron_golem.attack" to loop-player
+        if {_fase} >= 2:
+            if mod({_t}, 10) is 0:
+                animar({_b}, 5)
+                loop all players in radius 12 of {_b}:
+                    aplicarEfeito(loop-player, "slowness", 3, 3)
+                    send "&2Raízes do bosque prendem seus pés!" to loop-player
+
+    # ---------- 2. THALASSA: Maremoto, Chuva de Raios e Tsunami ----------
+    else if {_id} is 2:
+        if mod({_t}, 8) is 0:
+            animar({_b}, 4)
+            loop all players in radius 18 of {_b}:
+                damage loop-player by 6
+                push loop-player away from {_b} at speed 2.2
+                push loop-player upwards at speed 0.4
+                send "&b&lMAREMOTO! Você foi varrido pela onda gigante!" to loop-player
+                play sound "item.trident.riptide_3" to loop-player
+        if {_fase} >= 2:
+            if mod({_t}, 11) is 0:
+                animar({_b}, 5)
+                loop all players in radius 25 of {_b}:
+                    send "&eUma tempestade elétrica cerca o local!" to loop-player
+                    wait 1 second
+                    strike lightning effect at loop-player
+                    damage loop-player by 8
+
+    # ---------- 3. KORVAN: Rasante Flamejante e Chuva de Bigornas ----------
+    else if {_id} is 3:
+        if mod({_t}, 8) is 0:
+            animar({_b}, 4)
+            loop all players in radius 20 of {_b}:
+                push {_b} towards loop-player at speed 1.8
+                ignite loop-player for 4 seconds
+                damage loop-player by 7
+                send "&c&lKorvan dá um rasante incandescente!" to loop-player
+                play sound "entity.firework_rocket.blast" to loop-player
+        if {_fase} >= 2:
+            if mod({_t}, 12) is 0:
+                animar({_b}, 5)
+                loop all players in radius 16 of {_b}:
+                    send "&6&lBIGORNAS CAINDO DO TETO DA FORJA! ESQUIVE!" to loop-player
+                    wait 1 second
+                    damage loop-player by 9
+                    play sound "block.anvil.land" to loop-player
+
+    # ---------- 4. SERAPHEL: Rasante Espectral, Ilusões e Pilares de Luz ----------
+    else if {_id} is 4:
+        if mod({_t}, 7) is 0:
+            animar({_b}, 4)
+            teleport {_b} to location(x-coordinate of {_b} + random number between -8 and 8, y-coordinate of {_b}, z-coordinate of {_b} + random number between -8 and 8, world of {_b})
+            loop all players in radius 16 of {_b}:
+                damage loop-player by 7
+                aplicarEfeito(loop-player, "levitation", 2, 1)
+                send "&dSeraphel rasga o ar num voo espectral!" to loop-player
+        if {_fase} >= 2:
+            if mod({_t}, 10) is 0:
+                animar({_b}, 5)
+                loop all players in radius 20 of {_b}:
+                    strike lightning effect at loop-player
+                    damage loop-player by 7
+
+    # ---------- 5. O ECLIPSE: Puxão do Vazio, Blecaute e Explosão ----------
+    else:
+        if mod({_t}, 10) is 0:
+            animar({_b}, 5)
+            loop all players in radius 25 of {_b}:
+                push loop-player towards {_b} at speed 1.6
+                aplicarEfeito(loop-player, "darkness", 4, 1)
+                send "&5&lO Vazio puxa você para o epicentro da supernova! CORRA!" to loop-player
+                play sound "entity.warden.sonic_charge" to loop-player
+        if {_fase} >= 3:
+            if mod({_t}, 8) is 0:
+                animar({_b}, 4)
+                loop all players in radius 12 of {_b}:
+                    damage loop-player by 10
+                    push loop-player away from {_b} at speed 2.0
+                    aplicarEfeito(loop-player, "wither", 4, 1)
+
+# ---------- Vitória e Drops dos Guardiões ----------
+
+function vitoriaGuardião(id: number, c: location):
+    limparPilares({_id})
+    delete {boss::ativo::%{_id}%}
+    set {_premioOuro} to 2000 * {_id}
+    set {_runas} to 12 * {_id}
+    if {prog::boss::%{_id}%} is not set:
+        set {prog::boss::%{_id}%} to true
+        add 1 to {prog::bosses}
+        broadcast ""
+        broadcast "&6&l✦ VITÓRIA ÉPICA: %nomeBoss({_id})% FOI DERROTADO! ✦"
+        broadcast "&eA Chama de Aurelion recupera mais uma parte de sua antiga luz."
+        broadcast ""
+    loop all players in radius 55 of {_c}:
+        pagarSalario(loop-player, {_premioOuro})
+        add {_runas} to {runas::%uuid of loop-player%}
+        send "&6&l=== RECOMPENSAS DA VITÓRIA ===" to loop-player
+        send "&7Recompensa de Guerra: &e+%{_premioOuro}% Ouros &7e &d+%{_runas}% Fragmentos Rúnicos!" to loop-player
+        give ovoPet() to loop-player
+        send "&5Você recebeu um Ovo de Pet!" to loop-player
+        darDropsBoss({_id}, loop-player, true)
+        registrarMemoria(loop-player, {_id})
+        play sound "ui.toast.challenge_complete" to loop-player
+    salvarBancoDados("Vitória contra Guardião #%{_id}%")

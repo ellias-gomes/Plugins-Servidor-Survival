@@ -1,0 +1,34 @@
+1792275050406:whitelist add _ellipw
+1792275059183:op _ellipw
+1792275095366:deop _ellipw
+1792275107182:remove whitelist add _ellipw
+1792275117878:whitelist remove _ellipw
+1792275125646:whitelist add ellipw
+1792275128518:op ellipw
+1792275244830:lp creategroup jogador
+1792275249613:lp group jogador permission set essentials.home true
+1792275255108:lp group jogador permission set essentials.sethome true
+1792275258956:lp group jogador permission set essentials.delhome true
+1792275263372:lp group jogador permission set essentials.spawn true
+1792275272764:lp group jogador permission set essentials.delhome true
+1792275279516:lp group jogador permission set essentials.pay true
+1792275285388:lp group jogador permission set essentials.balance true
+1792275289132:lp group jogador permission set essentials.balancetop true
+1792275292516:lp group jogador permission set essentials.tpa true
+1792275297596:lp group jogador permission set essentials.tpaccept true
+1792275300788:lp group jogador permission set essentials.tpdeny true
+1792275304604:lp group jogador permission set dynamicshop.use true
+1792275307892:lp group jogador permission set dynamicshop.use.sellgui true
+1792275312268:lp group jogador permission set quickshop.create.sell true
+1792275315588:lp group jogador permission set quickshop.create.buy true
+1792275320092:lp group jogador permission set quickshop.use true
+1792275323331:lp group jogador permission set griefprevention.createclaims true
+1792275326996:lp group jogador permission set griefprevention.claims true
+1792275330180:lp group jogador permission set griefprevention.visualizenearbyclaims true
+1792275335468:lp creategroup admin
+1792275339307:lp group admin parent add jogador
+1792275347900:lp group admin permission set aurelion.admin true
+1792275359436:lp user ellipw parent add admin
+1792275369987:adjustbonusclaimblocks ellipw 10000
+1792276431575:final restaurar
+1792276450319:exit

@@ -1,0 +1,38 @@
+# Cole estes comandos no console do servidor (sem a barra) após a 1ª inicialização.
+# Troque Ellias/Pedro pelos nicks reais do Minecraft (o Pedro entra na whitelist também).
+
+whitelist add Ellias
+whitelist add Pedro
+op Ellias
+
+# Grupos e permissões no LuckPerms
+lp creategroup jogador
+lp group jogador permission set essentials.home true
+lp group jogador permission set essentials.sethome true
+lp group jogador permission set essentials.delhome true
+lp group jogador permission set essentials.spawn true
+lp group jogador permission set essentials.pay true
+lp group jogador permission set essentials.balance true
+lp group jogador permission set essentials.balancetop true
+lp group jogador permission set essentials.tpa true
+lp group jogador permission set essentials.tpaccept true
+lp group jogador permission set essentials.tpdeny true
+lp group jogador permission set dynamicshop.use true
+lp group jogador permission set dynamicshop.use.sellgui true
+lp group jogador permission set quickshop.create.sell true
+lp group jogador permission set quickshop.create.buy true
+lp group jogador permission set quickshop.use true
+lp group jogador permission set griefprevention.createclaims true
+lp group jogador permission set griefprevention.claims true
+lp group jogador permission set griefprevention.visualizenearbyclaims true
+
+# Grupo Admin
+lp creategroup admin
+lp group admin parent add jogador
+lp group admin permission set aurelion.admin true
+lp user Ellias parent add admin
+lp user Pedro parent add jogador
+
+# Blocos de proteção para construção da vila (10.000 blocos cada)
+adjustbonusclaimblocks Ellias 10000
+adjustbonusclaimblocks Pedro 10000
