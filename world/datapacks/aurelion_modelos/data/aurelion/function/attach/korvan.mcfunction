@@ -12,6 +12,11 @@ effect give @s minecraft:invisibility infinite 0 true
 attribute @s minecraft:scale base set 1.8
 item replace entity @s weapon.mainhand with minecraft:air
 item replace entity @s weapon.offhand with minecraft:air
+bossbar add aurelion:boss_3 "§c§lKorvan, o Ferreiro Caído §7[Fase I]"
+bossbar set aurelion:boss_3 color red
+bossbar set aurelion:boss_3 style notched_10
+bossbar set aurelion:boss_3 name "§c§lKorvan, o Ferreiro Caído §7[Fase I]"
+bossbar set aurelion:boss_3 visible true
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_korvan_torso"],block_state:"minecraft:blackstone",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.7500f,2.1000f,-0.4500f],scale:[1.5000f,1.6000f,0.9000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_korvan_magma_peito"],block_state:"minecraft:magma_block",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.4500f,2.4500f,0.4250f],scale:[0.9000f,0.9000f,0.1500f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f,brightness:{block:15,sky:15}}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_korvan_magma_costas"],block_state:"minecraft:magma_block",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.4000f,2.6000f,-0.6250f],scale:[0.8000f,0.8000f,0.1500f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f,brightness:{block:15,sky:15}}

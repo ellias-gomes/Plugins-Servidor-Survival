@@ -2,6 +2,12 @@
 # Inicia o servidor "Cinzas de Aurelion" (Paper 26.3, Java 25).
 cd "$(dirname "$0")" || exit 1
 RAM="${RAM:-5G}"   # máquina com 12 GB: 5G é seguro. Aumente para 6G/8G se tiver folga.
+
+# Garante que o pacote de skins 3D está atualizado e inicia mini-servidor HTTP local (porta 8081) para envio no jogo
+python3 scripts/gerar_skins_itens.py >/dev/null 2>&1 || true
+pkill -f "http.server 8081" 2>/dev/null || true
+python3 -m http.server 8081 --directory resourcepack >/dev/null 2>&1 &
+
 while true; do
   python3 scripts/banco_dados.py salvar "Inicializacao do Servidor" 2>/dev/null || true
   java -Xms$RAM -Xmx$RAM -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 \

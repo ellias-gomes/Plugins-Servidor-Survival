@@ -1,0 +1,27 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "entries": [
+      {
+        "threshold": 1016,
+        "model": {
+          "type": "minecraft:model",
+          "model": "aurelion:item/lamina_vampiro"
+        }
+      },
+      {
+        "threshold": 1020,
+        "model": {
+          "type": "minecraft:model",
+          "model": "aurelion:item/lamina_musgo"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/diamond_sword"
+    }
+  }
+}

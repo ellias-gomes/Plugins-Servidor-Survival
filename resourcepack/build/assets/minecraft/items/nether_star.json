@@ -1,0 +1,27 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "entries": [
+      {
+        "threshold": 1025,
+        "model": {
+          "type": "minecraft:model",
+          "model": "aurelion:item/coracao_chama"
+        }
+      },
+      {
+        "threshold": 1030,
+        "model": {
+          "type": "minecraft:model",
+          "model": "aurelion:item/insignia_rpg"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/nether_star"
+    }
+  }
+}

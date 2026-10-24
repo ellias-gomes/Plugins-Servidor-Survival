@@ -1,9 +1,8 @@
 # ============================================================================
 #  LORE - "As Cinzas de Aurelion"
-#  - Livro Físico Oficial: "Crônicas de Aurelion" entregue no 1º join ou via /lore livro
-#  - Explicação solene e detalhada dos desfechos: RESTAURAR vs LIBERTAR
+#  - Livro Físico Oficial: "Crônicas de Aurelion" (Shift+Clique abre o Menu do Eco de Valdric!)
 #  - Pergaminhos de Memória Ancestral entregues após cada Guardião
-#  - Comandos /lore, /memorias, /mentor e /final
+#  - Escolha Orgânica do Desfecho: Clique Direito com o "Coração da Chama" abre o Altar do Destino!
 # ============================================================================
 
 function darLivroLore(p: player):
@@ -40,7 +39,7 @@ function registrarMemoria(p: player, id: number):
     send "" to {_p}
     send "&6&l✦ MEMÓRIA ANCESTRAL RECUPERADA ✦" to {_p}
     send lembranca({_id}) to {_p}
-    send "&7(Um pergaminho foi colocado em seu inventário. Releia com &f/memorias&7)" to {_p}
+    send "&7(Um pergaminho foi colocado em seu inventário. Clique nele com o botão direito para reler!)" to {_p}
     play sound "block.enchantment_table.use" to {_p}
 
 on right click with paper:
@@ -53,6 +52,115 @@ on right click with paper:
                 send lembranca(loop-number) to player
                 play sound "item.book.page_turn" to player
                 stop
+
+# ---------- Interação Orgânica com o Livro Crônicas de Aurelion (Shift + Clique Direito) ----------
+
+function consultarMentor(p: player):
+    set {diario::%uuid of {_p}%::mentor} to true
+    set {_o} to proximoObjetivo({_p})
+    send "" to {_p}
+    send "&6[Eco de Valdric] &7A marca de ouro em sua mão aquece e você escuta a voz de seu mestre:" to {_p}
+    if {_o} is 0:
+        send "&a'Meus filhos... vós superastes a escuridão. Segurem o Coração da Chama e cliquem com o botão direito para selar o destino do mundo!'" to {_p}
+    else:
+        send "&e'Vossa próxima provação: &f%tituloObj({_o})%&e.'" to {_p}
+        send "&7%descObj({_o})%" to {_p}
+    play sound "block.beacon.ambient" to {_p}
+
+function abrirMenuLore(p: player):
+    set {_gui} to chest inventory with 3 rows named "&6&lSantuário de Lore & Valdric"
+    set slot 11 of {_gui} to beacon named "&6&lOuvir o Eco de Valdric (Mentor)" with lore "&7Sintonize a marca de ouro na sua palma" and "&7para ouvir o conselho do Alquimista-Rei." and "&eClique para escutar!"
+    set slot 13 of {_gui} to paper named "&e&lMemórias dos Guardiões" with lore "&7Releia as lembranças recuperadas" and "&7ao purificar os Guardiões de Aurelion." and "&eClique para recordar!"
+    set slot 15 of {_gui} to writable book named "&a&lAbrir Diário de Bordo" with lore "&7Acompanhe os 10 Objetivos da Campanha," and "&7Pets, Banco e Caçadas." and "&eClique para abrir!"
+    open {_gui} to {_p}
+
+on right click with written book:
+    if player is sneaking:
+        cancel event
+        abrirMenuLore(player)
+
+on inventory click:
+    if "%name of event-inventory%" contains "Santuário de Lore & Valdric":
+        cancel event
+        set {_idx} to index of clicked slot
+        if {_idx} is 11:
+            close player's inventory
+            consultarMentor(player)
+        else if {_idx} is 13:
+            close player's inventory
+            execute player command "memorias"
+        else if {_idx} is 15:
+            close player's inventory
+            execute player command "diario"
+
+# ---------- Escolha Orgânica do Desfecho com a Relíquia "Coração da Chama" ----------
+
+function abrirMenuFinal(p: player):
+    if {prog::boss::5} is not set:
+        send "&cO Eclipse ainda não foi derrotado nas profundezas!" to {_p}
+        stop
+    if {final::resolvido} is set:
+        send "&7O destino de Aurelion já foi selado: &f%{final::resolvido}%" to {_p}
+        stop
+    set {_gui} to chest inventory with 3 rows named "&6&lO Destino da Chama-Coração"
+    set slot 11 of {_gui} to beacon named "&6&l1. RESTAURAR A CHAMA" with lore "&7Reerguer o Império de Aurelion." and "&7Ellias e Pedro são coroados os" and "&7Novos Imperadores da Ordem." and "&e• Fronteira +10.000 blocos & Prosperidade" and "" and "&6Clique para votar em RESTAURAR!"
+    set slot 15 of {_gui} to ender eye named "&5&l2. LIBERTAR O MUNDO" with lore "&7Despedaçar o cristal no Vazio." and "&7Romper o ciclo de reis e tronos," and "&7devolvendo a magia livre à natureza." and "&d• Fronteira +10.000 blocos & Liberdade" and "" and "&5Clique para votar em LIBERTAR!"
+    open {_gui} to {_p}
+
+function votarFinal(p: player, escolha: text):
+    if {prog::boss::5} is not set:
+        send "&cO Eclipse ainda não foi derrotado nas profundezas." to {_p}
+        stop
+    if {final::resolvido} is set:
+        send "&7O destino de Aurelion já foi selado: &f%{final::resolvido}%" to {_p}
+        stop
+    set {final::%uuid of {_p}%} to {_escolha}
+    broadcast "&6[Aurelion] &e%{_p}% &7tocou o Coração da Chama e escolheu: &f%{_escolha}%. &7Aguardando a decisão em consenso..."
+    play sound "block.end_portal_frame.fill" to {_p}
+    set {_acordo} to true
+    set {_conta} to 0
+    loop all players:
+        add 1 to {_conta}
+        if {final::%uuid of loop-player%} is not {_escolha}:
+            set {_acordo} to false
+    if {_conta} < 2:
+        set {_acordo} to false
+    if {_acordo} is true:
+        set {final::resolvido} to {_escolha}
+        add 1 to {temporada}
+        execute console command "worldborder add 10000 180"
+        if {_escolha} is "restaurar":
+            broadcast ""
+            broadcast "&6&l✦ A CHAMA-CORAÇÃO RENASCE PURIFICADA ✦"
+            broadcast "&eO Império de Aurelion ergue-se das cinzas! Ellias e Pedro são coroados os Reis da Nova Ordem."
+            broadcast "&7A fronteira do mundo expandiu em +10.000 blocos e a prosperidade brilha eternamente."
+            broadcast ""
+        else:
+            broadcast ""
+            broadcast "&5&l✦ O MUNDO É LIVRE DO JUGO DA CHAMA ✦"
+            broadcast "&dO cristal foi despedaçado! Ninguém mais será escravo da ambição de governar."
+            broadcast "&7A fronteira do mundo expandiu em +10.000 blocos para vocês explorarem como homens livres."
+            broadcast ""
+        loop all players:
+            give loop-player 1 beacon named "&6&lSelo da Nova Era"
+            add 100 to {runas::%uuid of loop-player%}
+            play sound "ui.toast.challenge_complete" to loop-player
+
+on right click with nether star:
+    if "%name of player's tool%" contains "Coração da Chama":
+        cancel event
+        abrirMenuFinal(player)
+
+on inventory click:
+    if "%name of event-inventory%" contains "O Destino da Chama-Coração":
+        cancel event
+        set {_idx} to index of clicked slot
+        if {_idx} is 11:
+            close player's inventory
+            votarFinal(player, "restaurar")
+        else if {_idx} is 15:
+            close player's inventory
+            votarFinal(player, "libertar")
 
 on first join:
     set {_u} to "%uuid of player%"
@@ -67,8 +175,8 @@ on first join:
     wait 4 seconds
     send "&6&l=== AS CINZAS DE AURELION ===" to player
     send "&7Você e seu parceiro acordaram marcados pelo &6Fio de Ouro&7." to player
-    send "&eUm livro com as Crônicas Antigas foi colocado em suas mãos! &7Abra-o para ler." to player
-    send "&7Digite &f/diario &7para suas missões, &f/mentor &7para conselhos e &f/lojas &7para o comércio." to player
+    send "&e• Livro Crônicas de Aurelion: &7Abra para ler ou faça &fShift + Clique Direito &7com ele para falar com o Mentor Valdric!" to player
+    send "&e• Bússola Rúnica: &7Clique com o botão direito segurando a &fBússola &7para rastrear os Guardiões e ver os Rituais!" to player
 
 command /lore [<text>]:
     aliases: /historia, /cronicas
@@ -79,11 +187,7 @@ command /lore [<text>]:
             send "&aVocê recebeu um novo exemplar das &6Crônicas de Aurelion&a!" to player
             play sound "item.book.put" to player
             stop
-        send "&6&l=== As Cinzas de Aurelion ===" to player
-        send "&7Mil anos após a Grande Cisão, os Gêmeos da Ordem despertam para reunir os 5 Fragmentos." to player
-        send "&f/lore livro &7- Receba o Livro Escrito oficial com todas as páginas e detalhes!" to player
-        send "&f/memorias &7- Releia as vozes dos guardiões derrotados." to player
-        send "&f/mentor &7- Ouça o conselho do eco de Valdric sobre o próximo passo." to player
+        abrirMenuLore(player)
 
 command /memorias:
     aliases: /lembrancas
@@ -102,58 +206,14 @@ command /mentor:
     aliases: /guia
     description: Conselho do Alquimista-Rei Valdric
     trigger:
-        set {diario::%uuid of player%::mentor} to true
-        set {_o} to proximoObjetivo(player)
-        send "&6[Eco de Valdric] &7A marca em sua mão aquece e você escuta a voz de seu mestre:" to player
-        if {_o} is 0:
-            send "&a'Meus filhos... vós superastes a escuridão. O destino do mundo agora repousa em vossas mãos: /final.'" to player
-        else:
-            send "&e'Vossa próxima provação: &f%tituloObj({_o})%&e.'" to player
-            send "&7%descObj({_o})%" to player
+        consultarMentor(player)
 
-command /final <text>:
-    description: Escolha o destino da Chama-Coração (restaurar | libertar) - decisão mútua obrigatória
+command /final [<text>]:
+    description: Escolha o destino da Chama-Coração (restaurar | libertar)
     trigger:
-        if {prog::boss::5} is not set:
-            send "&cO Eclipse ainda não foi derrotado nas profundezas." to player
-            stop
-        if {final::resolvido} is set:
-            send "&7O destino de Aurelion já foi selado: &f%{final::resolvido}%" to player
-            stop
-        if arg-1 is not "restaurar":
-            if arg-1 is not "libertar":
-                send "&cEscolha entre os dois caminhos sagrados:" to player
-                send "&6/final restaurar &7- Reerguer o Império de Aurelion como Novos Reis da Ordem." to player
-                send "&5/final libertar &7- Despedaçar a Chama e libertar o mundo de todo e qualquer trono." to player
-                send "&8(Consulte seu livro em /lore livro para entender o impacto de cada escolha!)" to player
-                stop
-        set {final::%uuid of player%} to arg-1
-        broadcast "&6[Aurelion] &e%player% &7votou por: &f%arg-1%. &7Aguardando a confirmação do seu irmão..."
-        set {_acordo} to true
-        set {_conta} to 0
-        loop all players:
-            add 1 to {_conta}
-            if {final::%uuid of loop-player%} is not arg-1:
-                set {_acordo} to false
-        if {_conta} < 2:
-            set {_acordo} to false
-        if {_acordo} is true:
-            set {final::resolvido} to arg-1
-            add 1 to {temporada}
-            execute console command "worldborder add 10000 180"
-            if arg-1 is "restaurar":
-                broadcast ""
-                broadcast "&6&l✦ A CHAMA-CORAÇÃO RENASCE PURIFICADA ✦"
-                broadcast "&eO Império de Aurelion ergue-se das cinzas! Ellias e Pedro são coroados os Reis da Nova Ordem."
-                broadcast "&7A fronteira do mundo expandiu em +10.000 blocos e a prosperidade brilha eternamente."
-                broadcast ""
-            else:
-                broadcast ""
-                broadcast "&5&l✦ O MUNDO É LIVRE DO JUGO DA CHAMA ✦"
-                broadcast "&dO cristal foi despedaçado! Ninguém mais será escravo da ambição de governar."
-                broadcast "&7A fronteira do mundo expandiu em +10.000 blocos para vocês explorarem como homens livres."
-                broadcast ""
-            loop all players:
-                give loop-player 1 beacon named "&6&lSelo da Nova Era"
-                add 100 to {runas::%uuid of loop-player%}
-                play sound "ui.toast.challenge_complete" to loop-player
+        if arg-1 is "restaurar":
+            votarFinal(player, "restaurar")
+        else if arg-1 is "libertar":
+            votarFinal(player, "libertar")
+        else:
+            abrirMenuFinal(player)

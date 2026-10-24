@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/book"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1031
+      },
+      "model": "aurelion:item/tomo_talento"
+    }
+  ]
+}

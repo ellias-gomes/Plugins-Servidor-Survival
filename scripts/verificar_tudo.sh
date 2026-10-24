@@ -71,6 +71,10 @@ SCRIPTS_ESPERADOS=(
     "skyrim.sk"
     "modelos.sk"
     "sistema_dados.sk"
+    "racas_classes.sk"
+    "profissoes.sk"
+    "forja_artefatos.sk"
+    "skins_itens.sk"
 )
 
 for s in "${SCRIPTS_ESPERADOS[@]}"; do
@@ -96,6 +100,13 @@ if [ -f "world/datapacks/aurelion_modelos/pack.mcmeta" ]; then
     echo "  [OK] Datapack 3D 'aurelion_modelos' instalado ($COUNT mcfunctions de modelos, feixe sônico e animações)"
 else
     echo "  [FALTA] Datapack 'aurelion_modelos' não encontrado! Rode: python3 scripts/gerar_modelos.py"
+fi
+
+if [ -f "resourcepack/aurelion_resourcepack.zip" ]; then
+    RP_SIZE=$(du -h resourcepack/aurelion_resourcepack.zip | awk '{print $1}')
+    echo "  [OK] Resource Pack 'aurelion_resourcepack.zip' presente ($RP_SIZE - 32 skins e modelos 1ª/3ª pessoa)"
+else
+    echo "  [FALTA] Resource Pack de skins não encontrado! Rode: ./scripts/instalar_skins.sh"
 fi
 
 if [ -f "dados/aurelion.db" ]; then

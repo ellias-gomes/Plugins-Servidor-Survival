@@ -1,55 +1,96 @@
 # ============================================================================
-#  PROGRESSÃO: Fragmentos Rúnicos (moeda de endgame), Pets colecionáveis (Pedro),
-#  Ofícios/salários (Ellias), Exploração/Cartografia (Pedro) e setup do mundo.
+#  PROGRESSÃO: Fragmentos Rúnicos (Ferreiro em GUI + Mesa de Ferraria),
+#  Pets colecionáveis (GUI + interação física), Ofícios/salários e Cartografia.
 # ============================================================================
 
-# ---------------------------- RUNAS ----------------------------
+# ---------------------------- FERREIRO DAS RUNAS (GUI + ORGÂNICO) ----------------------------
+
+function comprarItemRuna(p: player, n: number):
+    set {_u} to "%uuid of {_p}%"
+    set {_r} to {runas::%{_u}%}
+    if {_r} is not set:
+        set {_r} to 0
+    if {_n} is 1:
+        set {_c} to 30
+    else if {_n} is 2:
+        set {_c} to 10
+    else if {_n} is 3:
+        set {_c} to 5
+    else if {_n} is 4:
+        set {_c} to 20
+    else:
+        send "&cOpção inválida." to {_p}
+        stop
+    if {_r} < {_c}:
+        send "&cFragmentos Rúnicos insuficientes (Custo: %{_c}% | Você tem: %{_r}%)." to {_p}
+        play sound "block.anvil.Place" to {_p}
+        stop
+    if {_n} is 3:
+        if {_p}'s tool is air:
+            send "&cSegure o item que deseja reparar na mão principal!" to {_p}
+            stop
+        repair {_p}'s tool
+    remove {_c} from {runas::%{_u}%}
+    if {_n} is 1:
+        give ovoPet() to {_p}
+    else if {_n} is 2:
+        darSeloLapide({_p})
+    else if {_n} is 4:
+        give enchanted book of mending 1 to {_p}
+    send "&d&l[Ferreiro das Runas] &aForja concluída! (&d-%{_c}% Runas&a)" to {_p}
+    play sound "block.smithing_table.use" to {_p}
+
+function abrirMenuRunas(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_r} to {runas::%{_u}%}
+    if {_r} is not set:
+        set {_r} to 0
+    set {_gui} to chest inventory with 3 rows named "&d&lFerreiro das Runas"
+    set slot 4 of {_gui} to amethyst cluster named "&d&lSeus Fragmentos Rúnicos: &f%{_r}%" with lore "&7Obtidos ao derrotar Guardiões, Semi-Bosses" and "&7e explorar novos biomas pelo mundo."
+    set slot 10 of {_gui} to turtle egg named "&5&l1. Ovo de Pet Místico" with lore "&7Custo: &d30 Runas" and "&7Choca um companheiro colecionável." and "&eClique para forjar!"
+    set slot 12 of {_gui} to cobbled deepslate wall named "&6&l2. Selo Sagrado da Lápide" with lore "&7Custo: &d10 Runas" and "&7Reduz a taxa de resgate de morte em 50%% por 24h." and "&eClique para ativar!"
+    set slot 14 of {_gui} to anvil named "&a&l3. Reparo Rúnico Total" with lore "&7Custo: &d5 Runas" and "&7Restaura 100%% da durabilidade do item na sua mão." and "&eClique para reparar!"
+    set slot 16 of {_gui} to enchanted book named "&b&l4. Tomo de Remendo (Mending)" with lore "&7Custo: &d20 Runas" and "&7Entrega um Livro Encantado de Remendo I." and "&eClique para adquirir!"
+    set slot 22 of {_gui} to arrow named "&7Voltar ao Diário de Bordo" with lore "&eClique para voltar"
+    open {_gui} to {_p}
+
+# Interação orgânica: Shift + Clique Direito em uma Mesa de Ferraria (Smithing Table) abre o Ferreiro das Runas!
+on right click on smithing table:
+    if player is sneaking:
+        cancel event
+        abrirMenuRunas(player)
+
+on inventory click:
+    if "%name of event-inventory%" contains "Ferreiro das Runas":
+        cancel event
+        set {_idx} to index of clicked slot
+        if {_idx} is 10:
+            comprarItemRuna(player, 1)
+            abrirMenuRunas(player)
+        else if {_idx} is 12:
+            comprarItemRuna(player, 2)
+            abrirMenuRunas(player)
+        else if {_idx} is 14:
+            close player's inventory
+            comprarItemRuna(player, 3)
+        else if {_idx} is 16:
+            comprarItemRuna(player, 4)
+            abrirMenuRunas(player)
+        else if {_idx} is 22:
+            close player's inventory
+            execute player command "diario"
+
 command /runas [<text>] [<number>]:
     aliases: /runa, /ferreiro
-    description: Ferreiro das Runas - gaste Fragmentos Rúnicos (só vêm de bosses)
+    description: Ferreiro das Runas - gaste Fragmentos Rúnicos
     trigger:
-        set {_u} to "%uuid of player%"
-        set {_r} to {runas::%{_u}%}
-        if {_r} is not set:
-            set {_r} to 0
-        if arg-1 is not "comprar":
-            send "&d&l=== Ferreiro das Runas === &7Você tem &d%{_r}% &7runas" to player
-            send "&e1. &fOvo de Pet &d(30)" to player
-            send "&e2. &fSelo da Lápide: -50%% da taxa por 24h &d(10)" to player
-            send "&e3. &fReparo completo do item na mão &d(5)" to player
-            send "&e4. &fLivro de Remendo &d(20)" to player
-            send "&7Use &f/runas comprar <nº>" to player
-            stop
-        set {_n} to arg-2
-        if {_n} is 1:
-            set {_c} to 30
-        else if {_n} is 2:
-            set {_c} to 10
-        else if {_n} is 3:
-            set {_c} to 5
-        else if {_n} is 4:
-            set {_c} to 20
-        else:
-            send "&cOpção inválida." to player
-            stop
-        if {_r} < {_c}:
-            send "&cRunas insuficientes (%{_c}%)." to player
-            stop
-        if {_n} is 3:
-            if player's tool is air:
-                send "&cSegure um item para reparar." to player
+        if arg-1 is "comprar":
+            if arg-2 is set:
+                comprarItemRuna(player, arg-2)
                 stop
-            repair player's tool
-        remove {_c} from {runas::%{_u}%}
-        if {_n} is 1:
-            give ovoPet() to player
-        else if {_n} is 2:
-            darSeloLapide(player)
-        else if {_n} is 4:
-            give enchanted book of mending 1 to player
-        send "&aCompra realizada." to player
+        abrirMenuRunas(player)
 
-# ---------------------------- PETS ----------------------------
+# ---------------------------- PETS (GUI + INTERAÇÃO ORGÂNICA) ----------------------------
 on load:
     set {petcat::ids::*} to "lobo_cinza", "gato_musgo", "papagaio_rubi", "lobo_espectral", "gato_noturno", "papagaio_sol", "lobo_ferrugem", "gato_tempestade", "papagaio_mares", "lobo_aurelion" and "gato_eclipse"
 
@@ -110,12 +151,13 @@ on right click with turtle egg:
         set {_nome} to petInfo({_id}, "nome")
         if {pets::%{_u}%::owned::*} contains {_id}:
             add 8 to {runas::%{_u}%}
-            send "&dO ovo chocou um &f%{_nome}% &dque você já tem! Convertido em &f8 runas&d." to player
+            send "&dO ovo chocou um &f%{_nome}% &dque você já tem! Convertido em &f+8 Runas&d." to player
         else:
             add {_id} to {pets::%{_u}%::owned::*}
             set {pets::%{_u}%::xp::%{_id}%} to 0
-            send "&d&l✦ NOVO PET (%{_rar}%)! &f%{_nome}% &7- invoque com /pet invocar %{_id}%" to player
+            send "&d&l✦ NOVO PET (%{_rar}%)! &f%{_nome}% &7adicionado à sua coleção!" to player
             play sound "entity.player.levelup" to player
+            invocarPetPorId(player, {_id})
 
 function petNivel(p: player, id: text) :: number:
     set {_xp} to {pets::%uuid of {_p}%::xp::%{_id}%}
@@ -133,46 +175,99 @@ function removerPet(p: player):
         if "%name of loop-entity%" contains "(Pet de %{_p}%)":
             kill loop-entity
 
+function invocarPetPorId(p: player, pid: text):
+    set {_u} to "%uuid of {_p}%"
+    if {pets::%{_u}%::owned::*} does not contain {_pid}:
+        send "&cVocê ainda não descobriu esse Pet!" to {_p}
+        stop
+    removerPet({_p})
+    set {_t} to petInfo({_pid}, "tipo")
+    set {_nome} to petInfo({_pid}, "nome")
+    if {_t} is "wolf":
+        spawn 1 wolf at {_p}
+    else if {_t} is "cat":
+        spawn 1 cat at {_p}
+    else:
+        spawn 1 parrot at {_p}
+    set {_e} to last spawned entity
+    set name of {_e} to "&d%{_nome}% &7(Pet de %{_p}%)"
+    set {pet::ent::%{_u}%} to {_e}
+    set {pet::ativo::%{_u}%} to {_pid}
+    set {_nv} to petNivel({_p}, {_pid})
+    send "&d✦ Companheiro invocado: &f%{_nome}% &7(Nível %{_nv}% | Buff: %petInfo({_pid}, "buff")%)" to {_p}
+    play sound "entity.wolf.ambient" to {_p}
+
+function abrirMenuPets(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_gui} to chest inventory with 3 rows named "&d&lColeção de Pets de Aurelion"
+    set {_idx} to 0
+    loop {petcat::ids::*}:
+        set {_pid} to loop-value
+        set {_nm} to petInfo({_pid}, "nome")
+        set {_rr} to petInfo({_pid}, "raridade")
+        set {_bf} to petInfo({_pid}, "buff")
+        if {pets::%{_u}%::owned::*} contains {_pid}:
+            set {_nv} to petNivel({_p}, {_pid})
+            set {_st} to "&eClique para invocar este Pet!"
+            if {pet::ativo::%{_u}%} is {_pid}:
+                set {_st} to "&a✔ ATIVO AGORA (Clique para guardar)"
+            set slot {_idx} of {_gui} to bone named "&d&l%{_nm}%" with lore "&7Raridade: &f%{_rr}% &7| Nível: &e%{_nv}%" and "&7Bônus Passivo: &a%{_bf}%" and "" and {_st}
+        else:
+            set slot {_idx} of {_gui} to gray dye named "&8🔒 ??? (Não Descoberto)" with lore "&7Raridade: &f%{_rr}%" and "&7Choque Ovos de Pet para descobrir!"
+        add 1 to {_idx}
+    set slot 22 of {_gui} to arrow named "&7Voltar ao Diário de Bordo" with lore "&eClique para voltar"
+    set slot 26 of {_gui} to barrier named "&c&lGuardar Pet Atual" with lore "&7Recolhe seu companheiro ativo." and "&eClique para guardar"
+    open {_gui} to {_p}
+
+on inventory click:
+    if "%name of event-inventory%" contains "Coleção de Pets de Aurelion":
+        cancel event
+        set {_idx} to index of clicked slot
+        set {_u} to "%uuid of player%"
+        if {_idx} is 22:
+            close player's inventory
+            execute player command "diario"
+            stop
+        if {_idx} is 26:
+            removerPet(player)
+            delete {pet::ativo::%{_u}%}
+            send "&7Seu Pet foi guardado." to player
+            abrirMenuPets(player)
+            stop
+        set {_i} to {_idx} + 1
+        if {_i} >= 1:
+            if {_i} <= 11:
+                set {_pid} to {petcat::ids::%{_i}%}
+                if {pets::%{_u}%::owned::*} contains {_pid}:
+                    close player's inventory
+                    if {pet::ativo::%{_u}%} is {_pid}:
+                        removerPet(player)
+                        delete {pet::ativo::%{_u}%}
+                        send "&7Seu Pet foi guardado." to player
+                    else:
+                        invocarPetPorId(player, {_pid})
+
+# Interação orgânica: Clicar com botão direito (agachado) no próprio Pet no mundo abre o menu de Pets!
+on right click on wolf or cat or parrot:
+    if "%name of clicked entity%" contains "(Pet de %player%)":
+        cancel event
+        abrirMenuPets(player)
+
 command /pet [<text>] [<text>]:
     aliases: /pets
     description: Seus pets colecionáveis
     trigger:
         set {_u} to "%uuid of player%"
         if arg-1 is "invocar":
-            set {_pid} to arg-2
-            if {_pid} is not set:
-                send "&cUse /pet invocar <id_do_pet>" to player
+            if arg-2 is set:
+                invocarPetPorId(player, arg-2)
                 stop
-            if {pets::%{_u}%::owned::*} does not contain {_pid}:
-                send "&cVocê não tem esse pet. Veja /pet" to player
-                stop
-            removerPet(player)
-            set {_t} to petInfo({_pid}, "tipo")
-            set {_nome} to petInfo({_pid}, "nome")
-            if {_t} is "wolf":
-                spawn 1 wolf at player
-            else if {_t} is "cat":
-                spawn 1 cat at player
-            else:
-                spawn 1 parrot at player
-            set {_e} to last spawned entity
-            set name of {_e} to "&d%{_nome}% &7(Pet de %player%)"
-            set {pet::ent::%{_u}%} to {_e}
-            set {pet::ativo::%{_u}%} to {_pid}
-            set {_nv} to petNivel(player, {_pid})
-            send "&dPet invocado: &f%{_nome}% &7(nível %{_nv}%)" to player
         else if arg-1 is "guardar":
             removerPet(player)
             delete {pet::ativo::%{_u}%}
             send "&7Pet guardado." to player
-        else:
-            send "&d&l=== Coleção de Pets (%amount of {pets::%{_u}%::owned::*}%/11) ===" to player
-            loop {pets::%{_u}%::owned::*}:
-                set {_nm} to petInfo(loop-value, "nome")
-                set {_rr} to petInfo(loop-value, "raridade")
-                set {_nv} to petNivel(player, loop-value)
-                send "&f%{_nm}% &7[%{_rr}%] nv.%{_nv}% &8- /pet invocar %loop-value%" to player
-            send "&7Ovos vêm de bosses, exploração, dungeons e do Ferreiro das Runas." to player
+            stop
+        abrirMenuPets(player)
 
 function aplicarBuff(p: player, buff: text, tier: number):
     set {_t} to {_tier}
@@ -201,7 +296,10 @@ every 4 seconds:
         if {pet::ativo::%{_u}%} is set:
             set {_e} to {pet::ent::%{_u}%}
             if {_e} is alive:
-                if distance between {_e} and loop-player is greater than 8:
+                if world of {_e} is world of loop-player:
+                    if distance between {_e} and loop-player is greater than 8:
+                        teleport {_e} to loop-player
+                else:
                     teleport {_e} to loop-player
                 set {_lvl} to petNivel(loop-player, {pet::ativo::%{_u}%})
                 set {_tier} to 1
@@ -231,7 +329,6 @@ on quit:
     delete {pet::ativo::%uuid of player%}
 
 # ---------------------------- OFÍCIOS (salários) ----------------------------
-# Mineiro, lenhador e caçador pagam em ouro (salário NÃO indexado: inflação corrói o poder de compra).
 on break:
     set {_b} to "%type of event-block%"
     set {_v} to 0
@@ -261,11 +358,17 @@ on break:
             set {_v} to 3
         else:
             set {_v} to 2
+        # Bônus de salário por Nível de Minerador
+        if profissaoAtiva(player) is "minerador":
+            set {_v} to round({_v} * (1 + (0.2 * nivelProfissao(player))))
     else if {_b} contains "log":
-        set {_v} to 1
+        set {_v} to 2
+        # Bônus de salário por Nível de Lenhador
+        if profissaoAtiva(player) is "lenhador":
+            set {_v} to round({_v} * (1 + (0.2 * nivelProfissao(player))))
     if {_v} > 0:
         pagarSalario(player, {_v})
-        send action bar "&6Ofício: +%{_v}%" to player
+        send action bar "&6Ofício: +%{_v}% Ouros" to player
 
 on death of monster:
     if attacker is a player:
@@ -284,11 +387,14 @@ every 10 seconds:
             add {_b} to {explo::%{_u}%::*}
             set {_n} to amount of {explo::%{_u}%::*}
             pagarSalario(loop-player, 150)
-            send "&b[Cartografia] &7Bioma descoberto: &f%{_b}% &7(+150) &8- total %{_n}%" to loop-player
+            ganharXPRPG(loop-player, 35)
+            send "&b[Cartografia] &7Bioma descoberto: &f%{_b}% &7(+150 Ouros & +35 XP RPG) &8- total %{_n}%" to loop-player
             if mod({_n}, 10) is 0:
                 give ovoPet() to loop-player
+                give relicarioAntigo() to loop-player
+                give tomoConhecimento() to loop-player
                 add 5 to {runas::%{_u}%}
-                send "&d&lMarco de Cartógrafo (%{_n}% biomas)! &7Você ganhou um Ovo de Pet e 5 runas." to loop-player
+                send "&d&lMarco de Cartógrafo (%{_n}% biomas)! &7Você ganhou 1 Ovo de Pet, 1 Relicário Antigo, 1 Tomo do Conhecimento e 5 Runas." to loop-player
 
 # ---------------------------- SETUP DO MUNDO ----------------------------
 command /aurelionsetup:
@@ -299,4 +405,4 @@ command /aurelionsetup:
         execute console command "worldborder set 12000"
         execute console command "setworldspawn 0 100 0"
         send "&aBorda definida em 12.000 blocos e spawn configurado em (0, 100, 0)!" to player
-        send "&eA caçada aos 5 Guardiões é orgânica! Use &f/guardioes &eou &f/bussola &epara sintonizar o rumo." to player
+        send "&eA caçada aos 5 Guardiões é 100%% orgânica! Clique com botão direito segurando uma &fBússola&e." to player

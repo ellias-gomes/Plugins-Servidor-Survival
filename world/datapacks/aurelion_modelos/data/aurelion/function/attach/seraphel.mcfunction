@@ -12,6 +12,11 @@ effect give @s minecraft:invisibility infinite 0 true
 attribute @s minecraft:scale base set 2.0
 item replace entity @s weapon.mainhand with minecraft:air
 item replace entity @s weapon.offhand with minecraft:air
+bossbar add aurelion:boss_4 "§d§lSeraphel, o Oráculo Quebrado §7[Fase I]"
+bossbar set aurelion:boss_4 color pink
+bossbar set aurelion:boss_4 style notched_10
+bossbar set aurelion:boss_4 name "§d§lSeraphel, o Oráculo Quebrado §7[Fase I]"
+bossbar set aurelion:boss_4 visible true
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_seraphel_manto_top"],block_state:"minecraft:quartz_block",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.5500f,2.3000f,-0.3500f],scale:[1.1000f,1.4000f,0.7000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_seraphel_manto_base"],block_state:"minecraft:smooth_quartz",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.4000f,1.5000f,-0.2500f],scale:[0.8000f,1.0000f,0.5000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_seraphel_manto_ponta"],block_state:"minecraft:quartz_pillar",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.2000f,1.0500f,-0.1500f],scale:[0.4000f,0.5000f,0.3000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}

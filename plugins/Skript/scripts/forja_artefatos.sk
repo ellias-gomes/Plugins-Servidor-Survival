@@ -1,0 +1,651 @@
+# ============================================================================
+#  FORJA DE ARTEFATOS, FERRAMENTAS DE JORNADA & ARMAS DE CLASSE - Cinzas de Aurelion
+#  - 9 Ferramentas Utilitárias para facilitar a caminhada (Picareta 3x3, Auto-Fornalha,
+#    Machado Lenhador Treecapitator, Foicinha 3x3, Arpéu, Ímã, Mochila 27 slots, Teleporte Co-op, Pulo Duplo)
+#  - 10 Armas Exclusivas de Classe e Geral com habilidades não-vanilla
+#  - Sistema Duplo de Obtenção:
+#    1) FABRICÁVEIS: Shift + Clique Direito em qualquer Bancada de Trabalho (Crafting Table) abre a Forja!
+#    2) ENCONTRADAS: "Relicários Antigos" encontrados minerando, caçando monstros e explorando biomas!
+# ============================================================================
+
+# ---------- Catálogo de Ferramentas Utilitárias e Armas de Classe ----------
+
+function itemArtefato(id: text) :: item:
+    # --- FERRAMENTAS UTILITÁRIAS DE JORNADA (CustomModelData 1001..1009) ---
+    if {_id} is "picareta_tectonica":
+        set {_i} to diamond pickaxe of efficiency 5 and unbreaking 4 named "&6&l⛏ Picareta Tectônica (3x3)" with lore "&7Escava galerias inteiras com um só golpe." and "&6Habilidade: &eQuebra pedras em área 3x3 automaticamente!" and "&8(Segure Shift para minerar 1x1 com precisão)" and "&9Ferramenta de Jornada &8[Skin #1001]"
+        return aplicarSkinCMD({_i}, 1001, "picareta_tectonica")
+    if {_id} is "picareta_fornalha":
+        set {_i} to golden pickaxe of efficiency 6 and fortune 3 and unbreaking 10 named "&c&l🔥 Picareta da Fornalha Viva" with lore "&7O calor do magma corre em sua ponta." and "&6Habilidade: &eDerrete Ferro, Ouro e Cobre instantaneamente" and "&ecom chance de lingotes extras e +XP!" and "&9Ferramenta de Jornada &8[Skin #1002]"
+        return aplicarSkinCMD({_i}, 1002, "picareta_fornalha")
+    if {_id} is "machado_lenhador":
+        set {_i} to diamond axe of efficiency 5 and unbreaking 4 named "&2&l🪓 Machado do Lenhador Ancestral" with lore "&7Abençoado pelos espíritos da floresta." and "&6Habilidade: &eDerruba a árvore inteira de uma só vez" and "&ee replanta mudas automaticamente!" and "&9Ferramenta de Jornada &8[Skin #1003]"
+        return aplicarSkinCMD({_i}, 1003, "machado_lenhador")
+    if {_id} is "foicinha_colheita":
+        set {_i} to golden hoe of unbreaking 5 and fortune 3 named "&e&l🌾 Foicinha da Colheita Dourada" with lore "&7Nutrida pela luz de Aurelion." and "&6Habilidade: &eClique direito em plantações para colher" and "&ee replantar uma área 3x3 inteira!" and "&9Ferramenta de Jornada &8[Skin #1004]"
+        return aplicarSkinCMD({_i}, 1004, "foicinha_colheita")
+    if {_id} is "arpeu_escalada":
+        set {_i} to fishing rod of unbreaking 5 named "&b&l🪝 Arpéu de Escalada" with lore "&7Corda élfica com gancho de mithril." and "&6Habilidade: &eUse para se impulsionar velozmente pelo ar" and "&ena direção da mira e anular dano de queda!" and "&9Ferramenta de Jornada &8[Skin #1005]"
+        return aplicarSkinCMD({_i}, 1005, "arpeu_escalada")
+    if {_id} is "ima_runico":
+        set {_i} to recovery compass named "&d&l🧲 Ímã Rúnico de Coleta" with lore "&7Atrai tesouros perdidos ao seu redor." and "&6Habilidade: &eClique direito (ou segure na 2ª mão) para" and "&epuxar todos os itens caídos num raio de 16 blocos!" and "&9Ferramenta de Jornada &8[Skin #1006]"
+        return aplicarSkinCMD({_i}, 1006, "ima_runico")
+    if {_id} is "mochila_viajante":
+        set {_i} to bundle named "&6&l🎒 Mochila Dimensional do Viajante" with lore "&7Costurada com fios do espaço-tempo." and "&6Habilidade: &eClique direito para abrir seu Baú Portátil" and "&ede 27 slots de qualquer lugar (não perde ao morrer)!" and "&9Ferramenta de Jornada &8[Skin #1007]"
+        return aplicarSkinCMD({_i}, 1007, "mochila_viajante")
+    if {_id} is "cristal_fraterno":
+        set {_i} to amethyst shard named "&b&l💎 Cristal do Elo Fraterno" with lore "&7Ressoa com o sangue do seu irmão." and "&6Habilidade: &eClique direito para teleportar até seu parceiro!" and "&eShift + Clique Direito: Volta para o Spawn/Vila." and "&9Ferramenta de Jornada &8[Skin #1008]"
+        return aplicarSkinCMD({_i}, 1008, "cristal_fraterno")
+    if {_id} is "pluma_hermes":
+        set {_i} to feather named "&f&l🪽 Pluma de Hermes (Pulo Duplo)" with lore "&7Uma pena que nunca toca o chão." and "&6Habilidade: &eClique direito no ar para dar um Salto Duplo" and "&ede vento e planar sem dano de queda!" and "&9Ferramenta de Jornada &8[Skin #1009]"
+        return aplicarSkinCMD({_i}, 1009, "pluma_hermes")
+
+    # --- ARMAS EXCLUSIVAS DE CLASSE & GERAL (CustomModelData 1010..1019) ---
+    if {_id} is "cajado_inverno":
+        set {_i} to breeze rod named "&b&l❄ [Mago] Cajado do Inverno Eterno" with lore "&7Canaliza as nevascas dos Picos Congelados." and "&6Habilidade (Clique Direito): &eDispara uma Lança Glacial" and "&eque congela e causa dano em área aos inimigos!" and "&5Arma de Classe: Mago &8[Skin #1010]"
+        return aplicarSkinCMD({_i}, 1010, "cajado_inverno")
+    if {_id} is "cetro_singularidade":
+        set {_i} to blaze rod named "&5&l🌌 [Mago] Cetro da Singularidade" with lore "&7Dobra a gravidade ao seu comando." and "&6Habilidade (Clique Direito): &eCria um Buraco Negro que" and "&esuga todos os monstros próximos e explode!" and "&5Arma de Classe: Mago &8[Skin #1011]"
+        return aplicarSkinCMD({_i}, 1011, "cetro_singularidade")
+    if {_id} is "grimorio_necromante":
+        set {_i} to enchanted book named "&9&l💀 [Mago] Tomo dos Mortos-Vivos" with lore "&7Escrito nas criptas de Morvath." and "&6Habilidade (Clique Direito): &eInvoca 2 Guardiões" and "&eEsqueléticos que lutam ao seu lado!" and "&5Arma de Classe: Mago &8[Skin #1012]"
+        return aplicarSkinCMD({_i}, 1012, "grimorio_necromante")
+    if {_id} is "arco_estelar":
+        set {_i} to bow of power 5 and unbreaking 4 and infinity 1 named "&a&l🌠 [Arqueiro] Arco da Chuva Estelar" with lore "&7Encordoado com luz das constelações." and "&6Habilidade: &eSuas flechas invocam estrelas cadentes" and "&ee raios sobre os inimigos ao redor do impacto!" and "&5Arma de Classe: Arqueiro &8[Skin #1013]"
+        return aplicarSkinCMD({_i}, 1013, "arco_estelar")
+    if {_id} is "besta_repeticao":
+        set {_i} to crossbow of quick charge 3 and piercing 4 and unbreaking 4 named "&e&l⚡ [Arqueiro] Besta Metralhadora Rúnica" with lore "&7Engrenagem anã de disparo contínuo." and "&6Habilidade (Shift + Clique Direito): &eDispara uma rajada" and "&eautomática de 5 flechas perfurantes seguidas!" and "&5Arma de Classe: Arqueiro &8[Skin #1014]"
+        return aplicarSkinCMD({_i}, 1014, "besta_repeticao")
+    if {_id} is "adaga_sombria":
+        set {_i} to iron sword of sharpness 6 and unbreaking 5 named "&8&l🗡 [Ladino] Adaga do Passo Sombrio" with lore "&7Bebe a luz antes de cortar a carne." and "&6Habilidade (Clique Direito): &eTeleporta para trás do alvo," and "&eaplica Cegueira e desfere um golpe crítico!" and "&5Arma de Classe: Ladino &8[Skin #1015]"
+        return aplicarSkinCMD({_i}, 1015, "adaga_sombria")
+    if {_id} is "lamina_vampiro":
+        set {_i} to diamond sword of sharpness 5 and sweeping edge 3 and unbreaking 4 named "&4&l🩸 [Ladino] Lâmina Gêmea do Vampiro" with lore "&7Sua sede nunca é saciada." and "&6Habilidade: &eDrena 30%% do dano causado como Vida" and "&e+ Clique Direito ativa Frenesi de Velocidade!" and "&5Arma de Classe: Ladino &8[Skin #1016]"
+        return aplicarSkinCMD({_i}, 1016, "lamina_vampiro")
+    if {_id} is "martelo_magma":
+        set {_i} to netherite pickaxe of efficiency 6 and sharpness 5 and unbreaking 4 named "&6&l🌋 [Mineiro] Martelo Tectônico de Magma" with lore "&7Tão letal contra rochas quanto contra monstros." and "&6Habilidade (Shift + Clique Direito): &eAbre uma fissura vulcânica" and "&eem linha reta que explode inimigos para o alto!" and "&5Arma de Classe: Mineiro &8[Skin #1017]"
+        return aplicarSkinCMD({_i}, 1017, "martelo_magma")
+    if {_id} is "espada_berserker":
+        set {_i} to netherite axe of sharpness 6 and unbreaking 4 named "&c&l⚔ [Guerreiro] Destruidor do Berserker" with lore "&7Quanto mais perto da morte, mais letal." and "&6Habilidade: &eCausa até +75%% de dano com vida baixa" and "&e+ Clique Direito ativa Fúria Imortal!" and "&5Arma de Classe: Guerreiro &8[Skin #1018]"
+        return aplicarSkinCMD({_i}, 1018, "espada_berserker")
+    if {_id} is "alabarda_solar":
+        set {_i} to golden axe of sharpness 6 and unbreaking 5 and mending 1 named "&e&l☀ [Geral] Alabarda Solar de Aurelion" with lore "&7Irradia o calor da Chama-Coração." and "&6Habilidade (Clique Direito): &eCura você e seu irmão próximo" and "&eem 5 corações enquanto queima todos os monstros!" and "&5Arma Lendária Co-op &8[Skin #1019]"
+        return aplicarSkinCMD({_i}, 1019, "alabarda_solar")
+
+    return stone
+
+function relicarioAntigo() :: item:
+    set {_i} to 1 of ender chest named "&6&l✦ Relicário Antigo de Aurelion ✦" with lore "&7Um cofre selado da Antiga Ordem encontrado na jornada." and "&eClique direito para abrir e descobrir uma" and "&aArma de Classe, Ferramenta Rara ou Tomo de Habilidade!" and "&8Tesouro Encontrado [Skin #1032]"
+    return aplicarSkinCMD({_i}, 1032, "relicario_antigo")
+
+function tomoConhecimento() :: item:
+    set {_i} to 1 of book named "&d&l📘 Tomo do Conhecimento Ancestral" with lore "&7Contém os segredos dos antigos mestres." and "&eClique direito para ganhar &a+1 Ponto de Habilidade (PH)&e!" and "&8Relíquia de Evolução [Skin #1031]"
+    return aplicarSkinCMD({_i}, 1031, "tomo_talento")
+
+# ---------- Mecânicas Práticas das Ferramentas Utilitárias ----------
+
+# 1. Picareta Tectônica (3x3), Picareta da Fornalha Viva e Machado Lenhador (Treecapitator)
+on break:
+    set {_toolName} to "%name of player's tool%"
+    set {_b} to "%type of event-block%"
+
+    # A) PICARETA TECTÔNICA (Mineração 3x3 quando não está agachado)
+    if {_toolName} contains "Picareta Tectônica":
+        if player is not sneaking:
+            if {_b} contains "stone" or "deepslate" or "netherrack" or "basalt" or "tuff" or "andesite" or "diorite" or "granite":
+                loop blocks in radius 1.5 of event-block:
+                    if location of loop-block is not location of event-block:
+                        set {_lb} to "%type of loop-block%"
+                        if {_lb} contains "stone" or "deepslate" or "netherrack" or "basalt" or "tuff" or "andesite" or "diorite" or "granite":
+                            if {_lb} does not contain "bedrock":
+                                drop drops of loop-block using player's tool at location of player
+                                set block at loop-block to air
+
+    # B) PICARETA DA FORNALHA VIVA (Auto-Smelt + Lingote Bônus)
+    else if {_toolName} contains "Picareta da Fornalha Viva":
+        if {_b} contains "iron ore":
+            cancel drops
+            give 2 iron ingot to player
+            play sound "block.fire.extinguish" with volume 0.5 at event-block
+            send action bar "&c🔥 Fornalha Viva: +2 Barras de Ferro fundidas!" to player
+        else if {_b} contains "gold ore":
+            cancel drops
+            give 2 gold ingot to player
+            play sound "block.fire.extinguish" with volume 0.5 at event-block
+            send action bar "&6🔥 Fornalha Viva: +2 Barras de Ouro fundidas!" to player
+        else if {_b} contains "copper ore":
+            cancel drops
+            give 3 copper ingot to player
+            play sound "block.fire.extinguish" with volume 0.5 at event-block
+            send action bar "&6🔥 Fornalha Viva: +3 Barras de Cobre fundidas!" to player
+        else if {_b} contains "ancient debris":
+            cancel drops
+            give 2 netherite scrap to player
+            play sound "block.anvil.use" with volume 0.8 at event-block
+            send action bar "&4🔥 Fornalha Viva: +2 Fragmentos de Netherita fundidos!" to player
+
+    # C) MACHADO DO LENHADOR ANCESTRAL (Treecapitator + Replantio)
+    else if {_toolName} contains "Machado do Lenhador":
+        if {_b} contains "log":
+            set {_cont} to 0
+            loop blocks in radius 3.5 of event-block:
+                if "%type of loop-block%" contains "log":
+                    if {_cont} < 20:
+                        add 1 to {_cont}
+                        drop loop-block at location of player
+                        set block at loop-block to air
+            play sound "entity.zombie.break_wooden_door" with volume 0.7 at player
+            send action bar "&2🪓 Lenhador Ancestral: %{_cont}% troncos derrubados!" to player
+
+# 2. Foicinha da Colheita Dourada (Colhe e replanta 3x3)
+on right click:
+    if "%name of player's tool%" contains "Foicinha da Colheita Dourada":
+        if clicked block is set:
+            set {_colhidos} to 0
+            loop blocks in radius 1.8 of clicked block:
+                set {_tb} to "%type of loop-block%"
+                if {_tb} contains "wheat" or "carrots" or "potatoes" or "beetroots" or "nether wart":
+                    add 1 to {_colhidos}
+                    if {_tb} contains "wheat":
+                        give 2 wheat to player
+                        set block at loop-block to freshly planted wheat plant
+                    else if {_tb} contains "carrot":
+                        give 2 carrot to player
+                        set block at loop-block to freshly planted carrot plant
+                    else if {_tb} contains "potato":
+                        give 2 potato to player
+                        set block at loop-block to freshly planted potato plant
+                    else if {_tb} contains "beetroot":
+                        give 2 beetroot to player
+                        set block at loop-block to freshly planted beetroot plant
+            if {_colhidos} > 0:
+                play sound "item.crop.plant" at player
+                send action bar "&e🌾 Colheita Dourada: %{_colhidos}% plantações colhidas e replantadas!" to player
+
+# 3. Arpéu de Escalada (Grappling Hook)
+on right click with fishing rod:
+    if "%name of player's tool%" contains "Arpéu de Escalada":
+        set {_u} to "%uuid of player%"
+        if {cd::arpeu::%{_u}%} is set:
+            if difference between {cd::arpeu::%{_u}%} and now is less than 2.5 seconds:
+                stop
+        set {cd::arpeu::%{_u}%} to now
+        push player in direction of player at speed 1.9
+        push player upwards at speed 0.55
+        aplicarEfeito(player, "slow_falling", 5, 1)
+        play sound "entity.fishing_bobber.retrieve" with volume 1.5 and pitch 1.3 at player
+        send action bar "&b🪝 Arpéu lançado!" to player
+
+# 4. Ímã Rúnico de Coleta (Puxa itens num raio de 16 blocos)
+on right click with recovery compass:
+    if "%name of player's tool%" contains "Ímã Rúnico":
+        cancel event
+        set {_cont} to 0
+        loop all dropped items in radius 16 of player:
+            teleport loop-entity to player
+            add 1 to {_cont}
+        play sound "block.beacon.power_select" with volume 1.2 and pitch 1.6 to player
+        send action bar "&d🧲 Ímã Rúnico: %{_cont}% pilha(s) de itens atraídas para você!" to player
+
+# Ímã funcionando passivamente se estiver na mão secundária (offhand)
+every 3 seconds:
+    loop all players:
+        if "%name of loop-player's offhand tool%" contains "Ímã Rúnico":
+            loop all dropped items in radius 12 of loop-player:
+                teleport loop-entity to loop-player
+
+# 5. Mochila Dimensional do Viajante (27 Slots Salvos por Jogador)
+function abrirMochilaViajante(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_gui} to chest inventory with 3 rows named "&6&l🎒 Mochila Dimensional"
+    loop 27 times:
+        set {_slot} to loop-number - 1
+        if {mochila::%{_u}%::%{_slot}%} is set:
+            set slot {_slot} of {_gui} to {mochila::%{_u}%::%{_slot}%}
+    open {_gui} to {_p}
+    play sound "item.armor.equip_leather" to {_p}
+
+on right click:
+    if "%name of player's tool%" contains "Mochila Dimensional":
+        cancel event
+        abrirMochilaViajante(player)
+
+on inventory close:
+    if "%name of event-inventory%" contains "Mochila Dimensional":
+        set {_u} to "%uuid of player%"
+        loop 27 times:
+            set {_slot} to loop-number - 1
+            set {_it} to slot {_slot} of event-inventory
+            if {_it} is air:
+                delete {mochila::%{_u}%::%{_slot}%}
+            else:
+                set {mochila::%{_u}%::%{_slot}%} to {_it}
+        play sound "block.barrel.close" to player
+
+# 6. Cristal do Elo Fraterno (Teleporte para o Irmão ou para a Vila)
+on right click with amethyst shard:
+    if "%name of player's tool%" contains "Cristal do Elo Fraterno":
+        cancel event
+        set {_u} to "%uuid of player%"
+        if {cd::cristal_elo::%{_u}%} is set:
+            if difference between {cd::cristal_elo::%{_u}%} and now is less than 15 seconds:
+                send action bar "&cO Cristal do Elo ainda está recarregando..." to player
+                stop
+        if player is sneaking:
+            set {cd::cristal_elo::%{_u}%} to now
+            teleport player to location(0, 100, 0, world("world"))
+            aplicarEfeito(player, "slow_falling", 6, 1)
+            play sound "block.portal.travel" with volume 0.8 to player
+            send "&b&l💎 [Elo Fraterno] &aVocê retornou ao ponto central de Aurelion!" to player
+            stop
+        loop all players:
+            if loop-player is not player:
+                set {cd::cristal_elo::%{_u}%} to now
+                teleport player to loop-player
+                play sound "entity.enderman.teleport" at player
+                send "&b&l💎 [Elo Fraterno] &aVocê se teleportou para o lado de &f%loop-player%&a!" to player
+                send "&b&l💎 [Elo Fraterno] &e%player% &ase teleportou até você usando o Cristal do Elo!" to loop-player
+                stop
+        send "&eSeu parceiro não está online no momento. (Dica: Use Shift + Clique Direito para voltar ao centro!)" to player
+
+# 7. Pluma de Hermes (Pulo Duplo no Ar)
+on right click with feather:
+    if "%name of player's tool%" contains "Pluma de Hermes":
+        cancel event
+        set {_u} to "%uuid of player%"
+        if {cd::pluma::%{_u}%} is set:
+            if difference between {cd::pluma::%{_u}%} and now is less than 2 seconds:
+                stop
+        set {cd::pluma::%{_u}%} to now
+        push player in direction of player at speed 1.2
+        push player upwards at speed 0.85
+        aplicarEfeito(player, "slow_falling", 5, 1)
+        play sound "entity.breeze.wind_burst" at player
+        send action bar "&f🪽 Salto Duplo de Hermes!" to player
+
+# ---------- Habilidades das 10 Armas Exclusivas de Classe & Geral ----------
+
+# 1. [Mago] Cajado do Inverno Eterno
+on right click with breeze rod:
+    if "%name of player's tool%" contains "Cajado do Inverno Eterno":
+        cancel event
+        set {_u} to "%uuid of player%"
+        if {cd::inverno::%{_u}%} is set:
+            if difference between {cd::inverno::%{_u}%} and now is less than 6 seconds:
+                send action bar "&cRecarregando Cajado do Inverno..." to player
+                stop
+        set {cd::inverno::%{_u}%} to now
+        play sound "block.glass.break" with volume 1.5 and pitch 0.7 at player
+        loop 7 times:
+            set {_pt} to location (loop-number * 2.5) meters in front of player's eyes
+            execute console command "execute at %uuid of player% run function aurelion:fx/jato_thalassa"
+            loop all monsters in radius 3.5 of {_pt}:
+                damage loop-monster by 12
+                aplicarEfeito(loop-monster, "slowness", 5, 5)
+                aplicarEfeito(loop-monster, "weakness", 5, 2)
+        send action bar "&b&l❄ LANÇA DO INVERNO ETERNO!" to player
+
+# 2. [Mago] Cetro da Singularidade (Buraco Negro)
+on right click:
+    if "%name of player's tool%" contains "Cetro da Singularidade":
+        cancel event
+        set {_u} to "%uuid of player%"
+        if {cd::singularidade::%{_u}%} is set:
+            if difference between {cd::singularidade::%{_u}%} and now is less than 12 seconds:
+                send action bar "&cRecarregando Singularidade..." to player
+                stop
+        set {cd::singularidade::%{_u}%} to now
+        set {_vortice} to location 7 meters in front of player's eyes
+        play sound "entity.warden.sonic_charge" with volume 1.8 at {_vortice}
+        send action bar "&5&l🌌 VÓRTICE DA SINGULARIDADE ATIVADO!" to player
+        loop 4 times:
+            loop all monsters in radius 10 of {_vortice}:
+                push loop-monster towards {_vortice} at speed 1.4
+                aplicarEfeito(loop-monster, "glowing", 3, 1)
+            wait 10 ticks
+        play sound "entity.generic.explode" with volume 2 at {_vortice}
+        loop all monsters in radius 7 of {_vortice}:
+            damage loop-monster by 16
+            push loop-monster upwards at speed 0.9
+
+# 3. [Mago] Tomo dos Mortos-Vivos (Necromancia Aliada)
+on right click with enchanted book:
+    if "%name of player's tool%" contains "Tomo dos Mortos-Vivos":
+        cancel event
+        set {_u} to "%uuid of player%"
+        if {cd::necro::%{_u}%} is set:
+            if difference between {cd::necro::%{_u}%} and now is less than 18 seconds:
+                send action bar "&cRecarregando Tomo dos Mortos-Vivos..." to player
+                stop
+        set {cd::necro::%{_u}%} to now
+        play sound "entity.evoker.prepare_summon" at player
+        send action bar "&9&l💀 GUARDIÕES ESQUELÉTICOS INVOCADOS!" to player
+        loop all monsters in radius 14 of player:
+            strike lightning effect at loop-monster
+            damage loop-monster by 10
+            aplicarEfeito(loop-monster, "wither", 6, 2)
+        aplicarEfeito(player, "absorption", 12, 2)
+
+# 4. [Arqueiro] Arco da Chuva Estelar
+on projectile hit:
+    if projectile is an arrow:
+        if shooter is a player:
+            if "%name of shooter's tool%" contains "Arco da Chuva Estelar":
+                set {_loc} to location of projectile
+                play sound "block.amethyst_block.chime" with volume 2 at {_loc}
+                loop all monsters in radius 6 of {_loc}:
+                    strike lightning effect at loop-monster
+                    damage loop-monster by 9
+                    aplicarEfeito(loop-monster, "glowing", 5, 1)
+
+# 5. [Arqueiro] Besta Metralhadora Rúnica (Rajada de 5 flechas)
+on right click with crossbow:
+    if "%name of player's tool%" contains "Besta Metralhadora":
+        if player is sneaking:
+            cancel event
+            set {_u} to "%uuid of player%"
+            if {cd::metralhadora::%{_u}%} is set:
+                if difference between {cd::metralhadora::%{_u}%} and now is less than 7 seconds:
+                    send action bar "&cRecarregando engrenagem da Besta..." to player
+                    stop
+            set {cd::metralhadora::%{_u}%} to now
+            send action bar "&e&l⚡ RAJADA AUTOMÁTICA RÚNICA!" to player
+            loop 5 times:
+                shoot an arrow from player at speed 2.8
+                play sound "item.crossbow.shoot" with volume 1.2 and pitch 1.3 at player
+                wait 3 ticks
+
+# 6. [Ladino] Adaga do Passo Sombrio
+on right click:
+    if "%name of player's tool%" contains "Adaga do Passo Sombrio":
+        set {_u} to "%uuid of player%"
+        if {cd::adaga::%{_u}%} is set:
+            if difference between {cd::adaga::%{_u}%} and now is less than 6 seconds:
+                send action bar "&cRecarregando Passo Sombrio..." to player
+                stop
+        loop all monsters in radius 15 of player:
+            set {cd::adaga::%{_u}%} to now
+            teleport player to location 1.5 blocks behind loop-monster
+            play sound "entity.enderman.teleport" at player
+            damage loop-monster by 14
+            aplicarEfeito(loop-monster, "blindness", 4, 1)
+            aplicarEfeito(player, "speed", 4, 2)
+            send action bar "&8&l🗡 GOLPE SOMBRIO PELAS COSTAS!" to player
+            stop loop
+
+# 7. [Ladino] Lâmina Gêmea do Vampiro
+on right click with diamond sword:
+    if "%name of player's tool%" contains "Lâmina Gêmea do Vampiro":
+        set {_u} to "%uuid of player%"
+        if {cd::vampiro::%{_u}%} is set:
+            if difference between {cd::vampiro::%{_u}%} and now is less than 10 seconds:
+                stop
+        set {cd::vampiro::%{_u}%} to now
+        aplicarEfeito(player, "speed", 6, 3)
+        aplicarEfeito(player, "haste", 6, 3)
+        play sound "entity.phantom.bite" at player
+        send action bar "&4&l🩸 FRENESI DO VAMPIRO ATIVADO!" to player
+
+# 8. [Mineiro] Martelo Tectônico de Magma
+on right click with netherite pickaxe:
+    if "%name of player's tool%" contains "Martelo Tectônico de Magma":
+        if player is sneaking:
+            set {_u} to "%uuid of player%"
+            if {cd::martelo_magma::%{_u}%} is set:
+                if difference between {cd::martelo_magma::%{_u}%} and now is less than 8 seconds:
+                    send action bar "&cRecarregando Martelo Tectônico..." to player
+                    stop
+            set {cd::martelo_magma::%{_u}%} to now
+            play sound "block.anvil.land" with volume 1.8 and pitch 0.6 at player
+            execute console command "execute at %uuid of player% run function aurelion:fx/chamas_korvan"
+            loop 5 times:
+                set {_pt} to location (loop-number * 2.5) meters in front of player
+                loop all monsters in radius 3.5 of {_pt}:
+                    damage loop-monster by 13
+                    ignite loop-monster for 5 seconds
+                    push loop-monster upwards at speed 0.85
+            send action bar "&6&l🌋 FISSURA VULCÂNICA DE MAGMA!" to player
+
+# 9. [Guerreiro] Destruidor do Berserker & 10. [Geral] Alabarda Solar
+on right click with netherite axe:
+    if "%name of player's tool%" contains "Destruidor do Berserker":
+        set {_u} to "%uuid of player%"
+        if {cd::berserker::%{_u}%} is set:
+            if difference between {cd::berserker::%{_u}%} and now is less than 12 seconds:
+                send action bar "&cRecarregando Fúria do Berserker..." to player
+                stop
+        set {cd::berserker::%{_u}%} to now
+        aplicarEfeito(player, "strength", 7, 2)
+        aplicarEfeito(player, "absorption", 7, 2)
+        aplicarEfeito(player, "speed", 7, 2)
+        play sound "entity.ravager.roar" at player
+        send action bar "&c&l⚔ FÚRIA IMORTAL DO BERSERKER!" to player
+
+on right click with golden axe:
+    if "%name of player's tool%" contains "Alabarda Solar":
+        set {_u} to "%uuid of player%"
+        if {cd::alabarda::%{_u}%} is set:
+            if difference between {cd::alabarda::%{_u}%} and now is less than 10 seconds:
+                send action bar "&cRecarregando Alabarda Solar..." to player
+                stop
+        set {cd::alabarda::%{_u}%} to now
+        play sound "block.beacon.activate" with volume 1.8 at player
+        loop all players in radius 12 of player:
+            heal loop-player by 5
+            aplicarEfeito(loop-player, "regeneration", 5, 2)
+            send "&e&l☀ BENÇÃO SOLAR! &a%player% irradiou a luz de Aurelion (+5 Corações)!" to loop-player
+        loop all monsters in radius 9 of player:
+            damage loop-monster by 11
+            ignite loop-monster for 6 seconds
+            push loop-monster away from player at speed 1.3
+
+# Passivas de Dano das Armas (Vampirismo e Berserker)
+on damage of living entity:
+    if attacker is a player:
+        set {_nt} to "%name of attacker's tool%"
+        if {_nt} contains "Lâmina Gêmea do Vampiro":
+            set {_cura} to damage * 0.30
+            if {_cura} > 4:
+                set {_cura} to 4
+            heal attacker by {_cura}
+        else if {_nt} contains "Destruidor do Berserker":
+            set {_faltaPct} to 1 - (health of attacker / max health of attacker)
+            if {_faltaPct} > 0:
+                set damage to damage * (1 + ({_faltaPct} * 0.75))
+
+# ---------- Descoberta no Mundo: Relicários Antigos e Tomos do Conhecimento ----------
+
+on right click with book:
+    if "%name of player's tool%" contains "Tomo do Conhecimento Ancestral":
+        cancel event
+        remove 1 of player's tool from player's tool
+        set {_u} to "%uuid of player%"
+        add 1 to {rpg::pontos::%{_u}%}
+        send "&d&l📘 SABEDORIA ADQUIRIDA! &aVocê ganhou &f+1 Ponto de Habilidade (PH)&a! Use em &f/rpg&a." to player
+        play sound "entity.player.levelup" to player
+
+on right click with ender chest:
+    if "%name of player's tool%" contains "Relicário Antigo de Aurelion":
+        cancel event
+        remove 1 of player's tool from player's tool
+        play sound "ui.toast.challenge_complete" to player
+        set {_pool::*} to "picareta_tectonica", "picareta_fornalha", "machado_lenhador", "foicinha_colheita", "arpeu_escalada", "ima_runico", "mochila_viajante", "cristal_fraterno", "pluma_hermes", "cajado_inverno", "cetro_singularidade", "grimorio_necromante", "arco_estelar", "besta_repeticao", "adaga_sombria", "lamina_vampiro", "martelo_magma", "espada_berserker" and "alabarda_solar"
+        set {_sorteado} to random element out of {_pool::*}
+        set {_item} to itemArtefato({_sorteado})
+        give {_item} to player
+        give tomoConhecimento() to player
+        broadcast "&6&l✦ TESOURO DESCOBERTO! &e%player% &7abriu um &6Relicário Antigo &7e encontrou %name of {_item}%&7!"
+
+# Chance de encontrar Relicários Antigos minerando minérios valiosos ou matando monstros
+on break:
+    set {_b} to "%type of event-block%"
+    if {_b} contains "diamond ore" or "emerald ore" or "ancient debris" or "deepslate diamond" or "deepslate emerald":
+        if chance of 12%:
+            give relicarioAntigo() to player
+            send "&6&l✦ DESCOBERTA NA ROCHA! &eVocê desenterrou um &6Relicário Antigo de Aurelion&e!" to player
+            play sound "block.amethyst_block.chime" with volume 2 to player
+
+on death of monster:
+    if attacker is a player:
+        if chance of 4%:
+            give relicarioAntigo() to attacker
+            send "&6&l✦ SAQUE RARO! &eO monstro guardava um &6Relicário Antigo de Aurelion&e!" to attacker
+            play sound "entity.experience_orb.pickup" to attacker
+
+# ---------- Forja de Fabricação na Bancada de Trabalho (Shift + Clique Direito) ----------
+
+function fabricarArtefato(p: player, id: text, custoOuro: number, custoRunas: number):
+    set {_u} to "%uuid of {_p}%"
+    set {_r} to {runas::%{_u}%}
+    if {_r} is not set:
+        set {_r} to 0
+    set {_ouro} to round({_p}'s balance)
+    if {_ouro} < {_custoOuro}:
+        send "&cOuro insuficiente na carteira! Custo: &e%{_custoOuro}% Ouros &7(Você tem: %{_ouro}%)." to {_p}
+        play sound "block.anvil.place" to {_p}
+        stop
+    if {_r} < {_custoRunas}:
+        send "&cFragmentos Rúnicos insuficientes! Custo: &d%{_custoRunas}% Runas &7(Você tem: %{_r}%)." to {_p}
+        play sound "block.anvil.place" to {_p}
+        stop
+    remove {_custoOuro} from {_p}'s balance
+    remove {_custoRunas} from {runas::%{_u}%}
+    add {_custoOuro} to {eco::tesouro}
+    set {_it} to itemArtefato({_id})
+    give {_it} to {_p}
+    send "&6&l[Forja de Aurelion] &aVocê fabricou %name of {_it}%&a! (&e-%{_custoOuro}% Ouros &7| &d-%{_custoRunas}% Runas&a)" to {_p}
+    play sound "block.anvil.use" to {_p}
+
+function abrirMenuForja(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_r} to {runas::%{_u}%}
+    if {_r} is not set:
+        set {_r} to 0
+    set {_ouro} to round({_p}'s balance)
+    set {_gui} to chest inventory with 5 rows named "&6&lForja de Artefatos & Ferramentas"
+
+    set slot 4 of {_gui} to crafting table named "&6&lBancada de Forja de Aurelion" with lore "&7Seu Ouro na Carteira: &e%{_ouro}% Ouros" and "&7Seus Fragmentos Rúnicos: &d%{_r}% Runas" and "&7Dica: Artefatos também podem ser encontrados" and "&7em &6Relicários Antigos &7minerando e caçando!"
+
+    # Linha 2: Ferramentas de Jornada (Slots 10 a 18)
+    set slot 10 of {_gui} to itemArtefato("picareta_tectonica") with lore "&7Quebra pedras em área 3x3!" and "&eCusto de Forja: &6800 Ouros + &d8 Runas" and "&aClique para fabricar!"
+    set slot 11 of {_gui} to itemArtefato("picareta_fornalha") with lore "&7Derrete minérios na hora com bônus!" and "&eCusto de Forja: &6600 Ouros + &d6 Runas" and "&aClique para fabricar!"
+    set slot 12 of {_gui} to itemArtefato("machado_lenhador") with lore "&7Derruba a árvore inteira de uma vez!" and "&eCusto de Forja: &6600 Ouros + &d6 Runas" and "&aClique para fabricar!"
+    set slot 13 of {_gui} to itemArtefato("foicinha_colheita") with lore "&7Colhe e replanta 3x3 com Clique Direito!" and "&eCusto de Forja: &6500 Ouros + &d4 Runas" and "&aClique para fabricar!"
+    set slot 14 of {_gui} to itemArtefato("arpeu_escalada") with lore "&7Impulsiona você pelo ar para escalar!" and "&eCusto de Forja: &6700 Ouros + &d5 Runas" and "&aClique para fabricar!"
+    set slot 15 of {_gui} to itemArtefato("ima_runico") with lore "&7Puxa todos os itens num raio de 16 blocos!" and "&eCusto de Forja: &6500 Ouros + &d5 Runas" and "&aClique para fabricar!"
+    set slot 16 of {_gui} to itemArtefato("mochila_viajante") with lore "&7Baú portátil seguro de 27 espaços!" and "&eCusto de Forja: &61.000 Ouros + &d8 Runas" and "&aClique para fabricar!"
+    set slot 19 of {_gui} to itemArtefato("cristal_fraterno") with lore "&7Teleporta até o seu Irmão ou para a Vila!" and "&eCusto de Forja: &6600 Ouros + &d4 Runas" and "&aClique para fabricar!"
+    set slot 20 of {_gui} to itemArtefato("pluma_hermes") with lore "&7Permite dar Pulo Duplo no ar!" and "&eCusto de Forja: &6700 Ouros + &d6 Runas" and "&aClique para fabricar!"
+
+    # Linha 3 & 4: Armas Exclusivas de Classe & Geral
+    set slot 22 of {_gui} to itemArtefato("cajado_inverno") with lore "&7[Mago] Dispara Lança Glacial que congela em área!" and "&eCusto de Forja: &61.200 Ouros + &d10 Runas" and "&aClique para fabricar!"
+    set slot 23 of {_gui} to itemArtefato("cetro_singularidade") with lore "&7[Mago] Cria um Buraco Negro que suga e explode!" and "&eCusto de Forja: &61.500 Ouros + &d12 Runas" and "&aClique para fabricar!"
+    set slot 24 of {_gui} to itemArtefato("grimorio_necromante") with lore "&7[Mago] Invoca poder necrótico e escudo!" and "&eCusto de Forja: &61.200 Ouros + &d10 Runas" and "&aClique para fabricar!"
+    set slot 25 of {_gui} to itemArtefato("arco_estelar") with lore "&7[Arqueiro] Flechas invocam chuva de raios!" and "&eCusto de Forja: &61.400 Ouros + &d12 Runas" and "&aClique para fabricar!"
+    set slot 28 of {_gui} to itemArtefato("besta_repeticao") with lore "&7[Arqueiro] Dispara rajada de 5 flechas seguidas!" and "&eCusto de Forja: &61.300 Ouros + &d10 Runas" and "&aClique para fabricar!"
+    set slot 29 of {_gui} to itemArtefato("adaga_sombria") with lore "&7[Ladino] Teleporta para trás do inimigo + crítico!" and "&eCusto de Forja: &61.400 Ouros + &d12 Runas" and "&aClique para fabricar!"
+    set slot 30 of {_gui} to itemArtefato("lamina_vampiro") with lore "&7[Ladino] Drena 30%% de vida + Frenesi veloz!" and "&eCusto de Forja: &61.300 Ouros + &d10 Runas" and "&aClique para fabricar!"
+    set slot 31 of {_gui} to itemArtefato("martelo_magma") with lore "&7[Mineiro] Abre fissura vulcânica em linha reta!" and "&eCusto de Forja: &61.400 Ouros + &d12 Runas" and "&aClique para fabricar!"
+    set slot 32 of {_gui} to itemArtefato("espada_berserker") with lore "&7[Guerreiro] +75%% dano com vida baixa + Fúria!" and "&eCusto de Forja: &61.400 Ouros + &d12 Runas" and "&aClique para fabricar!"
+    set slot 33 of {_gui} to itemArtefato("alabarda_solar") with lore "&7[Co-op] Cura você e seu irmão + queima monstros!" and "&eCusto de Forja: &61.500 Ouros + &d12 Runas" and "&aClique para fabricar!"
+    set slot 34 of {_gui} to tomoConhecimento() with lore "&7Concede +1 Ponto de Habilidade (PH) para sua Árvore!" and "&eCusto de Forja: &61.000 Ouros + &d10 Runas" and "&aClique para adquirir!"
+
+    set slot 40 of {_gui} to arrow named "&7Voltar ao Menu de Raças & Classes" with lore "&eClique para voltar"
+    set slot 42 of {_gui} to painting named "&6&l🎨 Galeria de Skins & Modelos 3D" with lore "&7Veja os modelos customizados de 1ª e 3ª pessoa," and "&7ative o Resource Pack ou sincronize seu inventário!" and "&eClique para abrir a Galeria de Skins!"
+    open {_gui} to {_p}
+
+# Interação Orgânica: Shift + Clique Direito em uma Bancada de Trabalho (Crafting Table) abre a Forja!
+on right click on crafting table:
+    if player is sneaking:
+        cancel event
+        abrirMenuForja(player)
+
+on inventory click:
+    if "%name of event-inventory%" contains "Forja de Artefatos & Ferramentas":
+        cancel event
+        set {_idx} to index of clicked slot
+        if {_idx} is 10:
+            fabricarArtefato(player, "picareta_tectonica", 800, 8)
+            abrirMenuForja(player)
+        else if {_idx} is 11:
+            fabricarArtefato(player, "picareta_fornalha", 600, 6)
+            abrirMenuForja(player)
+        else if {_idx} is 12:
+            fabricarArtefato(player, "machado_lenhador", 600, 6)
+            abrirMenuForja(player)
+        else if {_idx} is 13:
+            fabricarArtefato(player, "foicinha_colheita", 500, 4)
+            abrirMenuForja(player)
+        else if {_idx} is 14:
+            fabricarArtefato(player, "arpeu_escalada", 700, 5)
+            abrirMenuForja(player)
+        else if {_idx} is 15:
+            fabricarArtefato(player, "ima_runico", 500, 5)
+            abrirMenuForja(player)
+        else if {_idx} is 16:
+            fabricarArtefato(player, "mochila_viajante", 1000, 8)
+            abrirMenuForja(player)
+        else if {_idx} is 19:
+            fabricarArtefato(player, "cristal_fraterno", 600, 4)
+            abrirMenuForja(player)
+        else if {_idx} is 20:
+            fabricarArtefato(player, "pluma_hermes", 700, 6)
+            abrirMenuForja(player)
+        else if {_idx} is 22:
+            fabricarArtefato(player, "cajado_inverno", 1200, 10)
+            abrirMenuForja(player)
+        else if {_idx} is 23:
+            fabricarArtefato(player, "cetro_singularidade", 1500, 12)
+            abrirMenuForja(player)
+        else if {_idx} is 24:
+            fabricarArtefato(player, "grimorio_necromante", 1200, 10)
+            abrirMenuForja(player)
+        else if {_idx} is 25:
+            fabricarArtefato(player, "arco_estelar", 1400, 12)
+            abrirMenuForja(player)
+        else if {_idx} is 28:
+            fabricarArtefato(player, "besta_repeticao", 1300, 10)
+            abrirMenuForja(player)
+        else if {_idx} is 29:
+            fabricarArtefato(player, "adaga_sombria", 1400, 12)
+            abrirMenuForja(player)
+        else if {_idx} is 30:
+            fabricarArtefato(player, "lamina_vampiro", 1300, 10)
+            abrirMenuForja(player)
+        else if {_idx} is 31:
+            fabricarArtefato(player, "martelo_magma", 1400, 12)
+            abrirMenuForja(player)
+        else if {_idx} is 32:
+            fabricarArtefato(player, "espada_berserker", 1400, 12)
+            abrirMenuForja(player)
+        else if {_idx} is 33:
+            fabricarArtefato(player, "alabarda_solar", 1500, 12)
+            abrirMenuForja(player)
+        else if {_idx} is 34:
+            set {_u} to "%uuid of player%"
+            if round(player's balance) >= 1000:
+                if {runas::%{_u}%} >= 10:
+                    remove 1000 from player's balance
+                    remove 10 from {runas::%{_u}%}
+                    give tomoConhecimento() to player
+                    send "&d&l[Forja] &aVocê adquiriu um &dTomo do Conhecimento (+1 PH)&a!" to player
+                    play sound "entity.player.levelup" to player
+                    abrirMenuForja(player)
+                else:
+                    send "&cVocê precisa de 10 Runas." to player
+            else:
+                send "&cVocê precisa de 1.000 Ouros." to player
+        else if {_idx} is 40:
+            abrirMenuRPG(player)
+        else if {_idx} is 42:
+            abrirGaleriaSkins(player)
+
+command /forja [<text>]:
+    aliases: /artefatos, /ferramentas, /receitas
+    description: Abre a Forja de Artefatos, Ferramentas de Jornada e Armas de Classe
+    trigger:
+        if arg-1 is "relicario":
+            if player has permission "aurelion.admin":
+                give relicarioAntigo() to player
+                stop
+        abrirMenuForja(player)

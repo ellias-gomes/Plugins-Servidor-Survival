@@ -12,6 +12,11 @@ effect give @s minecraft:invisibility infinite 0 true
 attribute @s minecraft:scale base set 2.0
 item replace entity @s weapon.mainhand with minecraft:air
 item replace entity @s weapon.offhand with minecraft:air
+bossbar add aurelion:semi_3 "§6§l⛰ Gólem Esquecido de Basalto §7[Caçada]"
+bossbar set aurelion:semi_3 color yellow
+bossbar set aurelion:semi_3 style notched_6
+bossbar set aurelion:semi_3 name "§6§l⛰ Gólem Esquecido de Basalto §7[Caçada]"
+bossbar set aurelion:semi_3 visible true
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_golem_torso"],block_state:"minecraft:basalt",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-1.2000f,1.6000f,-0.8000f],scale:[2.4000f,2.2000f,1.6000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_golem_nucleo"],block_state:"minecraft:magma_block",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.5000f,2.2000f,0.7900f],scale:[1.0000f,1.0000f,0.1200f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f,brightness:{block:15,sky:15}}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_golem_rachadura1"],block_state:"minecraft:magma_block",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.8000f,2.9500f,0.7800f],scale:[0.2000f,0.7000f,0.1000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f,brightness:{block:15,sky:15}}

@@ -12,6 +12,11 @@ effect give @s minecraft:invisibility infinite 0 true
 attribute @s minecraft:scale base set 1.7
 item replace entity @s weapon.mainhand with minecraft:air
 item replace entity @s weapon.offhand with minecraft:air
+bossbar add aurelion:semi_2 "§9§l☠ Morvath, o Necromante da Cripta §7[Caçada]"
+bossbar set aurelion:semi_2 color blue
+bossbar set aurelion:semi_2 style notched_6
+bossbar set aurelion:semi_2 name "§9§l☠ Morvath, o Necromante da Cripta §7[Caçada]"
+bossbar set aurelion:semi_2 visible true
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_morvath_torso"],block_state:"minecraft:deepslate_tiles",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.5000f,1.4000f,-0.3000f],scale:[1.0000f,1.2000f,0.6000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_morvath_cinto"],block_state:"minecraft:cyan_concrete",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.5250f,1.3500f,-0.3250f],scale:[1.0500f,0.2000f,0.6500f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_morvath_head"],block_state:"minecraft:bone_block",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.3500f,2.6500f,-0.3500f],scale:[0.7000f,0.7000f,0.7000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}

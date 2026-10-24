@@ -12,6 +12,11 @@ effect give @s minecraft:invisibility infinite 0 true
 attribute @s minecraft:scale base set 1.7
 item replace entity @s weapon.mainhand with minecraft:air
 item replace entity @s weapon.offhand with minecraft:air
+bossbar add aurelion:boss_1 "§a§lVerdelith, o Guardião do Musgo §7[Fase I]"
+bossbar set aurelion:boss_1 color green
+bossbar set aurelion:boss_1 style notched_10
+bossbar set aurelion:boss_1 name "§a§lVerdelith, o Guardião do Musgo §7[Fase I]"
+bossbar set aurelion:boss_1 visible true
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_verdelith_torso"],block_state:"minecraft:moss_block",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-1.1000f,1.6000f,-0.7000f],scale:[2.2000f,2.0000f,1.4000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_verdelith_peito"],block_state:"minecraft:oak_log",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.6500f,2.0000f,0.6500f],scale:[1.3000f,1.2000f,0.2000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_verdelith_nucleo"],block_state:"minecraft:verdant_froglight",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.2500f,2.4000f,0.8100f],scale:[0.5000f,0.5000f,0.1000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f,brightness:{block:15,sky:15}}

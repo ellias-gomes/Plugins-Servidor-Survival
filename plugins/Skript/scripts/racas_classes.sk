@@ -1,0 +1,1035 @@
+# ============================================================================
+#  SISTEMA DE RAÇAS, CLASSES E ÁRVORES DE HABILIDADES - Cinzas de Aurelion
+#  - 6 Raças Jogáveis: Humano, Elfo, Anão, Demônio, Orc e Draconato
+#  - 5 Classes Jogáveis: Mago, Mineiro (Artífice), Ladino, Arqueiro e Guerreiro
+#  - Árvores de Habilidades Evolutivas para Raça (4 nós x 3 níveis) e Classe (4 nós x 3 níveis)
+#  - Nível de RPG, XP e Pontos de Habilidade (PH) ganhos jogando organicamente
+#  - Ativação Fluida Sem Comandos: Shift + F (Trocar de Mão agachado) ou Amuleto de Poder!
+#  - Mesa de Encantamentos (Shift + Clique Direito) abre a Central de Raças & Classes!
+# ============================================================================
+
+# ---------- Dados e Descrições das 6 Raças ----------
+
+function nomeRaca(id: text) :: text:
+    if {_id} is "humano":
+        return "&e&lHumano Imperial"
+    if {_id} is "elfo":
+        return "&a&lElfo Silvestre"
+    if {_id} is "anao":
+        return "&6&lAnão da Montanha"
+    if {_id} is "demonio":
+        return "&c&lDemônio Abissal"
+    if {_id} is "orc":
+        return "&2&lOrc Sangrento"
+    if {_id} is "draconato":
+        return "&5&lDraconato Ancestral"
+    return "&7Sem Raça"
+
+function infoRacaPassiva(id: text) :: text:
+    if {_id} is "humano":
+        return "+2 Corações, +20%% XP de RPG e +15%% Ouro em todas as fontes"
+    if {_id} is "elfo":
+        return "Velocidade I nativa, +20%% dano à distância e passos leves"
+    if {_id} is "anao":
+        return "+3 Corações, Pressa I nativa, Visão em cavernas e +defesa"
+    if {_id} is "demonio":
+        return "Imunidade nativa ao Fogo/Lava e +15%% de dano ofensivo"
+    if {_id} is "orc":
+        return "+4 Corações, Força I nativa e dano brutal corpo-a-corpo"
+    if {_id} is "draconato":
+        return "+2 Corações, Resistência I nativa e Queda Suave ao planar"
+    return "Escolha sua Raça no Altar de Origem!"
+
+function nomeNoRaca(raca: text, no: number) :: text:
+    if {_raca} is "humano":
+        if {_no} is 1:
+            return "Vitalidade Imperial (+Vida & Regen)"
+        if {_no} is 2:
+            return "Fortuna da Coroa (+Ouro & Runas)"
+        if {_no} is 3:
+            return "Determinação Inabalável (Escudo em Vida Baixa)"
+        return "[Ativa] Égide Real (Cura em Área & Absorção)"
+    if {_raca} is "elfo":
+        if {_no} is 1:
+            return "Passos do Vento (Chance de Esquiva & Pulo)"
+        if {_no} is 2:
+            return "Olhos de Águia (+Dano de Arco & Flecha Infinita)"
+        if {_no} is 3:
+            return "Raízes Protetoras (Prende quem te atacar)"
+        return "[Ativa] Salto Silvestre (Pulo + Invisibilidade + Folhas)"
+    if {_raca} is "anao":
+        if {_no} is 1:
+            return "Pele de Granito (+Redução de Dano & +Vida)"
+        if {_no} is 2:
+            return "Faro de Minerador (Chance de Dobrar Minérios)"
+        if {_no} is 3:
+            return "Sangue de Forja (Defesa Explosiva & Golpe Pesado)"
+        return "[Ativa] Avatar da Montanha (Rocha Viva + Terremoto)"
+    if {_raca} is "demonio":
+        if {_no} is 1:
+            return "Pacto Sanguinário (Roubo de Vida por golpe)"
+        if {_no} is 2:
+            return "Chamas do Inferno (Ataques incendeiam + Dano extra)"
+        if {_no} is 3:
+            return "Aura de Brasa (Queima e dá Wither em quem te bater)"
+        return "[Ativa] Nova Demoníaca (Explosão de Fogo Negro & Voo)"
+    if {_raca} is "orc":
+        if {_no} is 1:
+            return "Músculos de Titã (+Vida Máxima & +Dano Físico)"
+        if {_no} is 2:
+            return "Sede de Carnificina (Cura e Velocidade ao matar)"
+        if {_no} is 3:
+            return "Fúria de Sangue (Muito mais dano com vida baixa)"
+        return "[Ativa] Rugido do Senhor da Guerra (Atordoa + Força III)"
+    # Draconato
+    if {_no} is 1:
+        return "Escamas Ancestrais (+Defesa Elemental & +Vida)"
+    if {_no} is 2:
+        return "Coração de Dragão (+Dano de Habilidades e Feitiços)"
+    if {_no} is 3:
+        return "Asas do Vendaval (Planar & Recarga Reduzida)"
+    return "[Ativa] Sopro do Dragão (Cone de Fogo Dracônico & Raios)"
+
+# ---------- Dados e Descrições das 5 Classes ----------
+
+function nomeClasse(id: text) :: text:
+    if {_id} is "mago":
+        return "&b&lMago Arcanista"
+    if {_id} is "paladino" or "mineiro":
+        return "&e&lPaladino da Luz"
+    if {_id} is "ladino":
+        return "&8&lLadino das Sombras"
+    if {_id} is "arqueiro":
+        return "&a&lArqueiro Celestial"
+    if {_id} is "guerreiro":
+        return "&c&lGuerreiro Campeão"
+    return "&7Sem Classe"
+
+function infoClassePassiva(id: text) :: text:
+    if {_id} is "mago":
+        return "Recarga de feitiços -25%%, +dano mágico e orbes arcanos"
+    if {_id} is "paladino" or "mineiro":
+        return "+2 Corações extras, Aura Sagrada de regeneração e dano divino"
+    if {_id} is "ladino":
+        return "Velocidade II, Golpes Críticos Furtivos e Saque de Ouro"
+    if {_id} is "arqueiro":
+        return "+25%% dano à distância, Agilidade de mira e Flechas de Vento"
+    if {_id} is "guerreiro":
+        return "+3 Corações extras, Resistência I e Golpes em Varredura"
+    return "Escolha sua Classe de Combate!"
+
+function nomeNoClasse(cls: text, no: number) :: text:
+    if {_cls} is "mago":
+        if {_no} is 1:
+            return "Mente Arcana (+Dano Mágico & Faíscas nos ataques)"
+        if {_no} is 2:
+            return "Manto de Mana (Escudo de Absorção automático)"
+        if {_no} is 3:
+            return "Toque Glacial & Estelar (Congela e invoca raios)"
+        return "[Ativa] Meteoro Arcano & Blink (Teleporte + Explosão)"
+    if {_cls} is "paladino" or "mineiro":
+        if {_no} is 1:
+            return "Golpe Radiante (Dano Sagrado & Cega Inimigos)"
+        if {_no} is 2:
+            return "Escudo Divino (Absorção & Redução de Dano)"
+        if {_no} is 3:
+            return "Bênção da Aurora (Golpes curam aliados próximos)"
+        return "[Ativa] Julgamento Solar (Chuva de Luz Celestial & Cura)"
+    if {_cls} is "ladino":
+        if {_no} is 1:
+            return "Lâmina Letal (Chance de Crítico 2x + Sangramento)"
+        if {_no} is 2:
+            return "Veneno & Saque (Envenena alvos e +Ouro de monstros)"
+        if {_no} is 3:
+            return "Evasão Sombria (Chance de anular dano com fumaça)"
+        return "[Ativa] Execução das Sombras (Teleporta atrás + Crítico)"
+    if {_cls} is "arqueiro":
+        if {_no} is 1:
+            return "Tiro de Precisão (+Dano de Flechas e Alcance)"
+        if {_no} is 2:
+            return "Aljava Mística (Flechas flamejantes/gélidas e infinitas)"
+        if {_no} is 3:
+            return "Ricochete do Vendaval (Flechas atingem alvos em área)"
+        return "[Ativa] Saraivada Celestial (Salto Evasivo + Chuva de Raios)"
+    # Guerreiro
+    if {_no} is 1:
+        return "Golpe Hendidor (Ataques atingem todos à frente)"
+    if {_no} is 2:
+        return "Bastião Impenetrável (+Defesa e Contra-Ataque)"
+    if {_no} is 3:
+        return "Segundo Fôlego (Regeneração contínua em luta)"
+    return "[Ativa] Investida do Colosso (Avanço + Quebra-Terra)"
+
+# ---------- Sistema de Nível de RPG e Pontos de Habilidade (PH) ----------
+
+function nivelRPG(p: player) :: number:
+    set {_u} to "%uuid of {_p}%"
+    if {rpg::nivel::%{_u}%} is not set:
+        set {rpg::nivel::%{_u}%} to 1
+    return {rpg::nivel::%{_u}%}
+
+function pontosHabilidade(p: player) :: number:
+    set {_u} to "%uuid of {_p}%"
+    if {rpg::pontos::%{_u}%} is not set:
+        set {rpg::pontos::%{_u}%} to 2
+    return {rpg::pontos::%{_u}%}
+
+function xpNecessarioRPG(nv: number) :: number:
+    return 100 + ({_nv} * 85)
+
+function ganharXPRPG(p: player, qtd: number):
+    set {_u} to "%uuid of {_p}%"
+    if {rpg::nivel::%{_u}%} is not set:
+        set {rpg::nivel::%{_u}%} to 1
+    if {rpg::pontos::%{_u}%} is not set:
+        set {rpg::pontos::%{_u}%} to 2
+    if {rpg::xp::%{_u}%} is not set:
+        set {rpg::xp::%{_u}%} to 0
+    set {_mult} to 1
+    if {rpg::raca::%{_u}%} is "humano":
+        set {_mult} to 1.2
+    add round({_qtd} * {_mult}) to {rpg::xp::%{_u}%}
+    set {_req} to xpNecessarioRPG({rpg::nivel::%{_u}%})
+    if {rpg::xp::%{_u}%} >= {_req}:
+        remove {_req} from {rpg::xp::%{_u}%}
+        add 1 to {rpg::nivel::%{_u}%}
+        add 1 to {rpg::pontos::%{_u}%}
+        set {_nv} to {rpg::nivel::%{_u}%}
+        send "" to {_p}
+        send "&6&l✦ LEVEL UP DE RPG! Nível %{_nv}% Alcançado! ✦" to {_p}
+        send "&eVocê ganhou &a+1 Ponto de Habilidade &e(Total disponível: &f%{rpg::pontos::%{_u}%}% PH&e)!" to {_p}
+        send "&7Abra sua Árvore de Habilidades no &f/rpg &7ou em uma &fMesa de Encantamentos&7!" to {_p}
+        play sound "ui.toast.challenge_complete" to {_p}
+        atualizarAtributosRPG({_p})
+
+function nivelTalentoRaca(p: player, no: number) :: number:
+    set {_u} to "%uuid of {_p}%"
+    set {_r} to {rpg::raca::%{_u}%}
+    if {_r} is not set:
+        return 0
+    set {_nv} to {rpg::tree::raca::%{_u}%::%{_r}%::%{_no}%}
+    if {_nv} is not set:
+        return 0
+    return {_nv}
+
+function nivelTalentoClasse(p: player, no: number) :: number:
+    set {_u} to "%uuid of {_p}%"
+    set {_c} to {rpg::classe::%{_u}%}
+    if {_c} is not set:
+        return 0
+    set {_nv} to {rpg::tree::classe::%{_u}%::%{_c}%::%{_no}%}
+    if {_nv} is not set:
+        return 0
+    return {_nv}
+
+# ---------- Aplicação dos Atributos Base (Vida Máxima e Passivas Contínuas) ----------
+
+function atualizarAtributosRPG(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_hp} to 10
+    set {_r} to {rpg::raca::%{_u}%}
+    set {_c} to {rpg::classe::%{_u}%}
+    # Bônus de Vida por Raça
+    if {_r} is "humano":
+        add 2 to {_hp}
+        add nivelTalentoRaca({_p}, 1) to {_hp}
+    else if {_r} is "anao":
+        add 3 to {_hp}
+        add nivelTalentoRaca({_p}, 1) to {_hp}
+    else if {_r} is "orc":
+        add 4 to {_hp}
+        add (nivelTalentoRaca({_p}, 1) * 2) to {_hp}
+    else if {_r} is "draconato":
+        add 2 to {_hp}
+        add nivelTalentoRaca({_p}, 1) to {_hp}
+    else if {_r} is "demonio":
+        add 1 to {_hp}
+    else if {_r} is "elfo":
+        add 1 to {_hp}
+    # Bônus de Vida por Classe
+    if {_c} is "guerreiro":
+        add 3 to {_hp}
+        add nivelTalentoClasse({_p}, 2) to {_hp}
+    else if {_c} is "paladino" or "mineiro":
+        add 2 to {_hp}
+        add nivelTalentoClasse({_p}, 2) to {_hp}
+    set max health of {_p} to {_hp}
+
+# Loop de Passivas de Raça e Classe (a cada 4 segundos)
+every 4 seconds:
+    loop all players:
+        set {_p} to loop-player
+        set {_u} to "%uuid of {_p}%"
+        set {_r} to {rpg::raca::%{_u}%}
+        set {_c} to {rpg::classe::%{_u}%}
+        # Passivas Raciais
+        if {_r} is "elfo":
+            aplicarEfeito({_p}, "speed", 7, 1)
+            if nivelTalentoRaca({_p}, 1) >= 2:
+                aplicarEfeito({_p}, "jump_boost", 7, 1)
+        else if {_r} is "anao":
+            aplicarEfeito({_p}, "haste", 7, 1)
+            if y-coordinate of {_p} < 55:
+                aplicarEfeito({_p}, "night_vision", 16, 1)
+            if nivelTalentoRaca({_p}, 3) >= 3:
+                aplicarEfeito({_p}, "fire_resistance", 7, 1)
+        else if {_r} is "demonio":
+            aplicarEfeito({_p}, "fire_resistance", 7, 1)
+            if world of {_p} is world("world_nether"):
+                aplicarEfeito({_p}, "strength", 7, 1)
+        else if {_r} is "orc":
+            aplicarEfeito({_p}, "strength", 7, 1)
+        else if {_r} is "draconato":
+            aplicarEfeito({_p}, "resistance", 7, 1)
+            if {_p} is sneaking:
+                aplicarEfeito({_p}, "slow_falling", 5, 1)
+        # Passivas de Classe
+        if {_c} is "paladino" or "mineiro":
+            if nivelTalentoClasse({_p}, 3) >= 1:
+                loop all players in radius 8 of {_p}:
+                    aplicarEfeito(loop-player, "regeneration", 4, 1)
+        else if {_c} is "ladino":
+            aplicarEfeito({_p}, "speed", 7, 2)
+        else if {_c} is "guerreiro":
+            aplicarEfeito({_p}, "resistance", 7, 1)
+            if nivelTalentoClasse({_p}, 3) >= 1:
+                aplicarEfeito({_p}, "regeneration", 7, 1)
+        else if {_c} is "mago":
+            if nivelTalentoClasse({_p}, 2) >= 1:
+                aplicarEfeito({_p}, "absorption", 8, 1)
+
+on join:
+    wait 1 second
+    atualizarAtributosRPG(player)
+    if {rpg::raca::%uuid of player%} is not set:
+        send "" to player
+        send "&6&l✦ DESPERTAR DE ORIGEM (RAÇAS & CLASSES) ✦" to player
+        send "&eEscolha sua &fRaça &ee sua &fClasse &epara liberar sua Árvore de Habilidades!" to player
+        send "&7Faça &fShift + Clique Direito &7em uma &bMesa de Encantamentos &7ou abra pelo &f/diario &7(/rpg)!" to player
+
+on respawn:
+    wait 5 ticks
+    atualizarAtributosRPG(player)
+
+# ---------- Habilidades Passivas e Reativas em Combate e Mineração ----------
+
+# 1. Combate Ofensivo (Dano causado pelo Jogador)
+on damage of living entity:
+    if attacker is a player:
+        if victim is an armor stand:
+            stop
+        set {_u} to "%uuid of attacker%"
+        set {_r} to {rpg::raca::%{_u}%}
+        set {_c} to {rpg::classe::%{_u}%}
+        set {_bonusMult} to 1.0
+
+        # --- Bônus Ofensivos de Raça ---
+        if {_r} is "demonio":
+            add 0.15 to {_bonusMult}
+            set {_n2} to nivelTalentoRaca(attacker, 2)
+            if {_n2} >= 1:
+                set fire ticks of victim to (40 + ({_n2} * 20))
+                add (0.08 * {_n2}) to {_bonusMult}
+            set {_n1} to nivelTalentoRaca(attacker, 1)
+            if {_n1} >= 1:
+                heal attacker by (0.4 * {_n1})
+        else if {_r} is "orc":
+            set {_n1} to nivelTalentoRaca(attacker, 1)
+            add (0.12 * {_n1}) to {_bonusMult}
+            set {_n3} to nivelTalentoRaca(attacker, 3)
+            if {_n3} >= 1:
+                if (health of attacker / max health of attacker) < 0.5:
+                    add (0.15 * {_n3}) to {_bonusMult}
+        else if {_r} is "elfo":
+            if projectile is set:
+                add 0.20 to {_bonusMult}
+                set {_n2} to nivelTalentoRaca(attacker, 2)
+                add (0.15 * {_n2}) to {_bonusMult}
+
+        # --- Bônus Ofensivos de Classe ---
+        if {_c} is "ladino":
+            if attacker is sneaking:
+                add 0.35 to {_bonusMult}
+            set {_n1} to nivelTalentoClasse(attacker, 1)
+            if {_n1} >= 1:
+                set {_ch} to 15 + ({_n1} * 10)
+                if chance of {_ch}%:
+                    add 0.80 to {_bonusMult}
+                    aplicarEfeito(victim, "wither", 3, 1)
+                    send action bar "&c&l⚡ GOLPE CRÍTICO LETAL!" to attacker
+                    play sound "entity.player.attack.crit" to attacker
+            set {_n2} to nivelTalentoClasse(attacker, 2)
+            if {_n2} >= 1:
+                aplicarEfeito(victim, "poison", 3, {_n2})
+        else if {_c} is "arqueiro":
+            if projectile is an arrow:
+                add 0.25 to {_bonusMult}
+                set {_n1} to nivelTalentoClasse(attacker, 1)
+                add (0.20 * {_n1}) to {_bonusMult}
+                set {_n2} to nivelTalentoClasse(attacker, 2)
+                if {_n2} >= 1:
+                    ignite victim for 3 seconds
+                    aplicarEfeito(victim, "slowness", 3, 1)
+                set {_n3} to nivelTalentoClasse(attacker, 3)
+                if {_n3} >= 1:
+                    loop all monsters in radius (3 + {_n3}) of victim:
+                        if loop-monster is not victim:
+                            damage loop-monster by (4 * {_n3})
+                    play sound "entity.breeze.wind_burst" at victim
+        else if {_c} is "guerreiro":
+            set {_n1} to nivelTalentoClasse(attacker, 1)
+            if {_n1} >= 1:
+                add (0.15 * {_n1}) to {_bonusMult}
+                loop all monsters in radius 3.5 of victim:
+                    if loop-monster is not victim:
+                        damage loop-monster by (2 * {_n1})
+        else if {_c} is "paladino" or "mineiro":
+            set {_n1} to nivelTalentoClasse(attacker, 1)
+            if {_n1} >= 1:
+                add (0.15 * {_n1}) to {_bonusMult}
+                aplicarEfeito(victim, "blindness", 3, 1)
+                set fire ticks of victim to 60
+            set {_n3} to nivelTalentoClasse(attacker, 3)
+            if {_n3} >= 1:
+                loop all players in radius 6 of attacker:
+                    heal loop-player by (0.4 * {_n3})
+        else if {_c} is "mago":
+            set {_n1} to nivelTalentoClasse(attacker, 1)
+            if {_n1} >= 1:
+                add (0.12 * {_n1}) to {_bonusMult}
+            set {_n3} to nivelTalentoClasse(attacker, 3)
+            if {_n3} >= 1:
+                aplicarEfeito(victim, "slowness", 3, {_n3})
+                if chance of (12 * {_n3})%:
+                    strike lightning effect at victim
+                    damage victim by (3 * {_n3})
+
+        set damage to (damage * {_bonusMult})
+
+# Devolver flechas para Elfos e Arqueiros (Aljava Mística / Olhos de Águia)
+on projectile hit:
+    if projectile is an arrow:
+        if shooter is a player:
+            set {_u} to "%uuid of shooter%"
+            if {rpg::raca::%{_u}%} is "elfo":
+                if nivelTalentoRaca(shooter, 2) >= 2:
+                    give 1 arrow to shooter
+                    stop
+            if {rpg::classe::%{_u}%} is "arqueiro":
+                if nivelTalentoClasse(shooter, 2) >= 1:
+                    if chance of (30 + (20 * nivelTalentoClasse(shooter, 2)))%:
+                        give 1 arrow to shooter
+
+# 2. Combate Defensivo (Dano recebido pelo Jogador)
+on damage of player:
+    set {_u} to "%uuid of victim%"
+    set {_r} to {rpg::raca::%{_u}%}
+    set {_c} to {rpg::classe::%{_u}%}
+    set {_redMult} to 1.0
+
+    # Esquiva do Elfo
+    if {_r} is "elfo":
+        set {_n1} to nivelTalentoRaca(victim, 1)
+        if {_n1} >= 1:
+            if chance of (8 * {_n1})%:
+                cancel event
+                play sound "entity.ender_dragon.flap" to victim
+                send action bar "&a&l🍃 ESQUIVA SILVESTRE! Dano evitado!" to victim
+                stop
+        set {_n3} to nivelTalentoRaca(victim, 3)
+        if {_n3} >= 1:
+            if attacker is a living entity:
+                aplicarEfeito(attacker, "slowness", (1 + {_n3}), 3)
+                aplicarEfeito(attacker, "poison", 3, 1)
+
+    # Evasão Sombria do Ladino
+    if {_c} is "ladino":
+        set {_n3} to nivelTalentoClasse(victim, 3)
+        if {_n3} >= 1:
+            if chance of (10 * {_n3})%:
+                cancel event
+                aplicarEfeito(victim, "invisibility", 3, 1)
+                play sound "entity.illusioner.mirror_move" to victim
+                send action bar "&8&l💨 EVASÃO SOMBRIA! Você escapou nas sombras!" to victim
+                stop
+
+    # Pele de Granito do Anão
+    if {_r} is "anao":
+        set {_n1} to nivelTalentoRaca(victim, 1)
+        if {_n1} >= 1:
+            remove (0.08 * {_n1}) from {_redMult}
+
+    # Escamas do Draconato
+    if {_r} is "draconato":
+        set {_n1} to nivelTalentoRaca(victim, 1)
+        if {_n1} >= 1:
+            remove (0.08 * {_n1}) from {_redMult}
+
+    # Aura de Brasa do Demônio
+    if {_r} is "demonio":
+        set {_n3} to nivelTalentoRaca(victim, 3)
+        if {_n3} >= 1:
+            if attacker is a living entity:
+                ignite attacker for 4 seconds
+                damage attacker by (2 * {_n3})
+
+    # Determinação Imperial do Humano
+    if {_r} is "humano":
+        set {_n3} to nivelTalentoRaca(victim, 3)
+        if {_n3} >= 1:
+            if (health of victim / max health of victim) < 0.4:
+                aplicarEfeito(victim, "resistance", (3 + {_n3}), 2)
+                aplicarEfeito(victim, "absorption", 6, 1)
+
+    # Bastião do Guerreiro, Manto do Mago e Escudo do Paladino
+    if {_c} is "guerreiro":
+        set {_n2} to nivelTalentoClasse(victim, 2)
+        if {_n2} >= 1:
+            remove (0.08 * {_n2}) from {_redMult}
+    else if {_c} is "paladino" or "mineiro":
+        set {_n2} to nivelTalentoClasse(victim, 2)
+        if {_n2} >= 1:
+            remove (0.08 * {_n2}) from {_redMult}
+            if chance of (15 * {_n2})%:
+                aplicarEfeito(victim, "absorption", 6, 1)
+    else if {_c} is "mago":
+        set {_n2} to nivelTalentoClasse(victim, 2)
+        if {_n2} >= 1:
+            remove (0.07 * {_n2}) from {_redMult}
+
+    if {_redMult} < 0.35:
+        set {_redMult} to 0.35
+    set damage to (damage * {_redMult})
+
+# 3. Abates de Monstros (Ganho de XP de RPG + Passivas de Abate)
+on death of monster:
+    if attacker is a player:
+        set {_u} to "%uuid of attacker%"
+        ganharXPRPG(attacker, 18)
+        if {rpg::raca::%{_u}%} is "humano":
+            set {_n2} to nivelTalentoRaca(attacker, 2)
+            if {_n2} >= 1:
+                pagarSalario(attacker, (4 * {_n2}))
+        else if {rpg::raca::%{_u}%} is "orc":
+            set {_n2} to nivelTalentoRaca(attacker, 2)
+            if {_n2} >= 1:
+                heal attacker by (1.5 * {_n2})
+                aplicarEfeito(attacker, "speed", 4, 2)
+        if {rpg::classe::%{_u}%} is "ladino":
+            set {_n2} to nivelTalentoClasse(attacker, 2)
+            if {_n2} >= 1:
+                pagarSalario(attacker, (6 * {_n2}))
+
+# 4. Mineração: Veinminer, Toque da Fornalha e Faro de Anão
+on break:
+    set {_b} to "%type of event-block%"
+    set {_ehMinerio} to false
+    if {_b} contains "ore" or "debris":
+        set {_ehMinerio} to true
+    if {_ehMinerio} is false:
+        stop
+    set {_u} to "%uuid of player%"
+    ganharXPRPG(player, 12)
+
+    # Anão: Faro de Minerador (Chance de minério dobrado)
+    if {rpg::raca::%{_u}%} is "anao":
+        set {_n2} to nivelTalentoRaca(player, 2)
+        if {_n2} >= 1:
+            if chance of (15 * {_n2})%:
+                drop drops of event-block using player's tool at location of event-block
+                send action bar "&6&l⛏ FARO DE ANÃO! Minério dobrado!" to player
+
+    # Classe Mineiro: Veinminer (Escavador de Veios) e Toque da Fornalha
+    if {rpg::classe::%{_u}%} is "mineiro":
+        # Toque da Fornalha (Nó 2)
+        set {_n2} to nivelTalentoClasse(player, 2)
+        if {_n2} >= 1:
+            if {_b} contains "iron":
+                give 1 iron ingot to player
+            else if {_b} contains "gold":
+                give 1 gold ingot to player
+            else if {_b} contains "copper":
+                give 2 copper ingot to player
+            if chance of (10 * {_n2})%:
+                add 1 to {runas::%{_u}%}
+                send action bar "&d✦ Você encontrou +1 Fragmento Rúnico na rocha!" to player
+        # Veinminer (Nó 1)
+        set {_n1} to nivelTalentoClasse(player, 1)
+        if {_n1} >= 1:
+            set {_limite} to {_n1} * 3
+            set {_cont} to 0
+            set {_tipoAlvo} to type of event-block
+            loop blocks in radius 2.5 of event-block:
+                if type of loop-block is {_tipoAlvo}:
+                    if location of loop-block is not location of event-block:
+                        if {_cont} < {_limite}:
+                            add 1 to {_cont}
+                            drop drops of loop-block using player's tool at location of player
+                            set block at loop-block to air
+            if {_cont} > 0:
+                play sound "block.amethyst_cluster.break" to player
+                send action bar "&6&l⛏ VEINMINER! &e+%{_cont}% minérios conectados extraídos!" to player
+
+# ---------- Habilidades Ativas de Raça e de Classe (Shift + F ou Amuletos) ----------
+
+function ativarHabilidadeRaca(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_r} to {rpg::raca::%{_u}%}
+    if {_r} is not set:
+        send "&cEscolha sua Raça primeiro em uma Mesa de Encantamentos ou /rpg!" to {_p}
+        stop
+    set {_nv} to nivelTalentoRaca({_p}, 4)
+    if {_nv} < 1:
+        set {_nv} to 1
+    if {cd::hab_raca::%{_u}%} is set:
+        if difference between {cd::hab_raca::%{_u}%} and now is less than 18 seconds:
+            send action bar "&cHabilidade Racial em recarga! Aguarde alguns segundos..." to {_p}
+            stop
+    set {cd::hab_raca::%{_u}%} to now
+
+    if {_r} is "humano":
+        # Égide Real
+        play sound "item.totem.use" with volume 1.2 at {_p}
+        loop all players in radius 12 of {_p}:
+            heal loop-player by (3 + (2 * {_nv}))
+            aplicarEfeito(loop-player, "absorption", 10, {_nv})
+            aplicarEfeito(loop-player, "strength", 8, 1)
+            send "&e&l👑 ÉGIDE REAL! &f%{_p}% ergueu o estandarte imperial de cura e proteção!" to loop-player
+
+    else if {_r} is "elfo":
+        # Salto Silvestre & Camuflagem
+        push {_p} backwards at speed 1.4
+        push {_p} upwards at speed 0.65
+        aplicarEfeito({_p}, "invisibility", (4 + (2 * {_nv})), 1)
+        aplicarEfeito({_p}, "speed", (4 + (2 * {_nv})), 3)
+        execute console command "execute at %uuid of {_p}% run function aurelion:fx/espinhos_verdelith"
+        loop all monsters in radius 8 of {_p}:
+            damage loop-monster by (5 + (3 * {_nv}))
+            aplicarEfeito(loop-monster, "poison", 4, 2)
+        play sound "entity.illusioner.mirror_move" at {_p}
+        send action bar "&a&l🍃 SALTO SILVESTRE ATIVADO!" to {_p}
+
+    else if {_r} is "anao":
+        # Avatar da Montanha
+        aplicarEfeito({_p}, "resistance", (5 + (2 * {_nv})), 3)
+        aplicarEfeito({_p}, "strength", (5 + (2 * {_nv})), 2)
+        play sound "block.anvil.land" with volume 1.8 and pitch 0.6 at {_p}
+        loop all monsters in radius 9 of {_p}:
+            damage loop-monster by (6 + (3 * {_nv}))
+            push loop-monster upwards at speed 0.85
+        send action bar "&6&l⛰ AVATAR DA MONTANHA! Sua pele virou rocha viva!" to {_p}
+
+    else if {_r} is "demonio":
+        # Nova Demoníaca
+        execute console command "execute at %uuid of {_p}% run function aurelion:fx/chamas_korvan"
+        play sound "entity.generic.explode" with volume 1.5 at {_p}
+        push {_p} in direction of {_p} at speed 1.5
+        push {_p} upwards at speed 0.5
+        loop all monsters in radius 10 of {_p}:
+            damage loop-monster by (8 + (4 * {_nv}))
+            ignite loop-monster for 6 seconds
+            aplicarEfeito(loop-monster, "wither", 5, 2)
+        send action bar "&c&l🔥 NOVA DEMONÍACA! As chamas do abismo consomem seus inimigos!" to {_p}
+
+    else if {_r} is "orc":
+        # Rugido do Senhor da Guerra
+        play sound "entity.ravager.roar" with volume 2 at {_p}
+        aplicarEfeito({_p}, "strength", (5 + (2 * {_nv})), 3)
+        aplicarEfeito({_p}, "speed", (5 + (2 * {_nv})), 2)
+        loop all monsters in radius 10 of {_p}:
+            damage loop-monster by (5 + (2 * {_nv}))
+            push loop-monster away from {_p} at speed 1.4
+            aplicarEfeito(loop-monster, "weakness", 5, 2)
+        send action bar "&2&l⚔ RUGIDO DO SENHOR DA GUERRA!" to {_p}
+
+    else if {_r} is "draconato":
+        # Sopro do Dragão
+        play sound "entity.ender_dragon.growl" with volume 1.8 at {_p}
+        push {_p} upwards at speed 0.7
+        aplicarEfeito({_p}, "slow_falling", 6, 1)
+        loop 6 times:
+            set {_pt} to location (loop-number * 2.5) meters in front of {_p}'s eyes
+            execute console command "execute at %uuid of {_p}% run function aurelion:fx/chamas_korvan"
+            loop all monsters in radius 3.5 of {_pt}:
+                damage loop-monster by (7 + (3 * {_nv}))
+                ignite loop-monster for 5 seconds
+                strike lightning effect at loop-monster
+        send action bar "&5&l🐉 SOPRO DO DRAGÃO ANCESTRAL!" to {_p}
+
+function ativarHabilidadeClasse(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_c} to {rpg::classe::%{_u}%}
+    if {_c} is not set:
+        send "&cEscolha sua Classe primeiro em uma Mesa de Encantamentos ou /rpg!" to {_p}
+        stop
+    set {_nv} to nivelTalentoClasse({_p}, 4)
+    if {_nv} < 1:
+        set {_nv} to 1
+    set {_cdSeg} to 14
+    if {_c} is "mago":
+        set {_cdSeg} to 10
+    if {cd::hab_classe::%{_u}%} is set:
+        if difference between {cd::hab_classe::%{_u}%} and now is less than "%{_cdSeg}% seconds" parsed as timespan:
+            send action bar "&cHabilidade de Classe recarregando..." to {_p}
+            stop
+    set {cd::hab_classe::%{_u}%} to now
+
+    if {_c} is "mago":
+        # Meteoro Arcano & Blink
+        set {_alvoLoc} to location 8 meters in front of {_p}'s eyes
+        execute console command "execute at %uuid of {_p}% run function aurelion:fx/luz_seraphel"
+        play sound "entity.enderman.teleport" at {_p}
+        strike lightning effect at {_alvoLoc}
+        play sound "entity.generic.explode" at {_alvoLoc}
+        loop all monsters in radius 8 of {_alvoLoc}:
+            damage loop-monster by (10 + (4 * {_nv}))
+            ignite loop-monster for 5 seconds
+            push loop-monster upwards at speed 0.7
+        send action bar "&b&l☄ METEORO ARCANO INVOCADO!" to {_p}
+
+    else if {_c} is "paladino" or "mineiro":
+        # Julgamento Solar & Bênção da Aurora
+        play sound "item.totem.use" with volume 1.5 at {_p}
+        play sound "entity.warden.sonic_boom" with volume 1.3 and pitch 1.8 at {_p}
+        loop all players in radius 10 of {_p}:
+            heal loop-player by (4 + (2 * {_nv}))
+            aplicarEfeito(loop-player, "absorption", 10, {_nv})
+            aplicarEfeito(loop-player, "regeneration", 8, 2)
+        loop all monsters in radius 10 of {_p}:
+            strike lightning effect at loop-monster
+            damage loop-monster by (9 + (3 * {_nv}))
+            set fire ticks of loop-monster to 100
+        send action bar "&e&l✨ JULGAMENTO SOLAR ATIVADO! Bênção curativa invocada!" to {_p}
+
+    else if {_c} is "ladino":
+        # Execução das Sombras
+        set {_achou} to false
+        loop all monsters in radius 16 of {_p}:
+            set {_achou} to true
+            teleport {_p} to location 1.5 blocks behind loop-monster
+            play sound "entity.enderman.teleport" at {_p}
+            aplicarEfeito({_p}, "invisibility", 4, 1)
+            aplicarEfeito({_p}, "strength", 4, 2)
+            damage loop-monster by (10 + (5 * {_nv}))
+            aplicarEfeito(loop-monster, "blindness", 4, 1)
+            aplicarEfeito(loop-monster, "wither", 4, 2)
+            send action bar "&8&l🗡 EXECUÇÃO DAS SOMBRAS!" to {_p}
+            stop loop
+        if {_achou} is false:
+            push {_p} in direction of {_p} at speed 1.8
+            aplicarEfeito({_p}, "invisibility", 5, 1)
+            aplicarEfeito({_p}, "speed", 5, 3)
+            play sound "entity.illusioner.mirror_move" at {_p}
+            send action bar "&8&l💨 PASSO FANTASMA ATIVADO!" to {_p}
+
+    else if {_c} is "arqueiro":
+        # Saraivada Celestial
+        push {_p} backwards at speed 1.2
+        push {_p} upwards at speed 0.5
+        set {_zona} to location 9 meters in front of {_p}
+        play sound "entity.arrow.shoot" with volume 2 at {_p}
+        send action bar "&a&l🏹 SARAIVADA CELESTIAL!" to {_p}
+        loop all monsters in radius 9 of {_zona}:
+            strike lightning effect at loop-monster
+            damage loop-monster by (9 + (4 * {_nv}))
+            aplicarEfeito(loop-monster, "glowing", 8, 1)
+            aplicarEfeito(loop-monster, "slowness", 4, 2)
+
+    else if {_c} is "guerreiro":
+        # Investida do Colosso (Quebra-Terra)
+        push {_p} in direction of {_p} at speed 1.7
+        aplicarEfeito({_p}, "absorption", 8, {_nv})
+        wait 8 ticks
+        play sound "entity.iron_golem.attack" with volume 2 at {_p}
+        loop all monsters in radius 7 of {_p}:
+            damage loop-monster by (9 + (4 * {_nv}))
+            push loop-monster upwards at speed 0.85
+        send action bar "&c&l🛡 QUEBRA-TERRA DO COLOSSO!" to {_p}
+
+# Ativação orgânica no teclado: Shift + F (Trocar de Mão agachado)!
+# - Olhando para cima (pitch < -50): Habilidade Suprema da Raça
+# - Segurando ferramenta de trabalho: Habilidade Suprema da Profissão (Nv 5)
+# - Olhando normal / combate: Habilidade Ativa da Classe
+on swap hand items:
+    if player is sneaking:
+        cancel event
+        if pitch of player < -50:
+            ativarHabilidadeRaca(player)
+        else:
+            set {_item} to "%type of player's tool%"
+            if {_item} contains "pickaxe" or "axe" or "hoe" or "fishing" or "potion" or "glass_bottle" or "anvil":
+                ativarHabilidadeProfissao(player)
+            else:
+                ativarHabilidadeClasse(player)
+
+# Item Físico opcional: Insígnia de Origem & Classe (para quem preferir clicar na hotbar)
+function insigniaPoder() :: item:
+    set {_i} to 1 of nether star named "&6&lInsígnia de Sangue & Classe" with lore "&7Canalizador das suas habilidades de RPG." and "&e• Clique Direito: &fAtiva Habilidade da Classe" and "&e• Shift + Clique Direito: &fAtiva Habilidade da Raça" and "&8(Ou use Shift + F a qualquer momento!) [Skin #1030]"
+    return aplicarSkinCMD({_i}, 1030, "insignia_rpg")
+
+on right click with nether star:
+    if "%name of player's tool%" contains "Insígnia de Sangue & Classe":
+        cancel event
+        if player is sneaking:
+            ativarHabilidadeRaca(player)
+        else:
+            ativarHabilidadeClasse(player)
+
+# ---------- Menus Visuais (GUIs) de Raça, Classe e Árvores de Habilidades ----------
+
+function abrirMenuRPG(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_r} to {rpg::raca::%{_u}%}
+    if {_r} is not set:
+        set {_r} to "nenhuma"
+    set {_c} to {rpg::classe::%{_u}%}
+    if {_c} is not set:
+        set {_c} to "nenhuma"
+    set {_prof} to profissaoAtiva({_p})
+    set {_pnv} to nivelProfissao({_p})
+    set {_pxp} to xpProfissao({_p})
+    set {_preq} to xpNecessarioProfissao({_pnv})
+    set {_nv} to nivelRPG({_p})
+    set {_ph} to pontosHabilidade({_p})
+    set {_xp} to {rpg::xp::%{_u}%}
+    if {_xp} is not set:
+        set {_xp} to 0
+    set {_req} to xpNecessarioRPG({_nv})
+
+    set {_gui} to chest inventory with 6 rows named "&6&lSantuário de Raças, Classes & Profissões"
+    set slot 4 of {_gui} to beacon named "&6&lFicha de Herói: &f%{_p}%" with lore "&7Nível Geral de RPG: &e%{_nv}% &8(%{_xp}%/%{_req}% XP)" and "&7Pontos de Habilidade (PH): &a%{_ph}% PH" and "&71. Raça de Origem: %nomeRaca({_r})%" and "&72. Classe de Combate: %nomeClasse({_c})%" and "&73. Ofício/Profissão: %nomeProfissao({_prof})% &e(Nível %{_pnv}%/5)" and "" and "&eComo usar habilidades ativas:" and "&f• Shift + F com ferramenta: &7Suprema da Profissão (Nv 5)" and "&f• Shift + F normal: &7Habilidade de Combate da Classe" and "&f• Olhar p/ cima + Shift + F: &7Habilidade Suprema da Raça"
+
+    # Seletores das 3 Trilhas (Linha 2: Slots 10, 13 e 16)
+    set slot 10 of {_gui} to totem of undying named "&e&l1. Trilha de Raça: %nomeRaca({_r})%" with lore "&7Passiva: &f%infoRacaPassiva({_r})%" and "" and "&eClique para escolher / trocar de Raça!"
+    set slot 13 of {_gui} to diamond sword named "&b&l2. Trilha de Classe: %nomeClasse({_c})%" with lore "&7Passiva: &f%infoClassePassiva({_c})%" and "" and "&eClique para escolher / trocar de Classe!"
+    set slot 16 of {_gui} to diamond pickaxe named "&6&l3. Trilha de Profissão: %nomeProfissao({_prof})%" with lore "&7Nível Atual: &e%{_pnv}%/5 &8(%{_pxp}%/%{_preq}% XP)" and "&7Passiva: &f%infoProfissao({_prof})%" and "" and "&eClique para abrir a Central de Profissões!"
+
+    # Árvore 1: Habilidades da Raça (Slots 19, 20, 21, 22)
+    if {_r} is not "nenhuma":
+        loop 4 times:
+            set {_n} to loop-number
+            set {_tnv} to nivelTalentoRaca({_p}, {_n})
+            set {_st} to "&eClique para evoluir (Custo: 1 PH)"
+            if {_tnv} >= 3:
+                set {_st} to "&a✔ NÍVEL MÁXIMO (3/3)"
+            set slot (18 + {_n}) of {_gui} to amethyst shard named "&d&l[Raça #%{_n}%] &f%nomeNoRaca({_r}, {_n})%" with lore "&7Nível do Talento: &e%{_tnv}%/3" and "&7Pontos disponíveis: &a%{_ph}% PH" and "" and {_st}
+    else:
+        set slot 20 of {_gui} to barrier named "&cEscolha uma Raça primeiro!" with lore "&7Clique no Totem acima para escolher sua Raça."
+
+    # Árvore 2: Habilidades da Classe (Slots 28, 29, 30, 31)
+    if {_c} is not "nenhuma":
+        loop 4 times:
+            set {_n} to loop-number
+            set {_tnv} to nivelTalentoClasse({_p}, {_n})
+            set {_st} to "&eClique para evoluir (Custo: 1 PH)"
+            if {_tnv} >= 3:
+                set {_st} to "&a✔ NÍVEL MÁXIMO (3/3)"
+            set slot (27 + {_n}) of {_gui} to blaze powder named "&b&l[Classe #%{_n}%] &f%nomeNoClasse({_c}, {_n})%" with lore "&7Nível do Talento: &e%{_tnv}%/3" and "&7Pontos disponíveis: &a%{_ph}% PH" and "" and {_st}
+    else:
+        set slot 29 of {_gui} to barrier named "&cEscolha uma Classe primeiro!" with lore "&7Clique na Espada acima para escolher sua Classe."
+
+    # Árvore 3: Habilidades da Profissão (Slots 37, 38, 39, 40, 41)
+    if {_prof} is not "nenhuma":
+        loop 5 times:
+            set {_n} to loop-number
+            set {_hnm} to nomeHabilidadeProfissao({_prof}, {_n})
+            set {_hdesc} to descHabilidadeProfissao({_prof}, {_n})
+            if {_pnv} >= {_n}:
+                set {_nodeItem} to emerald block named "&a✔ [Profissão Nv %{_n}%] &f%{_hnm}%" with lore "&aDESBLOQUEADA & ATIVA" and "&7%{_hdesc}%"
+            else if {_n} is ({_pnv} + 1):
+                set {_nodeItem} to gold block named "&e⚡ [Profissão Nv %{_n}%] &f%{_hnm}%" with lore "&7%{_hdesc}%" and "" and "&7Progresso: &a%{_pxp}%/%{_preq}% XP &7(trabalhe no ofício)" and "&6Clique para evoluir com &f1 PH&6!"
+            else:
+                set {_nodeItem} to gray concrete named "&8🔒 [Profissão Nv %{_n}%] &7%{_hnm}%" with lore "&7%{_hdesc}%" and "" and "&cBloqueado: Requer Nível %{_n} - 1% primeiro."
+            set slot (36 + {_n}) of {_gui} to {_nodeItem}
+    else:
+        set slot 39 of {_gui} to barrier named "&cEscolha uma Profissão primeiro!" with lore "&7Clique na Picareta acima para escolher sua Profissão."
+
+    # Utilitários na linha inferior (Linha 6: Slots 45 a 53)
+    set slot 46 of {_gui} to nether star named "&6&lPegar Insígnia de Sangue & Classe" with lore "&7Item físico para ativar habilidades" and "&7com Clique Direito!" and "&eClique para receber gratuitamente"
+    set slot 48 of {_gui} to stonecutter named "&6&lCentral de Profissões (/profissoes)" with lore "&7Visualize os detalhes das 6 profissões" and "&7e troque seu ofício com 1 clique!" and "&eClique para abrir"
+    set slot 49 of {_gui} to arrow named "&7Voltar ao Diário de Bordo" with lore "&eClique para voltar"
+    set slot 52 of {_gui} to anvil named "&6&lAbrir Forja de Artefatos & Ferramentas" with lore "&7Fabrique Picareta 3x3, Machado Lenhador," and "&7Mochila, Arpéu e Armas de Classe!" and "&eClique para abrir a Forja"
+    open {_gui} to {_p}
+
+function abrirSelecaoRaca(p: player):
+    set {_gui} to chest inventory with 3 rows named "&e&lEscolha sua Raça de Origem"
+    set slot 10 of {_gui} to golden apple named "&e&l1. Humano Imperial" with lore "&7• +2 Corações extras (+4 HP)" and "&7• +20%% XP de RPG e +15%% de Ouro" and "&7• Habilidade: &eÉgide Real (Cura & Absorção)" and "" and "&aClique para escolher Humano!"
+    set slot 11 of {_gui} to oak sapling named "&a&l2. Elfo Silvestre" with lore "&7• Velocidade I permanente & Esquiva" and "&7• +20%% dano com Arcos e Flechas infinitas" and "&7• Habilidade: &aSalto Silvestre & Invisibilidade" and "" and "&aClique para escolher Elfo!"
+    set slot 12 of {_gui} to iron pickaxe named "&6&l3. Anão da Montanha" with lore "&7• +3 Corações extras (+6 HP) & Pressa I" and "&7• Chance de dobrar minérios & Visão na mina" and "&7• Habilidade: &6Avatar da Montanha (Rocha Viva)" and "" and "&aClique para escolher Anão!"
+    set slot 14 of {_gui} to blaze rod named "&c&l4. Demônio Abissal" with lore "&7• Imunidade total ao Fogo e Lava" and "&7• +15%% Dano + Roubo de Vida e Chamas" and "&7• Habilidade: &cNova Demoníaca (Explosão Ígnea)" and "" and "&aClique para escolher Demônio!"
+    set slot 15 of {_gui} to iron axe named "&2&l5. Orc Sangrento" with lore "&7• +4 Corações extras (+8 HP) & Força I" and "&7• Cura ao matar inimigos & Fúria de Sangue" and "&7• Habilidade: &2Rugido do Senhor da Guerra" and "" and "&aClique para escolher Orc!"
+    set slot 16 of {_gui} to dragon breath named "&5&l6. Draconato Ancestral" with lore "&7• +2 Corações extras & Resistência I nativa" and "&7• Planar no ar (Shift) & +Dano Mágico" and "&7• Habilidade: &5Sopro do Dragão (Fogo & Raios)" and "" and "&aClique para escolher Draconato!"
+    set slot 22 of {_gui} to arrow named "&7Voltar ao Menu de RPG" with lore "&eClique para voltar"
+    open {_gui} to {_p}
+
+function abrirSelecaoClasse(p: player):
+    set {_gui} to chest inventory with 3 rows named "&b&lEscolha sua Classe de Combate"
+    set slot 11 of {_gui} to enchanted book named "&b&l1. Mago Arcanista" with lore "&7• Recarga de feitiços -25%% & Manto de Mana" and "&7• Ataques congelam e invocam raios estelares" and "&7• Habilidade (Shift+F): &bMeteoro Arcano" and "" and "&aClique para ser Mago!"
+    set slot 12 of {_gui} to golden chestplate named "&e&l2. Paladino da Luz" with lore "&7• +2 Corações extras & Aura de Regeneração para aliados" and "&7• Ataques cegam inimigos e curam aliados próximos" and "&7• Habilidade (Shift+F): &eJulgamento Solar" and "" and "&aClique para ser Paladino!"
+    set slot 13 of {_gui} to iron sword named "&8&l3. Ladino das Sombras" with lore "&7• Velocidade II, Golpes Críticos 2x e Veneno" and "&7• Esquiva em fumaça e +Ouro de monstros" and "&7• Habilidade (Shift+F): &8Execução das Sombras" and "" and "&aClique para ser Ladino!"
+    set slot 14 of {_gui} to bow named "&a&l4. Arqueiro Celestial" with lore "&7• +25%% Dano com Arcos, Flechas de Vento em área" and "&7• Recupera flechas automaticamente" and "&7• Habilidade (Shift+F): &aSaraivada Celestial" and "" and "&aClique para ser Arqueiro!"
+    set slot 15 of {_gui} to shield named "&c&l5. Guerreiro Campeão" with lore "&7• +3 Corações extras, Resistência I e Regeneração" and "&7• Ataques em varredura atingem vários inimigos" and "&7• Habilidade (Shift+F): &cInvestida do Colosso" and "" and "&aClique para ser Guerreiro!"
+    set slot 22 of {_gui} to arrow named "&7Voltar ao Menu de RPG" with lore "&eClique para voltar"
+    open {_gui} to {_p}
+
+function evoluirNoRaca(p: player, no: number):
+    set {_u} to "%uuid of {_p}%"
+    set {_r} to {rpg::raca::%{_u}%}
+    if {_r} is not set:
+        send "&cEscolha uma Raça primeiro!" to {_p}
+        stop
+    set {_atu} to nivelTalentoRaca({_p}, {_no})
+    if {_atu} >= 3:
+        send "&eEste talento da sua Raça já está no nível máximo (3/3)!" to {_p}
+        stop
+    if pontosHabilidade({_p}) < 1:
+        send "&cVocê não possui Pontos de Habilidade (PH)! Suba de nível caçando, minerando ou explorando." to {_p}
+        stop
+    remove 1 from {rpg::pontos::%{_u}%}
+    add 1 to {rpg::tree::raca::%{_u}%::%{_r}%::%{_no}%}
+    atualizarAtributosRPG({_p})
+    send "&d&l[Árvore Racial] &aTalento &f%nomeNoRaca({_r}, {_no})% &aevoluído para o Nível %{_atu} + 1%/3!" to {_p}
+    play sound "entity.player.levelup" to {_p}
+
+function evoluirNoClasse(p: player, no: number):
+    set {_u} to "%uuid of {_p}%"
+    set {_c} to {rpg::classe::%{_u}%}
+    if {_c} is not set:
+        send "&cEscolha uma Classe primeiro!" to {_p}
+        stop
+    set {_atu} to nivelTalentoClasse({_p}, {_no})
+    if {_atu} >= 3:
+        send "&eEste talento da sua Classe já está no nível máximo (3/3)!" to {_p}
+        stop
+    if pontosHabilidade({_p}) < 1:
+        send "&cVocê não possui Pontos de Habilidade (PH)! Suba de nível caçando, minerando ou explorando." to {_p}
+        stop
+    remove 1 from {rpg::pontos::%{_u}%}
+    add 1 to {rpg::tree::classe::%{_u}%::%{_c}%::%{_no}%}
+    atualizarAtributosRPG({_p})
+    send "&b&l[Árvore de Classe] &aTalento &f%nomeNoClasse({_c}, {_no})% &aevoluído para o Nível %{_atu} + 1%/3!" to {_p}
+    play sound "entity.player.levelup" to {_p}
+
+# Interação Orgânica: Shift + Clique Direito em uma Mesa de Encantamentos abre o Menu de RPG!
+on right click on enchanting table:
+    if player is sneaking:
+        cancel event
+        abrirMenuRPG(player)
+
+on inventory click:
+    set {_inv} to "%name of event-inventory%"
+    if {_inv} contains "Santuário de Raças":
+        cancel event
+        set {_idx} to index of clicked slot
+        if {_idx} is 10:
+            abrirSelecaoRaca(player)
+        else if {_idx} is 13:
+            abrirSelecaoClasse(player)
+        else if {_idx} is 16:
+            close player's inventory
+            abrirMenuProfissoes(player)
+        else if {_idx} >= 19:
+            if {_idx} <= 22:
+                evoluirNoRaca(player, ({_idx} - 18))
+                abrirMenuRPG(player)
+        else if {_idx} >= 28:
+            if {_idx} <= 31:
+                evoluirNoClasse(player, ({_idx} - 27))
+                abrirMenuRPG(player)
+        else if {_idx} >= 37:
+            if {_idx} <= 41:
+                set {_clicadoNv} to ({_idx} - 36)
+                if {_clicadoNv} is (nivelProfissao(player) + 1):
+                    evoluirComPHProfissao(player)
+                    abrirMenuRPG(player)
+                else if {_clicadoNv} <= nivelProfissao(player):
+                    send "&aEsta habilidade da profissão já está desbloqueada e ativa!" to player
+                else:
+                    send "&cEvolua o nível anterior primeiro!" to player
+        else if {_idx} is 46:
+            give insigniaPoder() to player
+            send "&aVocê recebeu a &6Insígnia de Sangue & Classe&a!" to player
+            play sound "item.armor.equip_gold" to player
+        else if {_idx} is 48:
+            close player's inventory
+            abrirMenuProfissoes(player)
+        else if {_idx} is 49:
+            close player's inventory
+            execute player command "diario"
+        else if {_idx} is 52:
+            close player's inventory
+            abrirMenuForja(player)
+
+    else if {_inv} contains "Escolha sua Raça de Origem":
+        cancel event
+        set {_idx} to index of clicked slot
+        set {_u} to "%uuid of player%"
+        if {_idx} is 10:
+            set {rpg::raca::%{_u}%} to "humano"
+        else if {_idx} is 11:
+            set {rpg::raca::%{_u}%} to "elfo"
+        else if {_idx} is 12:
+            set {rpg::raca::%{_u}%} to "anao"
+        else if {_idx} is 14:
+            set {rpg::raca::%{_u}%} to "demonio"
+        else if {_idx} is 15:
+            set {rpg::raca::%{_u}%} to "orc"
+        else if {_idx} is 16:
+            set {rpg::raca::%{_u}%} to "draconato"
+        else if {_idx} is 22:
+            abrirMenuRPG(player)
+            stop
+        else:
+            stop
+        atualizarAtributosRPG(player)
+        send "&6&l✦ ORIGEM DESPERTADA: &fVocê agora é um %nomeRaca({rpg::raca::%{_u}%})%&f!" to player
+        play sound "ui.toast.challenge_complete" to player
+        abrirMenuRPG(player)
+
+    else if {_inv} contains "Escolha sua Classe de Combate":
+        cancel event
+        set {_idx} to index of clicked slot
+        set {_u} to "%uuid of player%"
+        if {_idx} is 11:
+            set {rpg::classe::%{_u}%} to "mago"
+        else if {_idx} is 12:
+            set {rpg::classe::%{_u}%} to "paladino"
+        else if {_idx} is 13:
+            set {rpg::classe::%{_u}%} to "ladino"
+        else if {_idx} is 14:
+            set {rpg::classe::%{_u}%} to "arqueiro"
+        else if {_idx} is 15:
+            set {rpg::classe::%{_u}%} to "guerreiro"
+        else if {_idx} is 22:
+            abrirMenuRPG(player)
+            stop
+        else:
+            stop
+        atualizarAtributosRPG(player)
+        send "&b&l✦ CLASSE ESCOLHIDA: &fVocê agora trilha o caminho do %nomeClasse({rpg::classe::%{_u}%})%&f!" to player
+        play sound "ui.toast.challenge_complete" to player
+        abrirMenuRPG(player)
+
+command /rpg [<text>]:
+    aliases: /raca, /racas, /classe, /classes, /arvore, /talentos
+    description: Abre o Santuário com as 3 Árvores (Raça, Classe e Profissões)
+    trigger:
+        if arg-1 is "raca" or "racas":
+            abrirSelecaoRaca(player)
+        else if arg-1 is "classe" or "classes":
+            abrirSelecaoClasse(player)
+        else if arg-1 is "profissao" or "profissoes" or "oficio":
+            abrirMenuProfissoes(player)
+        else:
+            abrirMenuRPG(player)
+
+command /habilidade [<text>]:
+    aliases: /hab, /skill
+    description: Ativa manualmente a Habilidade de Raça, Classe ou Profissão
+    trigger:
+        if arg-1 is "raca":
+            ativarHabilidadeRaca(player)
+        else if arg-1 is "profissao" or "oficio":
+            ativarHabilidadeProfissao(player)
+        else:
+            ativarHabilidadeClasse(player)

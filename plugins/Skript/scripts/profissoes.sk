@@ -1,0 +1,782 @@
+# ============================================================================
+#  SISTEMA DE PROFISSÕES & ÁRVORE DE OFÍCIOS - Cinzas de Aurelion
+#  - 6 Profissões: Minerador, Lenhador, Agricultor, Ferreiro, Pescador e Alquimista
+#  - Cada Nível (1 a 5) concede novas habilidades orgânicas e poderes exclusivos
+#  - 3ª Trilha de Progressão do Player: Raça + Classe + Profissão
+#  - Ganho orgânico de XP trabalhando ou investimento de Pontos de Habilidade (PH)
+#  - Ativação de Poder Supremo de Profissão (Nível 5): Shift + F segurando ferramenta!
+# ============================================================================
+
+# ---------- Metadados e Descrições das 6 Profissões ----------
+
+function nomeProfissao(id: text) :: text:
+    if {_id} is "minerador":
+        return "&6&lMinerador Artífice"
+    if {_id} is "lenhador":
+        return "&a&lLenhador Silvestre"
+    if {_id} is "agricultor":
+        return "&e&lAgricultor dos Campos"
+    if {_id} is "ferreiro":
+        return "&c&lMestre Ferreiro"
+    if {_id} is "pescador":
+        return "&b&lSenhor dos Mares"
+    if {_id} is "alquimista":
+        return "&d&lAlquimista Arcano"
+    return "&7Nenhuma Profissão"
+
+function iconeProfissao(id: text) :: item:
+    if {_id} is "minerador":
+        return diamond pickaxe
+    if {_id} is "lenhador":
+        return diamond axe
+    if {_id} is "agricultor":
+        return diamond hoe
+    if {_id} is "ferreiro":
+        return anvil
+    if {_id} is "pescador":
+        return fishing rod
+    if {_id} is "alquimista":
+        return brewing stand
+    return barrier
+
+function infoProfissao(id: text) :: text:
+    if {_id} is "minerador":
+        return "Especialista em minérios, escavação rápida, fundição instantânea e Veinminer"
+    if {_id} is "lenhador":
+        return "Derruba árvores inteiras de uma vez, colheita de pomares e vigor na mata"
+    if {_id} is "agricultor":
+        return "Colheita e replantio automático, fartura de alimentos e bênção das terras"
+    if {_id} is "ferreiro":
+        return "Reciclagem de equipamentos, desconto em bigornas/runas e auto-reparo de ferramentas"
+    if {_id} is "pescador":
+        return "Pesca relíquias, peixes místicos que dão buffs e respiração aquática mística"
+    if {_id} is "alquimista":
+        return "Poções com o dobro de duração, frascos extras no suporte e imunidade a venenos"
+    return "Escolha sua Profissão para liberar novas habilidades!"
+
+# ---------- Habilidades Concedidas por Cada Nível (1 a 5) ----------
+
+function nomeHabilidadeProfissao(prof: text, nv: number) :: text:
+    if {_prof} is "minerador":
+        if {_nv} is 1:
+            return "Visão das Cavernas & Pressa"
+        if {_nv} is 2:
+            return "Toque da Fornalha & Minério 2x"
+        if {_nv} is 3:
+            return "Escavador de Veios (Veinminer)"
+        if {_nv} is 4:
+            return "Mestre da Rocha & Durabilidade"
+        return "[Suprema] Detonação Sísmica 3x3x3"
+    if {_prof} is "lenhador":
+        if {_nv} is 1:
+            return "Machado Veloz & Agilidade"
+        if {_nv} is 2:
+            return "Derrubada em Cadeia (Tree Capitator)"
+        if {_nv} is 3:
+            return "Colheita da Copa Silvestre"
+        if {_nv} is 4:
+            return "Fibras de Carvalho & Auto-Reparo"
+        return "[Suprema] Furacão Silvestre em Área"
+    if {_prof} is "agricultor":
+        if {_nv} is 1:
+            return "Mãos Verdes (Auto-Replantio)"
+        if {_nv} is 2:
+            return "Fartura da Terra (Colheita 2x/3x)"
+        if {_nv} is 3:
+            return "Criador de Rebanhos & Gêmeos"
+        if {_nv} is 4:
+            return "Banquete dos Deuses (Nutrição Dourada)"
+        return "[Suprema] Bênção de Gaia (Amadurecimento Instantâneo)"
+    if {_prof} is "ferreiro":
+        if {_nv} is 1:
+            return "Têmpera de Mestre (+Durabilidade)"
+        if {_nv} is 2:
+            return "Desmonte & Reciclagem de Metais"
+        if {_nv} is 3:
+            return "Economia de Bigorna (50%% Desconto XP)"
+        if {_nv} is 4:
+            return "Blindagem Superior & Forja Rúnica"
+        return "[Suprema] Martelo do Titã (Reparo Total)"
+    if {_prof} is "pescador":
+        if {_nv} is 1:
+            return "Isca Atraente (Fisgada Rápida)"
+        if {_nv} is 2:
+            return "Tesouro das Profundezas (Runas & Ouro)"
+        if {_nv} is 3:
+            return "Graça dos Mares (Respiração Aquática)"
+        if {_nv} is 4:
+            return "Peixes Místicos de Aurelion"
+        return "[Suprema] Redemoinho Oceânico de Tesouros"
+    # Alquimista
+    if {_nv} is 1:
+        return "Botânica Mística (Drops 2x de Ervas)"
+    if {_nv} is 2:
+        return "Elixires Fortalecidos (Duração 2x)"
+    if {_nv} is 3:
+        return "Caldeirão Místico (Poções Extras)"
+    if {_nv} is 4:
+        return "Sangue Antídoto (Veneno vira Cura)"
+    return "[Suprema] Frasco Cataclísmico Explosivo"
+
+function descHabilidadeProfissao(prof: text, nv: number) :: text:
+    if {_prof} is "minerador":
+        if {_nv} is 1:
+            return "Ganha Visão Noturna contínua abaixo de Y=60 e Pressa I permanente ao segurar picareta."
+        if {_nv} is 2:
+            return "Minérios de ferro, ouro e cobre são fundidos na hora em lingotes, com 25%% de chance de drop dobrado."
+        if {_nv} is 3:
+            return "Quebra veios inteiros de minério conectados de uma só vez com sua picareta (Veinminer)!"
+        if {_nv} is 4:
+            return "Picaretas têm 50%% de chance de não gastar durabilidade, se auto-reparam e causam +5 dano em monstros."
+        return "Shift + F segurando picareta: escava um cubo 3x3x3 de pedras à frente e pode revelar Fragmentos Rúnicos!"
+    if {_prof} is "lenhador":
+        if {_nv} is 1:
+            return "Pressa I permanente ao segurar machados e Velocidade I ao caminhar em biomas de floresta e selva."
+        if {_nv} is 2:
+            return "Ao quebrar a base de um tronco de árvore com machado, toda a árvore desaba de uma só vez!"
+        if {_nv} is 3:
+            return "Folhas derrubadas têm chance tripla de soltar maçãs, maçãs douradas raras, mudas e mel."
+        if {_nv} is 4:
+            return "Machados se auto-reparam ao cortar madeira e você ganha Regeneração contínua na mata."
+        return "Shift + F com machado: cria um ciclone de vento que limpa folhas em 6 blocos e repele monstros."
+    if {_prof} is "agricultor":
+        if {_nv} is 1:
+            return "Clique com botão direito em plantações maduras colhe e replanta a semente instantaneamente!"
+        if {_nv} is 2:
+            return "Plantações colhidas têm 50%% de chance de render o dobro ou triplo de vegetais."
+        if {_nv} is 3:
+            return "Animais reproduzidos geram filhotes gêmeos e animais abatidos concedem 2x mais carnes e couros."
+        if {_nv} is 4:
+            return "Alimentos consumidos concedem Saturação estendida, Regeneração II e 2 Corações Dourados."
+        return "Shift + F com enxada: pulso de fertilidade em 8 blocos que amadurece todas as plantações instantaneamente!"
+    if {_prof} is "ferreiro":
+        if {_nv} is 1:
+            return "Todas as armas, armaduras e ferramentas forjadas ou consertadas ganham +25%% de durabilidade extra."
+        if {_nv} is 2:
+            return "Shift + Clique numa Bigorna com itens de metal/diamante velhos desmancha e devolve lingotes puros!"
+        if {_nv} is 3:
+            return "Custo de níveis de experiência (XP) para reparar e encantar itens em bigornas reduzido em 50%%."
+        if {_nv} is 4:
+            return "Desconto de 25%% em compras no Ferreiro das Runas (/runas) e armaduras absorvem +12%% de dano."
+        return "Shift + F com ferramenta: restaura 100%% da durabilidade do item na mão e causa estouro sísmico!"
+    if {_prof} is "pescador":
+        if {_nv} is 1:
+            return "O tempo para peixes morderem a isca na sua vara de pescar é reduzido pela metade."
+        if {_nv} is 2:
+            return "Chance de pescar Moedas de Ouro físicas, Fragmentos Rúnicos, Livros com Remendo e Conchas."
+        if {_nv} is 3:
+            return "Respiração Aquática contínua e nado ultrarrápido sob a água (Graça dos Mares)."
+        if {_nv} is 4:
+            return "Pescaria pode render Peixes Místicos de Aurelion que concedem Força II e Velocidade II ao comer."
+        return "Shift + F com vara de pescar: redemoinho aquático que puxa 3 tesouros submarinos ou repele inimigos!"
+    # Alquimista
+    if {_nv} is 1:
+        return "Coletar fungos do Nether, verrugas e ervas pelo mundo sempre rende o dobro de ingredientes."
+    if {_nv} is 2:
+        return "Todas as poções benéficas consumidas por você duram o dobro do tempo (+100%% de duração)."
+    if {_nv} is 3:
+        return "Ao preparar poções no suporte, há 50%% de chance de gerar um frasco idêntico extra de graça."
+    if {_nv} is 4:
+        return "Imunidade total a Veneno, Lentidão e Wither. Todo dano de veneno é convertido em cura instantânea!"
+    return "Shift + F com poção/frasco: arremessa frasco arcano que explode curando aliados e incendiando monstros!"
+
+# ---------- Sistema de Nível e XP de Profissão ----------
+
+function profissaoAtiva(p: player) :: text:
+    set {_u} to "%uuid of {_p}%"
+    if {rpg::profissao::%{_u}%} is not set:
+        set {rpg::profissao::%{_u}%} to "nenhuma"
+    return {rpg::profissao::%{_u}%}
+
+function nivelProfissao(p: player) :: number:
+    set {_u} to "%uuid of {_p}%"
+    set {_prof} to profissaoAtiva({_p})
+    if {_prof} is "nenhuma":
+        return 0
+    if {rpg::profissao_nivel::%{_u}%::%{_prof}%} is not set:
+        set {rpg::profissao_nivel::%{_u}%::%{_prof}%} to 1
+    return {rpg::profissao_nivel::%{_u}%::%{_prof}%}
+
+function xpProfissao(p: player) :: number:
+    set {_u} to "%uuid of {_p}%"
+    set {_prof} to profissaoAtiva({_p})
+    if {_prof} is "nenhuma":
+        return 0
+    if {rpg::profissao_xp::%{_u}%::%{_prof}%} is not set:
+        set {rpg::profissao_xp::%{_u}%::%{_prof}%} to 0
+    return {rpg::profissao_xp::%{_u}%::%{_prof}%}
+
+function xpNecessarioProfissao(nv: number) :: number:
+    if {_nv} is 1:
+        return 200
+    if {_nv} is 2:
+        return 500
+    if {_nv} is 3:
+        return 1000
+    if {_nv} is 4:
+        return 2000
+    return 999999
+
+function ganharXPProfissao(p: player, prof: text, qtd: number):
+    set {_u} to "%uuid of {_p}%"
+    set {_ativa} to profissaoAtiva({_p})
+    if {_ativa} is not {_prof}:
+        stop
+    set {_nv} to nivelProfissao({_p})
+    if {_nv} >= 5:
+        stop
+    if {rpg::profissao_xp::%{_u}%::%{_prof}%} is not set:
+        set {rpg::profissao_xp::%{_u}%::%{_prof}%} to 0
+    add {_qtd} to {rpg::profissao_xp::%{_u}%::%{_prof}%}
+    set {_req} to xpNecessarioProfissao({_nv})
+    set {_atu} to {rpg::profissao_xp::%{_u}%::%{_prof}%}
+    send action bar "&6[%nomeProfissao({_prof})%&6] &a+%{_qtd}% XP &7(%{_atu}%/%{_req}%)" to {_p}
+    if {_atu} >= {_req}:
+        subirNivelProfissao({_p}, {_prof})
+
+function subirNivelProfissao(p: player, prof: text):
+    set {_u} to "%uuid of {_p}%"
+    set {_nv} to nivelProfissao({_p})
+    if {_nv} >= 5:
+        send "&aVocê já atingiu a Maestria Máxima (Nível 5) em %nomeProfissao({_prof})%&a!" to {_p}
+        stop
+    set {_req} to xpNecessarioProfissao({_nv})
+    if {rpg::profissao_xp::%{_u}%::%{_prof}%} >= {_req}:
+        remove {_req} from {rpg::profissao_xp::%{_u}%::%{_prof}%}
+    else:
+        set {rpg::profissao_xp::%{_u}%::%{_prof}%} to 0
+    add 1 to {rpg::profissao_nivel::%{_u}%::%{_prof}%}
+    set {_novoNv} to {rpg::profissao_nivel::%{_u}%::%{_prof}%}
+    play sound "ui.toast.challenge_complete" to {_p}
+    play sound "entity.player.levelup" with pitch 1.2 to {_p}
+    send "" to {_p}
+    send "&6&l==============================================" to {_p}
+    send "&e&l✦ LEVEL UP DE PROFISSÃO! ✦" to {_p}
+    send "&fVocê agora é %nomeProfissao({_prof})% &e&lNível %{_novoNv}%/5&f!" to {_p}
+    send "&aNova Habilidade Desbloqueada: &f%nomeHabilidadeProfissao({_prof}, {_novoNv})%" to {_p}
+    send "&7%descHabilidadeProfissao({_prof}, {_novoNv})%" to {_p}
+    send "&6&l==============================================" to {_p}
+    send "" to {_p}
+    # Recompensa em Ouro no bolso por subir de nível
+    pagarSalario({_p}, ({_novoNv} * 80))
+    send action bar "&a✦ Recompensa por Maestria: +%{_novoNv} * 80% Ouros no bolso!" to {_p}
+
+function evoluirComPHProfissao(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_prof} to profissaoAtiva({_p})
+    if {_prof} is "nenhuma":
+        send "&cEscolha uma Profissão primeiro!" to {_p}
+        stop
+    set {_nv} to nivelProfissao({_p})
+    if {_nv} >= 5:
+        send "&aSua profissão já está na Maestria Máxima (Nível 5)!" to {_p}
+        stop
+    if pontosHabilidade({_p}) < 1:
+        send "&cVocê precisa de 1 Ponto de Habilidade (PH) para evoluir sua profissão com PH!" to {_p}
+        send "&7Ganhe PH subindo seu Nível geral de RPG no /rpg ou trabalhando na profissão." to {_p}
+        stop
+    remove 1 from {rpg::pontos::%{_u}%}
+    subirNivelProfissao({_p}, {_prof})
+
+function escolherProfissao(p: player, prof: text):
+    set {_u} to "%uuid of {_p}%"
+    set {rpg::profissao::%{_u}%} to {_prof}
+    if {rpg::profissao_nivel::%{_u}%::%{_prof}%} is not set:
+        set {rpg::profissao_nivel::%{_u}%::%{_prof}%} to 1
+    if {rpg::profissao_xp::%{_u}%::%{_prof}%} is not set:
+        set {rpg::profissao_xp::%{_u}%::%{_prof}%} to 0
+    send "" to {_p}
+    send "&6&l✦ PROFISSÃO ATIVADA: &fVocê agora é um %nomeProfissao({_prof})%&f!" to {_p}
+    send "&eHabilidade do Nível 1 ativa: &f%nomeHabilidadeProfissao({_prof}, 1)%" to {_p}
+    send "&7Pratique seu ofício pelo mundo ou gaste PH no &f/profissoes &7para subir de nível!" to {_p}
+    play sound "entity.player.levelup" to {_p}
+
+# ---------- Passivas Periódicas das Profissões (A cada 4 segundos) ----------
+
+every 4 seconds:
+    loop all players:
+        set {_p} to loop-player
+        set {_u} to "%uuid of {_p}%"
+        set {_prof} to {rpg::profissao::%{_u}%}
+        if {_prof} is "minerador":
+            set {_nv} to nivelProfissao({_p})
+            if {_nv} >= 1:
+                if "%type of {_p}'s tool%" contains "pickaxe":
+                    aplicarEfeito({_p}, "haste", 7, 1)
+                if y-coordinate of {_p} < 60:
+                    aplicarEfeito({_p}, "night_vision", 16, 1)
+        else if {_prof} is "lenhador":
+            set {_nv} to nivelProfissao({_p})
+            if {_nv} >= 1:
+                if "%type of {_p}'s tool%" contains "axe":
+                    aplicarEfeito({_p}, "haste", 7, 1)
+                set {_b} to "%biome at {_p}%"
+                if {_b} contains "forest" or "taiga" or "jungle" or "grove":
+                    aplicarEfeito({_p}, "speed", 7, 1)
+            if {_nv} >= 4:
+                aplicarEfeito({_p}, "regeneration", 6, 1)
+        else if {_prof} is "pescador":
+            set {_nv} to nivelProfissao({_p})
+            if {_nv} >= 3:
+                if block at {_p} is water:
+                    aplicarEfeito({_p}, "water_breathing", 12, 1)
+                    aplicarEfeito({_p}, "dolphins_grace", 8, 1)
+
+# ---------- Eventos Orgânicos: Mineração (Minerador) ----------
+
+on break:
+    set {_b} to "%type of event-block%"
+    set {_u} to "%uuid of player%"
+    set {_prof} to {rpg::profissao::%{_u}%}
+
+    # --- MINERADOR ---
+    if {_prof} is "minerador":
+        set {_nv} to nivelProfissao(player)
+        set {_ehMinerio} to false
+        set {_xpMin} to 0
+        if {_b} contains "ancient debris":
+            set {_ehMinerio} to true
+            set {_xpMin} to 50
+        else if {_b} contains "diamond":
+            set {_ehMinerio} to true
+            set {_xpMin} to 35
+        else if {_b} contains "emerald":
+            set {_ehMinerio} to true
+            set {_xpMin} to 30
+        else if {_b} contains "gold":
+            set {_ehMinerio} to true
+            set {_xpMin} to 20
+        else if {_b} contains "iron":
+            set {_ehMinerio} to true
+            set {_xpMin} to 15
+        else if {_b} contains "copper" or "lapis" or "redstone" or "coal":
+            set {_ehMinerio} to true
+            set {_xpMin} to 10
+        else if {_b} contains "ore":
+            set {_ehMinerio} to true
+            set {_xpMin} to 10
+
+        if {_ehMinerio} is true:
+            ganharXPProfissao(player, "minerador", {_xpMin})
+            # Nível 2: Toque da Fornalha & Dropar Lingotes Direto + Chance 2x
+            if {_nv} >= 2:
+                if {_b} contains "iron":
+                    give 1 iron ingot to player
+                    if chance of 25%:
+                        give 1 iron ingot to player
+                        send action bar "&6✦ Toque da Fornalha: Minério duplicado & fundido!" to player
+                else if {_b} contains "gold":
+                    give 1 gold ingot to player
+                    if chance of 25%:
+                        give 1 gold ingot to player
+                        send action bar "&6✦ Toque da Fornalha: Ouro duplicado & fundido!" to player
+                else if {_b} contains "copper":
+                    give 2 copper ingot to player
+                    if chance of 25%:
+                        give 1 copper ingot to player
+                else:
+                    if chance of 25%:
+                        drop drops of event-block using player's tool at location of event-block
+                        send action bar "&6✦ Faro de Minerador: Minério extra extraído!" to player
+            # Nível 3: Veinminer Orgânico (Escavador de Veios)
+            if {_nv} >= 3:
+                set {_tipoAlvo} to type of event-block
+                set {_quebrados} to 0
+                loop blocks in radius 3 of event-block:
+                    if type of loop-block is {_tipoAlvo}:
+                        if location of loop-block is not location of event-block:
+                            if {_quebrados} < 14:
+                                add 1 to {_quebrados}
+                                drop drops of loop-block using player's tool at location of player
+                                set block at loop-block to air
+                if {_quebrados} > 0:
+                    play sound "block.amethyst_cluster.break" to player
+                    send action bar "&6&l⛏ VEINMINER: &e+%{_quebrados}% minérios conectados minerados!" to player
+            # Nível 4: Auto-reparo da Picareta
+            if {_nv} >= 4:
+                if "%type of player's tool%" contains "pickaxe":
+                    repair player's tool by 2
+        else:
+            if y-coordinate of player < 60:
+                if {_b} contains "stone" or "deepslate" or "tuff" or "andesite" or "diorite" or "granite":
+                    ganharXPProfissao(player, "minerador", 2)
+
+    # --- LENHADOR ---
+    else if {_prof} is "lenhador":
+        set {_nv} to nivelProfissao(player)
+        if {_b} contains "log":
+            ganharXPProfissao(player, "lenhador", 14)
+            # Nível 2: Tree Capitator (Derrubada em Cadeia)
+            if {_nv} >= 2:
+                set {_troncos} to 0
+                set {_locBase} to location of event-block
+                loop 16 times:
+                    set {_acima} to location loop-number blocks above {_locBase}
+                    if "%type of block at {_acima}%" contains "log":
+                        add 1 to {_troncos}
+                        drop drops of block at {_acima} using player's tool at location of player
+                        set block at {_acima} to air
+                if {_troncos} > 0:
+                    play sound "entity.zombie.break_wooden_door" with volume 1.5 and pitch 0.8 at player
+                    send action bar "&a&l🪓 TREE CAPITATOR: &fÁrvore inteira desabou (%{_troncos}% troncos)!" to player
+            # Nível 4: Auto-reparo do machado
+            if {_nv} >= 4:
+                if "%type of player's tool%" contains "axe":
+                    repair player's tool by 2
+        else if {_b} contains "leaves":
+            ganharXPProfissao(player, "lenhador", 2)
+            # Nível 3: Colheita de Frutas e Mudas
+            if {_nv} >= 3:
+                if chance of 15%:
+                    drop 1 apple at location of event-block
+                if chance of 2%:
+                    drop 1 golden apple at location of event-block
+                    send action bar "&6&l✦ Maçã Dourada rara encontrada na copa!" to player
+                    play sound "entity.player.levelup" with pitch 1.8 to player
+
+    # --- AGRICULTOR ---
+    else if {_prof} is "agricultor":
+        set {_nv} to nivelProfissao(player)
+        if {_b} contains "wheat" or "carrots" or "potatoes" or "beetroots" or "melon" or "pumpkin" or "sugar_cane":
+            ganharXPProfissao(player, "agricultor", 10)
+            # Nível 2: Colheita Dupla
+            if {_nv} >= 2:
+                if chance of 40%:
+                    drop drops of event-block at location of event-block
+                    send action bar "&e✦ Fartura da Terra: Colheita em dobro!" to player
+
+    # --- ALQUIMISTA ---
+    else if {_prof} is "alquimista":
+        set {_nv} to nivelProfissao(player)
+        if {_b} contains "wart" or "mushroom":
+            ganharXPProfissao(player, "alquimista", 12)
+            # Nível 1: Dropar Ingrediente Dobrado
+            if {_nv} >= 1:
+                drop drops of event-block at location of event-block
+
+# Mãos Verdes do Agricultor: Clique direito em plantação madura colhe e replanta
+on right click on wheat or carrots or potatoes or beetroots:
+    set {_u} to "%uuid of player%"
+    if {rpg::profissao::%{_u}%} is "agricultor":
+        set {_nv} to nivelProfissao(player)
+        if {_nv} >= 1:
+            drop drops of event-block at location of event-block
+            if {_nv} >= 2:
+                if chance of 35%:
+                    drop drops of event-block at location of event-block
+            play sound "block.crop.break" at event-block
+            ganharXPProfissao(player, "agricultor", 12)
+            send action bar "&a✦ Mãos Verdes: Colhido e replantado automaticamente!" to player
+
+# Criação de Animais pelo Agricultor (Nível 3)
+on right click on cow or sheep or pig or chicken:
+    set {_u} to "%uuid of player%"
+    if {rpg::profissao::%{_u}%} is "agricultor":
+        set {_nv} to nivelProfissao(player)
+        if {_nv} >= 3:
+            if player is holding wheat or seeds or carrot or potato:
+                ganharXPProfissao(player, "agricultor", 20)
+
+# Banquete dos Deuses (Agricultor Nível 4): Alimentos dão saturação e absorção
+on consume:
+    set {_u} to "%uuid of player%"
+    if {rpg::profissao::%{_u}%} is "agricultor":
+        set {_nv} to nivelProfissao(player)
+        if {_nv} >= 4:
+            aplicarEfeito(player, "regeneration", 8, 2)
+            aplicarEfeito(player, "absorption", 20, 1)
+            send action bar "&e✦ Banquete dos Deuses: Vitalidade e absorção!" to player
+    else if {rpg::profissao::%{_u}%} is "alquimista":
+        # Nível 2: Duração dobrada de poções
+        set {_nv} to nivelProfissao(player)
+        if {_nv} >= 2:
+            ganharXPProfissao(player, "alquimista", 25)
+
+# Desmonte e Reciclagem do Ferreiro na Bigorna (Nível 2)
+on right click on anvil:
+    set {_u} to "%uuid of player%"
+    if {rpg::profissao::%{_u}%} is "ferreiro":
+        ganharXPProfissao(player, "ferreiro", 25)
+        set {_nv} to nivelProfissao(player)
+        if {_nv} >= 2:
+            if player is sneaking:
+                set {_t} to "%type of player's tool%"
+                set {_deu} to false
+                if {_t} contains "iron_":
+                    remove 1 of player's tool from player's inventory
+                    give 2 iron ingot to player
+                    set {_deu} to true
+                else if {_t} contains "gold_":
+                    remove 1 of player's tool from player's inventory
+                    give 2 gold ingot to player
+                    set {_deu} to true
+                else if {_t} contains "diamond_":
+                    remove 1 of player's tool from player's inventory
+                    give 2 diamond to player
+                    set {_deu} to true
+                if {_deu} is true:
+                    cancel event
+                    play sound "block.anvil.use" to player
+                    send action bar "&6&l⚙ RECICLAGEM: &aEquipamento desmanchado em lingotes puros!" to player
+                    ganharXPProfissao(player, "ferreiro", 50)
+
+# Pescaria do Pescador
+on fish:
+    set {_u} to "%uuid of player%"
+    if {rpg::profissao::%{_u}%} is "pescador":
+        if "%fish state%" is "CAUGHT_FISH":
+            set {_nv} to nivelProfissao(player)
+            ganharXPProfissao(player, "pescador", 35)
+            # Nível 2: Tesouro das Profundezas
+            if {_nv} >= 2:
+                if chance of 20%:
+                    give 1 gold ingot named "&6Moeda de Ouro Antiga" to player
+                    send action bar "&6✦ Tesouro Pescado: Moeda de Ouro Antiga!" to player
+                if chance of 10%:
+                    add 1 to {runas::%{_u}%}
+                    send action bar "&d✦ Tesouro Pescado: +1 Fragmento Rúnico!" to player
+            # Nível 4: Peixe Místico de Aurelion
+            if {_nv} >= 4:
+                if chance of 25%:
+                    give 1 cooked salmon named "&d&lPeixe Místico dos Mares" with lore "&7Peixe lendário de Aurelion." and "&eConsuma para ganhar Força II e Velocidade II!" to player
+                    send action bar "&d&l✦ PEIXE MÍSTICO FISGADO!" to player
+
+# Sangue Antídoto do Alquimista (Nível 4)
+on damage of player:
+    set {_u} to "%uuid of victim%"
+    if {rpg::profissao::%{_u}%} is "alquimista":
+        set {_nv} to nivelProfissao(victim)
+        if {_nv} >= 4:
+            if damage cause is poison or wither:
+                cancel event
+                heal victim by 1
+                send action bar "&a✦ Sangue Antídoto: Veneno transmutado em Cura!" to victim
+    # Ferreiro Nível 4: Blindagem Superior
+    else if {rpg::profissao::%{_u}%} is "ferreiro":
+        set {_nv} to nivelProfissao(victim)
+        if {_nv} >= 4:
+            set damage to (damage * 0.88)
+
+# ---------- Habilidades Ativas Supremas das Profissões (Nível 5) ----------
+
+function ativarHabilidadeProfissao(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_prof} to {rpg::profissao::%{_u}%}
+    if {_prof} is not set or "nenhuma":
+        send "&cEscolha uma Profissão primeiro em /profissoes ou /rpg!" to {_p}
+        stop
+    set {_nv} to nivelProfissao({_p})
+    if {_nv} < 5:
+        send "&cVocê precisa alcançar a Maestria Máxima (Nível 5) de %nomeProfissao({_prof})% &cpara usar a Ativa Suprema!" to {_p}
+        send "&7Seu nível atual: &e%{_nv}%/5&7. Trabalhe no ofício ou gaste PH no &f/profissoes&7!" to {_p}
+        stop
+    if {cd::hab_prof::%{_u}%} is set:
+        if difference between {cd::hab_prof::%{_u}%} and now is less than 15 seconds:
+            send action bar "&cHabilidade de Profissão em recarga! Aguarde alguns segundos..." to {_p}
+            stop
+    set {cd::hab_prof::%{_u}%} to now
+
+    # 1. MINERADOR: Detonação Sísmica 3x3x3
+    if {_prof} is "minerador":
+        play sound "block.anvil.land" with volume 2 and pitch 0.5 at {_p}
+        play sound "entity.generic.explode" with volume 1.5 at {_p}
+        set {_centro} to location 2 meters in front of {_p}
+        set {_quebrados} to 0
+        loop blocks in radius 2.2 of {_centro}:
+            set {_tb} to "%type of loop-block%"
+            if {_tb} contains "stone" or "deepslate" or "netherrack" or "basalt" or "tuff" or "granite" or "diorite" or "andesite" or "ore":
+                if {_tb} does not contain "bedrock":
+                    add 1 to {_quebrados}
+                    drop drops of loop-block using {_p}'s tool at location of {_p}
+                    set block at loop-block to air
+        loop all monsters in radius 8 of {_p}:
+            damage loop-monster by 10
+            push loop-monster upwards at speed 0.8
+        if chance of 20%:
+            add 1 to {runas::%{_u}%}
+            send "&d✦ A explosão sísmica revelou +1 Fragmento Rúnico!" to {_p}
+        send action bar "&6&l💥 DETONAÇÃO SÍSMICA! %{_quebrados}% blocos escavados instantaneamente!" to {_p}
+
+    # 2. LENHADOR: Furacão Silvestre
+    else if {_prof} is "lenhador":
+        play sound "entity.breeze.wind_burst" with volume 2 at {_p}
+        execute console command "execute at %uuid of {_p}% run function aurelion:fx/espinhos_verdelith"
+        loop blocks in radius 6 of {_p}:
+            if "%type of loop-block%" contains "leaves":
+                drop drops of loop-block at location of {_p}
+                set block at loop-block to air
+        loop all monsters in radius 8 of {_p}:
+            damage loop-monster by 12
+            push loop-monster away from {_p} at speed 1.6
+        send action bar "&a&l🍃 FURACÃO SILVESTRE ATIVADO! Copa limpa e monstros repelidos!" to {_p}
+
+    # 3. AGRICULTOR: Bênção de Gaia
+    else if {_prof} is "agricultor":
+        play sound "block.bell.resonate" with volume 2 at {_p}
+        execute console command "execute at %uuid of {_p}% run function aurelion:fx/luz_seraphel"
+        loop blocks in radius 8 of {_p}:
+            set {_b} to "%type of loop-block%"
+            if {_b} contains "wheat" or "carrots" or "potatoes" or "beetroots" or "sapling":
+                # Bonemeal visual e partículas
+                play sound "item.bone_meal.use" at loop-block
+        send action bar "&e&l🌱 BÊNÇÃO DE GAIA! Todas as plantações abençoadas ao redor!" to {_p}
+
+    # 4. FERREIRO: Martelo do Titã
+    else if {_prof} is "ferreiro":
+        play sound "block.anvil.use" with volume 2 and pitch 1.8 at {_p}
+        play sound "item.totem.use" at {_p}
+        if {_p}'s tool is not air:
+            repair {_p}'s tool
+            send "&a&l⚙ [Martelo do Titã] &fSua ferramenta foi reparada para 100%% de durabilidade!" to {_p}
+        loop all monsters in radius 7 of {_p}:
+            damage loop-monster by 10
+            ignite loop-monster for 5 seconds
+            push loop-monster upwards at speed 0.7
+        send action bar "&c&l🔨 MARTELO DO TITÃ! Reparo imediato e onda de faíscas!" to {_p}
+
+    # 5. PESCADOR: Tempestade dos Mares
+    else if {_prof} is "pescador":
+        play sound "entity.elder_guardian.curse" with volume 1.5 at {_p}
+        execute console command "execute at %uuid of {_p}% run function aurelion:fx/onda_thalassa"
+        give 1 gold ingot named "&6Moeda das Profundezas" to {_p}
+        give 1 nautilus shell to {_p}
+        if chance of 40%:
+            give 1 diamond to {_p}
+        loop all monsters in radius 9 of {_p}:
+            damage loop-monster by 11
+            push loop-monster upwards at speed 1.2
+        send action bar "&b&l🌊 REDEMOINHO OCEÂNICO! Tesouros puxados das águas!" to {_p}
+
+    # 6. ALQUIMISTA: Frasco Cataclísmico
+    else if {_prof} is "alquimista":
+        play sound "entity.generic.explode" at {_p}
+        execute console command "execute at %uuid of {_p}% run function aurelion:fx/chamas_korvan"
+        loop all players in radius 7 of {_p}:
+            heal loop-player by 6
+            aplicarEfeito(loop-player, "absorption", 12, 2)
+            aplicarEfeito(loop-player, "regeneration", 10, 2)
+        loop all monsters in radius 7 of {_p}:
+            damage loop-monster by 12
+            ignite loop-monster for 6 seconds
+            aplicarEfeito(loop-monster, "blindness", 5, 1)
+        send action bar "&d&l⚗ FRASCO CATACLÍSMICO DETONADO! Aliados curados e inimigos queimados!" to {_p}
+
+# ---------- Menus Visuais (GUIs) da Central de Profissões ----------
+
+function abrirMenuProfissoes(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_prof} to profissaoAtiva({_p})
+    set {_nv} to nivelProfissao({_p})
+    set {_xp} to xpProfissao({_p})
+    set {_req} to xpNecessarioProfissao({_nv})
+    set {_ph} to pontosHabilidade({_p})
+
+    set {_gui} to chest inventory with 6 rows named "&6&lCentral de Profissões & Ofícios"
+
+    # Slot 4: Resumo da Ficha Profissional
+    set slot 4 of {_gui} to beacon named "&6&lSua Ficha de Ofício: &f%{_p}%" with lore "&7Profissão Ativa: %nomeProfissao({_prof})%" and "&7Nível de Maestria: &e%{_nv}%/5" and "&7XP do Ofício: &a%{_xp}%/%{_req}% XP" and "&7Pontos de Habilidade Disponíveis: &a%{_ph}% PH" and "" and "&eComo usar o Poder Supremo (Nv 5):" and "&f• Aperte Shift + F com a ferramenta do ofício" and "&f• Ou use /habilidade profissao"
+
+    # Linha 2 (Slots 10 a 15): As 6 Profissões Disponíveis
+    set {_profs::*} to "minerador", "lenhador", "agricultor", "ferreiro", "pescador" and "alquimista"
+    set {_slots::*} to 10, 11, 12, 13, 14 and 15
+    loop 6 times:
+        set {_pid} to {_profs::%loop-number%}
+        set {_ico} to iconeProfissao({_pid})
+        set {_nm} to nomeProfissao({_pid})
+        set {_info} to infoProfissao({_pid})
+        set {_snv} to {rpg::profissao_nivel::%{_u}%::%{_pid}%}
+        if {_snv} is not set:
+            set {_snv} to 1
+        set {_st} to "&eClique para escolher esta profissão!"
+        if {_prof} is {_pid}:
+            set {_st} to "&a✔ PROFISSÃO ATUAL (Nível %{_snv}%/5)"
+        set slot {_slots::%loop-number%} of {_gui} to {_ico} named "%{_nm}%" with lore "&7%{_info}%" and "" and "&7Seu Nível nesta Profissão: &e%{_snv}%/5" and "" and {_st}
+
+    # Linha 4 (Slots 28 a 32): Árvore de 5 Níveis da Profissão Ativa
+    if {_prof} is not "nenhuma":
+        loop 5 times:
+            set {_n} to loop-number
+            set {_hnm} to nomeHabilidadeProfissao({_prof}, {_n})
+            set {_hdesc} to descHabilidadeProfissao({_prof}, {_n})
+            if {_nv} >= {_n}:
+                set {_itemNode} to emerald block named "&a✔ Nível %{_n}%: &f%{_hnm}%" with lore "&aDESBLOQUEADA & ATIVA" and "&7%{_hdesc}%"
+            else if {_n} is ({_nv} + 1):
+                set {_itemNode} to gold block named "&e⚡ Próximo Nível %{_n}%: &f%{_hnm}%" with lore "&7%{_hdesc}%" and "" and "&7Progresso: &a%{_xp}%/%{_req}% XP &7(pratique o ofício)" and "&6Ou clique aqui para desbloquear com &f1 PH&6!"
+            else:
+                set {_itemNode} to gray concrete named "&8🔒 Nível %{_n}%: &7%{_hnm}%" with lore "&7%{_hdesc}%" and "" and "&cBloqueado: Requer Nível %{_n} - 1% primeiro."
+            set slot (27 + {_n}) of {_gui} to {_itemNode}
+    else:
+        set slot 30 of {_gui} to barrier named "&cEscolha uma Profissão acima!" with lore "&7Clique em uma das 6 ferramentas para ativar seu ofício."
+
+    # Linha 6 (Slots 45 a 53): Navegação
+    set slot 47 of {_gui} to enchanting table named "&d&lVoltar ao Menu de RPG (3 Árvores)" with lore "&7Abre a tela integrada com Raça, Classe e Profissão." and "&eClique para abrir /rpg"
+    set slot 49 of {_gui} to arrow named "&7Voltar ao Diário de Bordo" with lore "&eClique para voltar"
+    set slot 51 of {_gui} to anvil named "&6&lForja de Artefatos & Ferramentas" with lore "&7Fabrique Picareta 3x3, Mochila, Arpéu e Armas." and "&eClique para abrir a Forja"
+
+    open {_gui} to {_p}
+
+# Interação orgânica: Shift + Clique Direito no Cortador de Pedra (Stonecutter) abre Profissões!
+on right click on stonecutter or grindstone:
+    if player is sneaking:
+        cancel event
+        abrirMenuProfissoes(player)
+
+on inventory click:
+    set {_inv} to "%name of event-inventory%"
+    if {_inv} contains "Central de Profissões":
+        cancel event
+        set {_idx} to index of clicked slot
+        set {_u} to "%uuid of player%"
+        # Seleção das 6 profissões
+        if {_idx} is 10:
+            escolherProfissao(player, "minerador")
+            abrirMenuProfissoes(player)
+        else if {_idx} is 11:
+            escolherProfissao(player, "lenhador")
+            abrirMenuProfissoes(player)
+        else if {_idx} is 12:
+            escolherProfissao(player, "agricultor")
+            abrirMenuProfissoes(player)
+        else if {_idx} is 13:
+            escolherProfissao(player, "ferreiro")
+            abrirMenuProfissoes(player)
+        else if {_idx} is 14:
+            escolherProfissao(player, "pescador")
+            abrirMenuProfissoes(player)
+        else if {_idx} is 15:
+            escolherProfissao(player, "alquimista")
+            abrirMenuProfissoes(player)
+        # Evolução com PH nos slots da árvore (28 a 32)
+        else if {_idx} >= 28:
+            if {_idx} <= 32:
+                set {_alvoNv} to {_idx} - 27
+                set {_atuNv} to nivelProfissao(player)
+                if {_alvoNv} is ({_atuNv} + 1):
+                    evoluirComPHProfissao(player)
+                    abrirMenuProfissoes(player)
+                else if {_alvoNv} <= {_atuNv}:
+                    send "&aEsta habilidade já está desbloqueada e ativa!" to player
+                else:
+                    send "&cEvolua o nível anterior primeiro!" to player
+        # Navegação inferior
+        else if {_idx} is 47:
+            close player's inventory
+            abrirMenuRPG(player)
+        else if {_idx} is 49:
+            close player's inventory
+            execute player command "diario"
+        else if {_idx} is 51:
+            close player's inventory
+            abrirMenuForja(player)
+
+# Comandos de Acesso Rápido
+command /profissoes [<text>] [<text>]:
+    aliases: /profissao, /oficio, /oficios, /jobs
+    description: Central de Profissões e Árvores de Ofícios
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "minerador" or "lenhador" or "agricultor" or "ferreiro" or "pescador" or "alquimista":
+                escolherProfissao(player, arg-1)
+                abrirMenuProfissoes(player)
+                stop
+        abrirMenuProfissoes(player)

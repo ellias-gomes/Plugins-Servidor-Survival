@@ -1,0 +1,24 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "entries": [
+      {
+        "threshold": 1007,
+        "model": {
+          "type": "minecraft:model",
+          "model": "aurelion:item/mochila_viajante"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:special",
+      "base": "minecraft:item/chest",
+      "model": {
+        "type": "minecraft:chest",
+        "texture": "minecraft:normal"
+      }
+    }
+  }
+}

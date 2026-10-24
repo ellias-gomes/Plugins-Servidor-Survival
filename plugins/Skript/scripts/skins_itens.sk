@@ -1,0 +1,246 @@
+# ============================================================================
+#  SISTEMA DE SKINS, MODELOS DE ITENS (1ª & 3ª PESSOA) E GALERIA VISUAL
+#  - Aplica CustomModelData (1001..1032) e sincroniza itens antigos no inventário
+#  - Calibrado em conjunto com resourcepack/aurelion_resourcepack.zip para que:
+#    • 1ª Pessoa (quem segura): ângulo e escala ergonômicos, sem tampar a mira
+#    • 3ª Pessoa (quem olha o jogador): encaixe exato na mão (cajados em pé,
+#      adagas compactas, martelos/alabardas imponentes, mochila/grimório leves)
+#  - Aura Visual de 3ª Pessoa na mão da arma (invisível na câmera de 1ª pessoa!)
+# ============================================================================
+
+function aplicarSkinCMD(i: item, cmd: number, id: text) :: item:
+    set custom model data of {_i} to {_cmd}
+    set custom model data strings of {_i} to {_id}
+    return {_i}
+
+function codigoSkinPorNome(nome: text) :: number:
+    # 9 Ferramentas Utilitárias (1001..1009)
+    if {_nome} contains "Picareta Tectônica":
+        return 1001
+    if {_nome} contains "Picareta da Fornalha Viva":
+        return 1002
+    if {_nome} contains "Machado do Lenhador":
+        return 1003
+    if {_nome} contains "Foicinha da Colheita Dourada":
+        return 1004
+    if {_nome} contains "Arpéu de Escalada":
+        return 1005
+    if {_nome} contains "Ímã Rúnico":
+        return 1006
+    if {_nome} contains "Mochila Dimensional":
+        return 1007
+    if {_nome} contains "Cristal do Elo Fraterno":
+        return 1008
+    if {_nome} contains "Pluma de Hermes":
+        return 1009
+    # 10 Armas de Classe & Co-op (1010..1019)
+    if {_nome} contains "Cajado do Inverno Eterno":
+        return 1010
+    if {_nome} contains "Cetro da Singularidade":
+        return 1011
+    if {_nome} contains "Tomo dos Mortos-Vivos":
+        return 1012
+    if {_nome} contains "Arco da Chuva Estelar":
+        return 1013
+    if {_nome} contains "Besta Metralhadora":
+        return 1014
+    if {_nome} contains "Adaga do Passo Sombrio":
+        return 1015
+    if {_nome} contains "Lâmina Gêmea do Vampiro":
+        return 1016
+    if {_nome} contains "Martelo Tectônico de Magma":
+        return 1017
+    if {_nome} contains "Destruidor do Berserker":
+        return 1018
+    if {_nome} contains "Alabarda Solar":
+        return 1019
+    # Relíquias dos Guardiões, Skyrim e RPG (1020..1032)
+    if {_nome} contains "Lâmina do Musgo Eterno":
+        return 1020
+    if {_nome} contains "Tridente de Thalassa":
+        return 1021
+    if {_nome} contains "Picareta de Korvan":
+        return 1022
+    if {_nome} contains "Arco do Oráculo":
+        return 1023
+    if {_nome} contains "Lâmina do Eclipse":
+        return 1024
+    if {_nome} contains "Coração da Chama":
+        return 1025
+    if {_nome} contains "Lâmina Sangrenta de Valdric":
+        return 1026
+    if {_nome} contains "Martelo do Trovão Nórdico":
+        return 1026
+    if {_nome} contains "Cajado da Bola de Fogo":
+        return 1027
+    if {_nome} contains "Insígnia de Sangue & Classe":
+        return 1030
+    if {_nome} contains "Tomo do Conhecimento Ancestral":
+        return 1031
+    if {_nome} contains "Relicário Antigo de Aurelion":
+        return 1032
+    return 0
+
+# Sincroniza automaticamente a skin (CustomModelData) de todos os itens no inventário do jogador
+function sincronizarSkinsInventario(p: player) :: number:
+    set {_atualizados} to 0
+    loop 41 times:
+        set {_slot} to loop-number - 1
+        set {_it} to slot {_slot} of {_p}'s inventory
+        if {_it} is not air:
+            set {_nm} to "%name of {_it}%"
+            set {_cmd} to codigoSkinPorNome({_nm})
+            if {_cmd} > 0:
+                if custom model data of {_it} is not {_cmd}:
+                    set custom model data of {_it} to {_cmd}
+                    set slot {_slot} of {_p}'s inventory to {_it}
+                    add 1 to {_atualizados}
+    return {_atualizados}
+
+on join:
+    wait 20 ticks
+    sincronizarSkinsInventario(player)
+
+on tool change:
+    set {_it} to player's tool
+    if {_it} is not air:
+        set {_cmd} to codigoSkinPorNome("%name of {_it}%")
+        if {_cmd} > 0:
+            if custom model data of {_it} is not {_cmd}:
+                set custom model data of player's tool to {_cmd}
+
+# ---------- Assinatura Visual em 3ª Pessoa na Mão do Jogador ----------
+# Posicionada exatamente na mão direita do personagem (0.38m à direita e y+0.92),
+# abaixo da câmera de 1ª pessoa (y+1.62), para que:
+#   - Quem segura a ferramenta em 1ª pessoa tenha visão 100% limpa e confortável
+#   - Quem olha o jogador em 3ª pessoa veja o brilho elemental na lâmina/ferramenta!
+
+every 2 seconds:
+    loop all players:
+        set {_u} to "%uuid of loop-player%"
+        if {skins::aura_off::%{_u}%} is not set:
+            set {_nm} to "%name of loop-player's tool%"
+            set {_cmd} to codigoSkinPorNome({_nm})
+            if {_cmd} > 0:
+                set {_yaw} to yaw of loop-player
+                # Vetor da mão direita em 3ª pessoa (frente + direita da cintura)
+                set {_angDir} to {_yaw} + 55
+                set {_hx} to (x-coordinate of loop-player) - (0.45 * sin({_angDir}))
+                set {_hy} to (y-coordinate of loop-player) + 0.92
+                set {_hz} to (z-coordinate of loop-player) + (0.45 * cos({_angDir}))
+                if {_cmd} is 1001 or 1004 or 1019 or 1025:
+                    # Brilho Dourado / Tectônico / Solar
+                    execute console command "particle minecraft:wax_on %{_hx}% %{_hy}% %{_hz}% 0.08 0.08 0.08 0.01 3 normal"
+                else if {_cmd} is 1002 or 1017 or 1018 or 1022:
+                    # Brasa de Fornalha / Magma / Berserker
+                    execute console command "particle minecraft:flame %{_hx}% %{_hy}% %{_hz}% 0.08 0.08 0.08 0.01 3 normal"
+                else if {_cmd} is 1003 or 1020:
+                    # Folhas / Esporos Ancestrais do Bosque
+                    execute console command "particle minecraft:happy_villager %{_hx}% %{_hy}% %{_hz}% 0.08 0.08 0.08 0.01 2 normal"
+                else if {_cmd} is 1005 or 1008 or 1009 or 1010 or 1013 or 1021:
+                    # Gelo / Vento / Estelar / Marés
+                    execute console command "particle minecraft:snowflake %{_hx}% %{_hy}% %{_hz}% 0.08 0.08 0.08 0.01 3 normal"
+                else if {_cmd} is 1006 or 1007 or 1011 or 1012 or 1015 or 1024:
+                    # Runa / Singularidade / Passo Sombrio / Eclipse
+                    execute console command "particle minecraft:portal %{_hx}% %{_hy}% %{_hz}% 0.1 0.1 0.1 0.05 4 normal"
+                else if {_cmd} is 1016:
+                    # Lâmina Gêmea do Vampiro
+                    execute console command "particle minecraft:damage_indicator %{_hx}% %{_hy}% %{_hz}% 0.08 0.08 0.08 0.01 2 normal"
+
+# ---------- Galeria Visual de Skins & Modelos (1ª e 3ª Pessoa) ----------
+
+function abrirGaleriaSkins(p: player):
+    sincronizarSkinsInventario({_p})
+    set {_u} to "%uuid of {_p}%"
+    set {_gui} to chest inventory with 6 rows named "&6&l🎨 Galeria de Skins & Modelos 3D"
+
+    set {_statusAura} to "&a✔ ATIVADA (Visível em 3ª pessoa)"
+    if {skins::aura_off::%{_u}%} is set:
+        set {_statusAura} to "&c✖ DESATIVADA"
+
+    set slot 4 of {_gui} to painting named "&e&lModelos & Skins de Aurelion (1ª e 3ª Pessoa)" with lore "&7Cada uma das 19 Ferramentas & Armas possui:" and "&f• Skin Pixel-Art 32x32 exclusiva &r&7(fácil de diferenciar)" and "&f• Visão em 1ª Pessoa confortável &r&7(não tampa a mira)" and "&f• Empunhadura em 3ª Pessoa calibrada &r&7(cajados em pé," and "&7  adagas compactas, martelos pesados e mochila leve!)"
+
+    # Linha 2: 9 Ferramentas Utilitárias (Slots 9..17)
+    set slot 9 of {_gui} to itemArtefato("picareta_tectonica")
+    set slot 10 of {_gui} to itemArtefato("picareta_fornalha")
+    set slot 11 of {_gui} to itemArtefato("machado_lenhador")
+    set slot 12 of {_gui} to itemArtefato("foicinha_colheita")
+    set slot 13 of {_gui} to itemArtefato("arpeu_escalada")
+    set slot 14 of {_gui} to itemArtefato("ima_runico")
+    set slot 15 of {_gui} to itemArtefato("mochila_viajante")
+    set slot 16 of {_gui} to itemArtefato("cristal_fraterno")
+    set slot 17 of {_gui} to itemArtefato("pluma_hermes")
+
+    # Linha 3 & 4: 10 Armas de Classe & Co-op (Slots 18..27)
+    set slot 18 of {_gui} to itemArtefato("cajado_inverno")
+    set slot 19 of {_gui} to itemArtefato("cetro_singularidade")
+    set slot 20 of {_gui} to itemArtefato("grimorio_necromante")
+    set slot 21 of {_gui} to itemArtefato("arco_estelar")
+    set slot 22 of {_gui} to itemArtefato("besta_repeticao")
+    set slot 23 of {_gui} to itemArtefato("adaga_sombria")
+    set slot 24 of {_gui} to itemArtefato("lamina_vampiro")
+    set slot 25 of {_gui} to itemArtefato("martelo_magma")
+    set slot 26 of {_gui} to itemArtefato("espada_berserker")
+    set slot 27 of {_gui} to itemArtefato("alabarda_solar")
+
+    # Linha 4: Relíquias dos Guardiões e Itens de RPG (Slots 28..35)
+    set slot 28 of {_gui} to reliquia("lamina_musgo")
+    set slot 29 of {_gui} to reliquia("tridente_mares")
+    set slot 30 of {_gui} to reliquia("picareta_ferreiro")
+    set slot 31 of {_gui} to reliquia("arco_oraculo")
+    set slot 32 of {_gui} to reliquia("lamina_eclipse")
+    set slot 33 of {_gui} to insigniaPoder()
+    set slot 34 of {_gui} to tomoConhecimento()
+    set slot 35 of {_gui} to relicarioAntigo()
+
+    # Controles na linha inferior
+    set slot 47 of {_gui} to emerald block named "&a&lSincronizar Skins do Meu Inventário" with lore "&7Atualiza imediatamente o CustomModelData" and "&7de todas as armas e ferramentas na sua bolsa." and "&eClique para atualizar!"
+    set slot 49 of {_gui} to arrow named "&7Voltar à Forja de Artefatos" with lore "&eClique para voltar"
+    set slot 50 of {_gui} to ender eye named "&d&lAura Elemental na Mão (3ª Pessoa)" with lore "&7Status: %{_statusAura}%" and "&7Exibe partículas sutis na mão da arma para quem" and "&7olha você de fora, sem atrapalhar sua 1ª pessoa!" and "&eClique para alternar"
+    set slot 51 of {_gui} to knowledge book named "&b&lCarregar Resource Pack de Skins" with lore "&7Envia o pacote oficial &faurelion_resourcepack.zip" and "&7para o seu cliente Minecraft ou mostra como ativar!" and "&eClique para carregar as skins!"
+
+    open {_gui} to {_p}
+
+on inventory click:
+    if "%name of event-inventory%" contains "Galeria de Skins & Modelos 3D":
+        cancel event
+        set {_idx} to index of clicked slot
+        set {_u} to "%uuid of player%"
+        if {_idx} is 47:
+            set {_n} to sincronizarSkinsInventario(player)
+            send "&a&l[Skins] &aInventário verificado e sincronizado (&f%{_n}% item(ns) atualizado(s)&a)!" to player
+            play sound "block.Smithing_table.use" to player
+        else if {_idx} is 49:
+            abrirMenuForja(player)
+        else if {_idx} is 50:
+            if {skins::aura_off::%{_u}%} is set:
+                delete {skins::aura_off::%{_u}%}
+                send "&a&l[Skins] &aAura elemental de 3ª pessoa &fATIVADA&a!" to player
+            else:
+                set {skins::aura_off::%{_u}%} to true
+                send "&e&l[Skins] &7Aura elemental de 3ª pessoa &cDESATIVADA&7." to player
+            play sound "ui.button.click" to player
+            abrirGaleriaSkins(player)
+        else if {_idx} is 51:
+            close player's inventory
+            enviarPacoteSkins(player)
+
+function enviarPacoteSkins(p: player):
+    send "&6&l==============================================" to {_p}
+    send "&e&l   🎨 SKINS & MODELOS 3D DE AURELION (32 ITENS)" to {_p}
+    send "&7Enviando pacote de texturas para o seu cliente..." to {_p}
+    send "&7• &fArquivo local pronto: &eresourcepack/aurelion_resourcepack.zip" to {_p}
+    send "&7• &fInstalação rápida: &7Rode &f./scripts/instalar_skins.sh &7para copiar" to {_p}
+    send "&7  automaticamente para sua pasta &f.minecraft/resourcepacks/&7!" to {_p}
+    send "&6&l==============================================" to {_p}
+    send the resource pack from "http://127.0.0.1:8081/aurelion_resourcepack.zip" with hash "06c88a5bfcdf55ba99df44cbe990292313e83fc2" to {_p}
+    play sound "block.beacon.power_select" to {_p}
+
+command /skins [<text>]:
+    aliases: /modelos_itens, /resourcepack, /texturas
+    description: Abre a Galeria de Skins & Modelos 3D das Armas e Ferramentas
+    trigger:
+        if arg-1 is "baixar" or "carregar":
+            enviarPacoteSkins(player)
+            stop
+        abrirGaleriaSkins(player)

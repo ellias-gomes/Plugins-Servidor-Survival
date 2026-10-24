@@ -12,6 +12,11 @@ effect give @s minecraft:invisibility infinite 0 true
 attribute @s minecraft:scale base set 1.6
 item replace entity @s weapon.mainhand with minecraft:air
 item replace entity @s weapon.offhand with minecraft:air
+bossbar add aurelion:semi_1 "§c§l⚔ Thorgar, o Carniceiro dos Ermos §7[Caçada]"
+bossbar set aurelion:semi_1 color red
+bossbar set aurelion:semi_1 style notched_6
+bossbar set aurelion:semi_1 name "§c§l⚔ Thorgar, o Carniceiro dos Ermos §7[Caçada]"
+bossbar set aurelion:semi_1 visible true
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_thorgar_torso"],block_state:"minecraft:red_nether_bricks",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.6250f,1.4000f,-0.3000f],scale:[1.2500f,1.2000f,0.6000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_thorgar_cinto"],block_state:"minecraft:netherite_block",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.6562f,1.3500f,-0.3250f],scale:[1.3125f,0.2000f,0.6500f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_thorgar_head"],block_state:"minecraft:orange_terracotta",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.3500f,2.6500f,-0.3500f],scale:[0.7000f,0.7000f,0.7000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}

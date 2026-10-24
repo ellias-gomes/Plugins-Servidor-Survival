@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "minecraft:item/breeze_rod"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1010
+      },
+      "model": "aurelion:item/cajado_inverno"
+    }
+  ]
+}

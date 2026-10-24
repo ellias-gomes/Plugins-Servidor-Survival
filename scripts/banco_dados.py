@@ -123,6 +123,10 @@ def init_db():
             objetivos_feitos INTEGER DEFAULT 0,
             cacadas_feitas INTEGER DEFAULT 0,
             memorias_feitas INTEGER DEFAULT 0,
+            raca TEXT DEFAULT '',
+            classe TEXT DEFAULT '',
+            profissao TEXT DEFAULT '',
+            profissao_nivel INTEGER DEFAULT 1,
             voto_final TEXT DEFAULT '',
             atualizado_em TEXT
         );
@@ -173,6 +177,16 @@ def init_db():
         );
         """
     )
+    for col, col_def in [
+        ("raca", "TEXT DEFAULT ''"),
+        ("classe", "TEXT DEFAULT ''"),
+        ("profissao", "TEXT DEFAULT ''"),
+        ("profissao_nivel", "INTEGER DEFAULT 1"),
+    ]:
+        try:
+            cur.execute(f"ALTER TABLE jogadores ADD COLUMN {col} {col_def}")
+        except Exception:
+            pass
     conn.commit()
     return conn
 
@@ -249,6 +263,10 @@ def salvar_no_banco(motivo="Salvamento Manual"):
         banco_saldo = float(sk_vars.get(f"banco::{uid}", 0.0))
         banco_nivel = int(sk_vars.get(f"banconivel::{uid}", 1))
         runas = int(sk_vars.get(f"runas::{uid}", 0))
+        raca = str(sk_vars.get(f"db::jogador::{uid}::raca", sk_vars.get(f"rpg::raca::{uid}", "nenhuma")))
+        classe = str(sk_vars.get(f"db::jogador::{uid}::classe", sk_vars.get(f"rpg::classe::{uid}", "nenhuma")))
+        profissao = str(sk_vars.get(f"db::jogador::{uid}::profissao", sk_vars.get(f"rpg::profissao::{uid}", "nenhuma")))
+        profissao_nivel = int(sk_vars.get(f"db::jogador::{uid}::profissao_nivel", 1))
         voto_final = str(sk_vars.get(f"final::{uid}", ""))
 
         pets_cnt = sum(1 for k in sk_vars if k.startswith(f"pets::{uid}::owned::"))
@@ -270,8 +288,9 @@ def salvar_no_banco(motivo="Salvamento Manual"):
         cur.execute(
             """
             INSERT INTO jogadores (uuid, nome, carteira, banco_saldo, banco_nivel, runas, pets_colecionados,
-                                   biomas_descobertos, objetivos_feitos, cacadas_feitas, memorias_feitas, voto_final, atualizado_em)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                   biomas_descobertos, objetivos_feitos, cacadas_feitas, memorias_feitas,
+                                   raca, classe, profissao, profissao_nivel, voto_final, atualizado_em)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(uuid) DO UPDATE SET
                 nome=excluded.nome,
                 carteira=excluded.carteira,
@@ -283,10 +302,14 @@ def salvar_no_banco(motivo="Salvamento Manual"):
                 objetivos_feitos=excluded.objetivos_feitos,
                 cacadas_feitas=excluded.cacadas_feitas,
                 memorias_feitas=excluded.memorias_feitas,
+                raca=excluded.raca,
+                classe=excluded.classe,
+                profissao=excluded.profissao,
+                profissao_nivel=excluded.profissao_nivel,
                 voto_final=excluded.voto_final,
                 atualizado_em=excluded.atualizado_em
             """,
-            (uid, nome, carteira, banco_saldo, banco_nivel, runas, pets_cnt, biomas_cnt, obj_cnt, cac_cnt, mem_cnt, voto_final, now_str),
+            (uid, nome, carteira, banco_saldo, banco_nivel, runas, pets_cnt, biomas_cnt, obj_cnt, cac_cnt, mem_cnt, raca, classe, profissao, profissao_nivel, voto_final, now_str),
         )
         jogadores_resumo.append(
             {
@@ -295,6 +318,10 @@ def salvar_no_banco(motivo="Salvamento Manual"):
                 "carteira": carteira,
                 "banco": banco_saldo,
                 "runas": runas,
+                "raca": raca,
+                "classe": classe,
+                "profissao": profissao,
+                "profissao_nivel": profissao_nivel,
                 "objetivos": obj_cnt,
                 "cacadas": cac_cnt,
                 "pets": pets_cnt,
@@ -343,7 +370,7 @@ def mostrar_status():
 
     print("\n[Jogadores Registrados]")
     cur.execute(
-        "SELECT nome, uuid, carteira, banco_saldo, banco_nivel, runas, objetivos_feitos, cacadas_feitas, pets_colecionados, biomas_descobertos FROM jogadores"
+        "SELECT nome, uuid, carteira, banco_saldo, banco_nivel, runas, objetivos_feitos, cacadas_feitas, pets_colecionados, biomas_descobertos, raca, classe, profissao, profissao_nivel FROM jogadores"
     )
     rows = cur.fetchall()
     if not rows:
@@ -351,6 +378,7 @@ def mostrar_status():
     for r in rows:
         print(f"  • {r[0]} ({r[1]})")
         print(f"    Carteira: {r[2]} | Banco (Nv.{r[4]}): {r[3]} | Runas: {r[5]}")
+        print(f"    Raça: {r[10] or 'Nenhuma'} | Classe: {r[11] or 'Nenhuma'} | Profissão: {r[12] or 'Nenhuma'} (Nv.{r[13]})")
         print(f"    Diário: {r[6]}/10 | Caçadas Skyrim: {r[7]}/4 | Pets: {r[8]}/11 | Biomas: {r[9]}")
 
     print("\n[Últimos 5 Snapshots de Restauração]")

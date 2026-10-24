@@ -12,6 +12,7 @@ Servidor privado para **Ellias** e **Pedro**: Paper 26.3 + Java 25, economia din
 # No console: cole os comandos de scripts/comandos_iniciais.txt (whitelist, grupos, permissões e claims)
 # Dentro do jogo (como Ellias/OP):  /aurelionsetup
 ./scripts/tunel_playit.sh        # túnel playit.gg para o Pedro conectar (ver docs/REDE.md)
+./scripts/limpar_mundo.sh        # zera mundo (overworld/nether/end) e players para reiniciar do zero quando quiser
 ```
 
 ## Documentação Completa
@@ -23,7 +24,10 @@ Servidor privado para **Ellias** e **Pedro**: Paper 26.3 + Java 25, economia din
 | [docs/LORE.md](docs/LORE.md) | Crônicas em Livro escrito, os Gêmeos, memórias e os Finais (Restaurar vs Libertar) |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | 10 objetivos, caçadas Skyrim, feitiços e mecânicas dos 5 Guardiões |
 
-## Comandos Principais no Jogo
+## Comandos Principais no Jogo (Todos com Acesso Orgânico em Blocos!)
+- **RPG - 3 Árvores de Progressão: Raça, Classe & Profissões (`Shift + Clique Direito` na Mesa de Encantamentos):** `/rpg`, `/raca`, `/classe`, `/profissoes`, `/talentos`, `/habilidades` (Ative habilidades com **`Shift + F`**: ferramenta de trabalho ativa Suprema da Profissão, combate ativa Classe e olhar para cima ativa Raça!)
+- **Central de Profissões & Ofícios (`Shift + Clique Direito` no Cortador de Pedra ou Bigorna):** `/profissoes` (Minerador, Lenhador, Agricultor, Ferreiro, Pescador e Alquimista com 5 níveis de habilidades progressivas e bônus salariais)
+- **Forja de Armas & Ferramentas Utilitárias (`Shift + Clique Direito` na Bancada de Trabalho):** `/forja`, `/artefatos`, `/ferramentas`
 - **Missões e Lore:** `/lore livro` (receber o livro físico), `/diario`, `/mentor`, `/memorias`, `/final`
 - **Caçadas e Feitiços (Skyrim):** `/cacadas` (mural de semi-bosses e artefatos), `/missoes`
 - **Economia e Comércio:** `/economia`, `/banco`, `/moeda` (sacar/depositar moedas físicas), `/cambio` (Villagers), `/lojas` (guia do /shop e /qs), `/shop`, `/sell`, `/qs`
@@ -32,8 +36,8 @@ Servidor privado para **Ellias** e **Pedro**: Paper 26.3 + Java 25, economia din
 - **Administração:** `/aurelionsetup`, `/ecoadmin`, `/aurelion`, `/modelos <teste 1..12|limpar>` (inspecionar modelos 3D e animações)
 
 ## Estrutura do Projeto
-- `plugins/Skript/scripts/` - Módulos de regras (`economia.sk`, `banco.sk`, `lapide.sk`, `itens.sk`, `bosses.sk`, `progressao.sk`, `diario.sk`, `lore.sk`, `skyrim.sk`, `modelos.sk`, `sistema_dados.sk`).
+- `plugins/Skript/scripts/` - Módulos de regras (`economia.sk`, `banco.sk`, `lapide.sk`, `itens.sk`, `bosses.sk`, `progressao.sk`, `diario.sk`, `lore.sk`, `skyrim.sk`, `modelos.sk`, `sistema_dados.sk`, `racas_classes.sk`, `profissoes.sk`, `forja_artefatos.sk`, `skins_itens.sk`).
 - `dados/aurelion.db` - Banco de dados relacional SQLite com fichas de jogadores, estado econômico, bosses, objetivos e histórico de snapshots restauráveis.
-- `scripts/` - Automação (`verificar_tudo.sh`, `banco_dados.py`, `resetar_avanco.sh`, `gerar_modelos.py`, `baixar_plugins.sh`, `backup.sh`, `tunel_playit.sh`, `pos_setup.sh`, `aceitar_eula.sh`, `comandos_iniciais.txt`).
+- `scripts/` - Automação (`limpar_mundo.sh`, `verificar_tudo.sh`, `banco_dados.py`, `resetar_avanco.sh`, `gerar_modelos.py`, `baixar_plugins.sh`, `backup.sh`, `tunel_playit.sh`, `pos_setup.sh`, `aceitar_eula.sh`, `comandos_iniciais.txt`).
 - `world/datapacks/` - `Terralith` (biomas épicos) + `aurelion_modelos` (12 modelos 3D multi-partes com animações interpoladas + feixe sônico direcional `fus_ro_dah`, 100% server-side).
 - `backups/` - Diretório de rotação de backups automáticos (últimos 10 snapshots).

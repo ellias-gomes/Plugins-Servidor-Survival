@@ -6,25 +6,31 @@
 
 function reliquia(id: text) :: item:
     if {_id} is "lamina_musgo":
-        return diamond sword of sharpness 5 and looting 3 and unbreaking 3 and mending 1 named "&a&lLâmina do Musgo Eterno" with lore "&7Forjada nas raízes de Verdelith." and "&6Relíquia de Aurelion"
+        set {_i} to diamond sword of sharpness 5 and looting 3 and unbreaking 3 and mending 1 named "&a&lLâmina do Musgo Eterno" with lore "&7Forjada nas raízes de Verdelith." and "&6Relíquia de Aurelion &8[Skin #1020]"
+        return aplicarSkinCMD({_i}, 1020, "lamina_musgo")
     if {_id} is "elmo_musgo":
         return netherite helmet of protection 4 and respiration 3 and aqua affinity 1 and unbreaking 3 and mending 1 named "&a&lElmo do Musgo" with lore "&7Conjunto: Fio de Ouro (1/4)" and "&6Relíquia de Aurelion"
     if {_id} is "tridente_mares":
-        return trident of loyalty 3 and impaling 5 and channeling 1 and unbreaking 3 and mending 1 named "&b&lTridente de Thalassa" with lore "&7Canta como a maré antes da tempestade." and "&6Relíquia de Aurelion"
+        set {_i} to trident of loyalty 3 and impaling 5 and channeling 1 and unbreaking 3 and mending 1 named "&b&lTridente de Thalassa" with lore "&7Canta como a maré antes da tempestade." and "&6Relíquia de Aurelion &8[Skin #1021]"
+        return aplicarSkinCMD({_i}, 1021, "tridente_mares")
     if {_id} is "peitoral_mares":
         return netherite chestplate of protection 4 and thorns 3 and unbreaking 3 and mending 1 named "&b&lPeitoral das Marés" with lore "&7Conjunto: Fio de Ouro (2/4)" and "&6Relíquia de Aurelion"
     if {_id} is "picareta_ferreiro":
-        return netherite pickaxe of efficiency 7 and fortune 3 and unbreaking 4 and mending 1 named "&c&lPicareta de Korvan" with lore "&7Ainda quente da forja." and "&6Relíquia de Aurelion"
+        set {_i} to netherite pickaxe of efficiency 7 and fortune 3 and unbreaking 4 and mending 1 named "&c&lPicareta de Korvan" with lore "&7Ainda quente da forja." and "&6Relíquia de Aurelion &8[Skin #1022]"
+        return aplicarSkinCMD({_i}, 1022, "picareta_ferreiro")
     if {_id} is "grevas_ferreiro":
         return netherite leggings of protection 4 and swift sneak 3 and unbreaking 3 and mending 1 named "&c&lGrevas do Ferreiro" with lore "&7Conjunto: Fio de Ouro (3/4)" and "&6Relíquia de Aurelion"
     if {_id} is "arco_oraculo":
-        return bow of power 6 and punch 2 and flame 1 and unbreaking 3 and mending 1 named "&d&lArco do Oráculo" with lore "&7Vê onde a flecha vai cair." and "&6Relíquia de Aurelion"
+        set {_i} to bow of power 6 and punch 2 and flame 1 and unbreaking 3 and mending 1 named "&d&lArco do Oráculo" with lore "&7Vê onde a flecha vai cair." and "&6Relíquia de Aurelion &8[Skin #1023]"
+        return aplicarSkinCMD({_i}, 1023, "arco_oraculo")
     if {_id} is "botas_oraculo":
         return netherite boots of protection 4 and feather falling 4 and depth strider 3 and soul speed 3 and unbreaking 3 and mending 1 named "&d&lBotas do Oráculo" with lore "&7Conjunto: Fio de Ouro (4/4)" and "&6Relíquia de Aurelion"
     if {_id} is "lamina_eclipse":
-        return netherite sword of sharpness 7 and fire aspect 2 and looting 4 and sweeping edge 3 and unbreaking 5 and mending 1 named "&5&lLâmina do Eclipse" with lore "&7Corta a luz e a sombra." and "&6Relíquia de Aurelion" and "&8Chama-Coração (lasca)"
+        set {_i} to netherite sword of sharpness 7 and fire aspect 2 and looting 4 and sweeping edge 3 and unbreaking 5 and mending 1 named "&5&lLâmina do Eclipse" with lore "&7Corta a luz e a sombra." and "&6Relíquia de Aurelion" and "&8Chama-Coração (lasca) [Skin #1024]"
+        return aplicarSkinCMD({_i}, 1024, "lamina_eclipse")
     if {_id} is "coracao_chama":
-        return nether star named "&6&lCoração da Chama" with lore "&7Um fragmento ainda quente." and "&6Relíquia de Aurelion"
+        set {_i} to nether star named "&6&lCoração da Chama" with lore "&7Um fragmento ainda quente." and "&6Relíquia de Aurelion &8[Skin #1025]"
+        return aplicarSkinCMD({_i}, 1025, "coracao_chama")
     return stone
 
 function darDropsBoss(id: number, p: player, primeiraVez: boolean):

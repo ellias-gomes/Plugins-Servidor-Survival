@@ -73,6 +73,13 @@ function salvarFichaJogador(p: player):
         if {cacada::done::%{_u}%::%loop-number%} is set:
             add 1 to {_cacCont}
     set {db::jogador::%{_u}%::cacadas_concluidas} to {_cacCont}
+    set {db::jogador::%{_u}%::raca} to {rpg::raca::%{_u}%}
+    set {db::jogador::%{_u}%::classe} to {rpg::classe::%{_u}%}
+    set {db::jogador::%{_u}%::profissao} to profissaoAtiva({_p})
+    set {db::jogador::%{_u}%::profissao_nivel} to nivelProfissao({_p})
+    set {db::jogador::%{_u}%::profissao_xp} to xpProfissao({_p})
+    set {db::jogador::%{_u}%::rpg_nivel} to nivelRPG({_p})
+    set {db::jogador::%{_u}%::rpg_pontos} to pontosHabilidade({_p})
     set {db::jogador::%{_u}%::atualizado_em} to "%now%"
     set {saldo::%{_u}%} to round({_p}'s balance)
 
@@ -102,7 +109,7 @@ function resetarTodoAvanco(reiniciarKit: boolean):
     delete {dungeon::*}
     delete {final::*}
     delete {temporada}
-    # 3. Limpa progresso individual de Diário, Caçadas, Memórias, Biomas, Pets, Runas e Lápides
+    # 3. Limpa progresso individual de Diário, Caçadas, Memórias, Biomas, Pets, Runas, RPG, Mochila e Lápides
     delete {diario::*}
     delete {cacada::*}
     delete {memoria::*}
@@ -110,6 +117,10 @@ function resetarTodoAvanco(reiniciarKit: boolean):
     delete {runas::*}
     delete {lapide::*}
     delete {cd::*}
+    delete {rpg::*}
+    delete {mochila::*}
+    delete {elo::*}
+    delete {pulo_duplo::*}
     # 4. Guarda e limpa todos os Pets
     loop all players:
         removerPet(loop-player)
@@ -138,6 +149,7 @@ function resetarTodoAvanco(reiniciarKit: boolean):
         set loop-player's balance to 0
         set {saldo::%uuid of loop-player%} to 0
         set compass target of loop-player to localBoss(1)
+        atualizarAtributosRPG(loop-player)
         if {_reiniciarKit} is true:
             clear inventory of loop-player
             set level of loop-player to 0

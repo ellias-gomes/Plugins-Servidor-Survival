@@ -12,6 +12,11 @@ effect give @s minecraft:invisibility infinite 0 true
 attribute @s minecraft:scale base set 1.9
 item replace entity @s weapon.mainhand with minecraft:air
 item replace entity @s weapon.offhand with minecraft:air
+bossbar add aurelion:boss_2 "§b§lThalassa, Rainha das Marés §7[Fase I]"
+bossbar set aurelion:boss_2 color blue
+bossbar set aurelion:boss_2 style notched_10
+bossbar set aurelion:boss_2 name "§b§lThalassa, Rainha das Marés §7[Fase I]"
+bossbar set aurelion:boss_2 visible true
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_thalassa_torso"],block_state:"minecraft:prismarine_bricks",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.5000f,1.6000f,-0.3000f],scale:[1.0000f,1.4000f,0.6000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_thalassa_perola"],block_state:"minecraft:sea_lantern",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.1750f,2.2250f,0.2900f],scale:[0.3500f,0.3500f,0.1000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f,brightness:{block:15,sky:15}}
 summon minecraft:block_display ~ ~ ~ {Tags:["aur_part","aur_new","aur_thalassa_head"],block_state:"minecraft:dark_prismarine",transformation:{left_rotation:[0.0000f,0.0000f,0.0000f,1.0000f],right_rotation:[0.0f,0.0f,0.0f,1.0f],translation:[-0.3500f,3.0500f,-0.3500f],scale:[0.7000f,0.7000f,0.7000f]},teleport_duration:2,interpolation_duration:0,view_range:2.0f}

@@ -78,19 +78,31 @@ on respawn:
     if {lapide::%{_u}%::ids::*} is set:
         set {_id} to last element of {lapide::%{_u}%::ids::*}
         set {_loc} to {lapide::%{_u}%::%{_id}%::loc}
-        set compass target of player to {_loc}
+        if world of {_loc} is world of player:
+            set compass target of player to {_loc}
         wait 1 second
-        send "&6[Lápide] &7Seus itens estão seguros. Lápide #%{_id}% em &f%rounded x-coordinate of {_loc}%, %rounded y-coordinate of {_loc}%, %rounded z-coordinate of {_loc}% &7(sua bússola aponta para lá)." to player
-        send "&7Use &f/lapide &7para ver detalhes. Taxa estimada: &c%taxaLapide(player)%" to player
+        send "&6[Lápide] &7Seus itens estão seguros na Lápide #%{_id}% em &f%rounded x-coordinate of {_loc}%, %rounded y-coordinate of {_loc}%, %rounded z-coordinate of {_loc}%&7." to player
+        send "&7Vá até lá e &eclique na Lápide de pedra &7para resgatar (ou use &fShift + Clique Direito com a Bússola &7para resgate remoto)!" to player
 
 on right click on cobbled deepslate wall:
     set {_u} to "%uuid of player%"
     loop {lapide::%{_u}%::ids::*}:
         set {_loc} to {lapide::%{_u}%::%loop-value%::loc}
-        if distance between {_loc} and location of clicked block is less than 1.5:
-            cancel event
-            resgatar(player, loop-value, false)
-            stop
+        if world of {_loc} is world of clicked block:
+            if distance between {_loc} and location of clicked block is less than 2.0:
+                cancel event
+                resgatar(player, loop-value, false)
+                stop
+
+on break of cobbled deepslate wall:
+    set {_u} to "%uuid of player%"
+    loop {lapide::%{_u}%::ids::*}:
+        set {_loc} to {lapide::%{_u}%::%loop-value%::loc}
+        if world of {_loc} is world of event-block:
+            if distance between {_loc} and location of event-block is less than 2.0:
+                cancel event
+                resgatar(player, loop-value, false)
+                stop
 
 command /lapide [<text>] [<number>]:
     aliases: /grave, /resgate

@@ -1,8 +1,7 @@
 # ============================================================================
-#  DIÁRIO DE BORDO - Missões Principais da Chama & Caçadas de Skyrim
-#  - 10 Grandes Provações da Campanha Principal
-#  - Acesso direto ao Mural de Caçadas e Feitiços Secundários (/cacadas)
-#  - GUI interativa (/diario) com rastreamento automático
+#  DIÁRIO DE BORDO - Missões Principais da Chama & Central Interativa de Aurelion
+#  - 10 Grandes Provações da Campanha Principal (100% orgânicas, sem depender de comandos)
+#  - Acesso rápido a Bússola, Caçadas, Pets, Ferreiro das Runas, Banco e Mentor
 # ============================================================================
 
 function tituloObj(n: number) :: text:
@@ -28,24 +27,24 @@ function tituloObj(n: number) :: text:
 
 function descObj(n: number) :: text:
     if {_n} is 1:
-        return "Sobreviva à primeira noite dormindo em uma cama e consulte o /mentor."
+        return "Sobreviva à 1ª noite dormindo em uma cama e ouça o Eco de Valdric (Shift+Clique com o Livro)."
     if {_n} is 2:
-        return "Acumule 1.000 Ouros (carteira + banco) e faça um depósito com /banco."
+        return "Acumule 1.000 Ouros e faça um depósito no Cofre do Banco (Shift+Clique num Ender Chest ou aqui)."
     if {_n} is 3:
-        return "Morra em um local seguro e resgate seus itens com /lapide resgatar. Confie no cofre!"
+        return "Morra em segurança e clique com o botão direito na sua Lápide de pedra para resgatar tudo!"
     if {_n} is 4:
-        return "Siga a /bussola até o Altar do Bosque e derrote Verdelith quebrando seus pilares."
+        return "Use a Bússola até o Bosque, faça o Ritual (fogo na mata ou sacrifício animal) e vença Verdelith."
     if {_n} is 5:
-        return "Pedro constrói, Ellias decora: abram 3 lojas de jogadores (/qs) e digitem /diario confirmar."
+        return "Pedro constrói, Ellias decora: criem lojas em baús e toquem um Sino (ou cliquem aqui!) para confirmar."
     if {_n} is 6:
-        return "Siga a /bussola até o oceano e derrote Thalassa (libera o Nível 2 do Banco)."
+        return "Siga a Bússola ao mar, jogue Coração do Mar/Concha/Diamante na água e derrote Thalassa."
     if {_n} is 7:
-        return "Colecione 5 pets diferentes (/pet) e porte pelo menos 2 Relíquias de Aurelion."
+        return "Colecione 5 pets diferentes e porte pelo menos 2 Relíquias de Aurelion."
     if {_n} is 8:
-        return "Vá ao Nether, encontre a Forja com a /bussola e derrote Korvan."
+        return "No Nether, siga a Bússola, jogue Bloco de Ouro/Ferro na lava (ou bata na Bigorna) e vença Korvan."
     if {_n} is 9:
-        return "Suba aos Picos Congelados e vença o Oráculo Seraphel desfazendo suas ilusões."
-    return "Desça ao Deep Dark, vença o Eclipse e decidam em consenso: /final restaurar | libertar."
+        return "Nos Picos Congelados, salte para o Sacrifício (ou lance Pérola/Ametista) e vença Seraphel."
+    return "No Deep Dark, faça o Sacrifício de Sangue para vencer o Eclipse e use o Coração da Chama."
 
 function faixaObj(n: number) :: text:
     if {_n} <= 3:
@@ -149,6 +148,40 @@ every 10 seconds:
 on bed enter:
     set {diario::%uuid of player%::dormiu} to true
 
+# Tocar um Sino (Bell) na Vila confirma organicamente a fundação da Vila (Objetivo #5)!
+on right click on bell:
+    if {diario::conf5::%uuid of player%} is not set:
+        set {diario::conf5::%uuid of player%} to true
+        send "&6&l[Vila dos Irmãos] &aO sino ecoou! Você consagrou a fundação da Vila." to player
+        play sound "block.bell.use" with volume 2 at player
+
+function abrirDiarioGUI(p: player):
+    set {_gui} to chest inventory with 4 rows named "&6&lDiário de Bordo de Aurelion"
+    set {_slots::*} to 10, 11, 12, 13, 14, 19, 20, 21, 22 and 23
+    loop 10 times:
+        set {_faixa} to faixaObj(loop-number)
+        set {_desc} to descObj(loop-number)
+        if loop-number is 5:
+            set {_l::*} to {_faixa}, "&7%{_desc}%" and "&eClique aqui (ou toque um Sino) para confirmar a Vila!"
+        else:
+            set {_l::*} to {_faixa} and "&7%{_desc}%"
+        if {diario::%uuid of {_p}%::done::%loop-number%} is set:
+            set {_i} to emerald block named "&a✔ %loop-number%. %tituloObj(loop-number)%" with lore {_l::*}
+        else:
+            set {_i} to paper named "&e%loop-number%. %tituloObj(loop-number)%" with lore {_l::*}
+        set slot {_slots::%loop-number%} of {_gui} to {_i}
+    # Barra inferior de acesso rápido sem comandos (slots 27 a 35)
+    set slot 27 of {_gui} to enchanting table named "&d&lRaças, Classes & Profissões (3 Árvores)" with lore "&7Escolha sua Raça, Classe e Profissão" and "&7e evolua as 3 Árvores de Habilidades!" and "&8(Ou Shift+Clique numa Mesa de Encantamentos)" and "&eClique para abrir"
+    set slot 28 of {_gui} to compass named "&6&lBússola Rúnica & Santuários" with lore "&7Rastreie os 5 Guardiões e veja" and "&7como realizar os Rituais de Invocação!" and "&eClique para abrir"
+    set slot 29 of {_gui} to ender chest named "&e&lBanco Real de Aurelion" with lore "&7Deposite, saque ouro, cunhe Moedas Físicas" and "&7ou melhore o nível do seu Cofre!" and "&eClique para abrir"
+    set slot 30 of {_gui} to turtle egg named "&d&lColeção de Pets" with lore "&7Invoque ou guarde seus companheiros" and "&7com 1 clique!" and "&eClique para abrir"
+    set slot 31 of {_gui} to nether star named "&b&lMural de Caçadas (Skyrim)" with lore "&7Veja os 4 Semi-Bosses do mundo aberto," and "&7pegue Iscas gratuitas e ganhe Feitiços!" and "&eClique para abrir"
+    set slot 32 of {_gui} to smithing table named "&5&lFerreiro das Runas" with lore "&7Troque seus Fragmentos Rúnicos por" and "&7Ovos de Pet, Reparo, Selo e Remendo!" and "&eClique para abrir"
+    set slot 33 of {_gui} to beacon named "&a&lOuvir o Eco de Valdric (Mentor)" with lore "&7Receba o conselho do Alquimista-Rei" and "&7sobre o próximo passo da jornada." and "&eClique para escutar"
+    set slot 34 of {_gui} to emerald named "&2&lCâmbio Real de Aldeões" with lore "&7Converta Moedas Físicas e Ouro" and "&7em Esmeraldas!" and "&eClique para abrir"
+    set slot 35 of {_gui} to crafting table named "&6&lForja de Artefatos & Ferramentas" with lore "&7Fabrique Armas de Classe não-vanilla e" and "&7Ferramentas Utilitárias de jornada!" and "&8(Ou Shift+Clique numa Bancada de Trabalho)" and "&eClique para abrir"
+    open {_gui} to {_p}
+
 command /diario [<text>] [<number>]:
     aliases: /objetivos, /journal, /quest
     description: Diário de Bordo e Missões do Servidor
@@ -158,25 +191,43 @@ command /diario [<text>] [<number>]:
             send "&aVocê confirmou a fundação da Vila! Quando seu parceiro confirmar, o objetivo #5 será concluído." to player
             stop
         if arg-1 is "secundarias" or "skyrim":
-            execute player command "cacadas"
+            abrirMenuCacadas(player)
             stop
-        set {_gui} to chest inventory with 4 rows named "&6&lDiário de Bordo de Aurelion"
-        set {_slots::*} to 10, 11, 12, 13, 14, 19, 20, 21, 22 and 23
-        loop 10 times:
-            set {_faixa} to faixaObj(loop-number)
-            set {_desc} to descObj(loop-number)
-            set {_l::*} to {_faixa} and "&7%{_desc}%"
-            if {diario::%uuid of player%::done::%loop-number%} is set:
-                set {_i} to emerald block named "&a✔ %loop-number%. %tituloObj(loop-number)%" with lore {_l::*}
-            else:
-                set {_i} to paper named "&e%loop-number%. %tituloObj(loop-number)%" with lore {_l::*}
-            set slot {_slots::%loop-number%} of {_gui} to {_i}
-        set slot 31 of {_gui} to nether star named "&b&lMural de Caçadas (Skyrim)" with lore "&7Clique para ver as missões secundárias," and "&7semi-bosses e feitiços únicos!" and "&eComando direto: /cacadas"
-        open {_gui} to player
+        abrirDiarioGUI(player)
 
 on inventory click:
     if "%name of event-inventory%" contains "Diário de Bordo":
         cancel event
-        if index of clicked slot is 31:
+        set {_idx} to index of clicked slot
+        if {_idx} is 14:
+            set {diario::conf5::%uuid of player%} to true
+            send "&aVocê confirmou a fundação da Vila! Quando seu parceiro confirmar, o objetivo #5 será concluído." to player
+            play sound "block.bell.use" to player
+            abrirDiarioGUI(player)
+        else if {_idx} is 27:
             close player's inventory
-            execute player command "cacadas"
+            abrirMenuRPG(player)
+        else if {_idx} is 28:
+            close player's inventory
+            abrirMenuBussola(player)
+        else if {_idx} is 29:
+            close player's inventory
+            abrirMenuBanco(player)
+        else if {_idx} is 30:
+            close player's inventory
+            abrirMenuPets(player)
+        else if {_idx} is 31:
+            close player's inventory
+            abrirMenuCacadas(player)
+        else if {_idx} is 32:
+            close player's inventory
+            abrirMenuRunas(player)
+        else if {_idx} is 33:
+            close player's inventory
+            consultarMentor(player)
+        else if {_idx} is 34:
+            close player's inventory
+            abrirMenuCambio(player)
+        else if {_idx} is 35:
+            close player's inventory
+            abrirMenuForja(player)

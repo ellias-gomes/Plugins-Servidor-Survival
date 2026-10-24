@@ -1,0 +1,128 @@
+{
+  "parent": "minecraft:item/handheld",
+  "gui_light": "front",
+  "textures": {
+    "layer0": "aurelion:item/cetro_singularidade"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        35
+      ],
+      "translation": [
+        0,
+        4.8,
+        1.0
+      ],
+      "scale": [
+        0.95,
+        1.06,
+        0.9
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -35
+      ],
+      "translation": [
+        0,
+        4.8,
+        1.0
+      ],
+      "scale": [
+        0.95,
+        1.06,
+        0.9
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        6,
+        -85,
+        22
+      ],
+      "translation": [
+        1.35,
+        2.4,
+        1.15
+      ],
+      "scale": [
+        0.65,
+        0.72,
+        0.65
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        6,
+        85,
+        -22
+      ],
+      "translation": [
+        1.35,
+        2.4,
+        1.15
+      ],
+      "scale": [
+        0.65,
+        0.72,
+        0.65
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        2.8,
+        0
+      ],
+      "scale": [
+        0.58,
+        0.58,
+        0.58
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  }
+}

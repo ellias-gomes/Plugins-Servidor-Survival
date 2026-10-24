@@ -473,20 +473,60 @@ def main():
     write("data/minecraft/tags/function/tick.json", '{"values":["aurelion:tick"]}\n')
     write("data/minecraft/tags/function/load.json", '{"values":["aurelion:load"]}\n')
     F = "data/aurelion/function/"
+    bossbar_defs = [
+        (1, "boss_1", "green", "notched_10", "§a§lVerdelith, o Guardião do Musgo"),
+        (2, "boss_2", "blue", "notched_10", "§b§lThalassa, Rainha das Marés"),
+        (3, "boss_3", "red", "notched_10", "§c§lKorvan, o Ferreiro Caído"),
+        (4, "boss_4", "pink", "notched_10", "§d§lSeraphel, o Oráculo Quebrado"),
+        (5, "boss_5", "purple", "notched_20", "§5§lO Eclipse"),
+        (6, "semi_1", "red", "notched_6", "§c§l⚔ Thorgar, o Carniceiro dos Ermos"),
+        (7, "semi_2", "blue", "notched_6", "§9§l☠ Morvath, o Necromante da Cripta"),
+        (8, "semi_3", "yellow", "notched_6", "§6§l⛰ Gólem Esquecido de Basalto"),
+        (9, "semi_4", "purple", "notched_6", "§5§l🗡 Valeria, a Lâmina Sombria"),
+    ]
+    bb_init_lines = []
+    for mid, bbid, bcol, bsty, btitle in bossbar_defs:
+        bb_init_lines += [
+            f'bossbar add aurelion:{bbid} "{btitle}"',
+            f'bossbar set aurelion:{bbid} color {bcol}',
+            f'bossbar set aurelion:{bbid} style {bsty}',
+            f'bossbar set aurelion:{bbid} visible false',
+        ]
     write(F + "load.mcfunction",
           "\n".join(f"scoreboard objectives add {o} dummy" for o in
-                    ["aur_id", "aur_model", "aur_ph", "aur_cyc", "aur_hold", "aur_anim", "aur_ttl", "aur_px", "aur_pz", "aur_tmp"])
+                    ["aur_id", "aur_model", "aur_ph", "aur_cyc", "aur_hold", "aur_anim", "aur_ttl", "aur_px", "aur_pz", "aur_tmp", "aur_phase", "aur_shield"])
           + "\nexecute unless score #next aur_id matches 0.. run scoreboard players set #next aur_id 0\n"
           + "gamerule send_command_feedback false\n"
-          + "gamerule command_block_output false\n")
+          + "gamerule command_block_output false\n"
+          + "\n".join(bb_init_lines) + "\n")
+
+    tick_cleanup = []
+    for mid, bbid, bcol, bsty, btitle in bossbar_defs:
+        tick_cleanup += [
+            f"execute unless entity @e[tag=aur_base,scores={{aur_model={mid}}}] run bossbar set aurelion:{bbid} visible false",
+            f"execute unless entity @e[tag=aur_base,scores={{aur_model={mid}}}] run bossbar set aurelion:{bbid} players",
+        ]
     write(F + "tick.mcfunction",
           "execute as @e[tag=aur_base] at @s run function aurelion:base_tick\n"
           "execute as @e[tag=aur_part,tag=!aur_dying] run function aurelion:part_tick\n"
-          "execute as @e[tag=aur_part,tag=aur_dying] run function aurelion:part_dying\n")
+          "execute as @e[tag=aur_part,tag=aur_dying] run function aurelion:part_dying\n"
+          + "\n".join(tick_cleanup) + "\n")
+
+    bb_tick_lines = []
+    for mid, bbid, bcol, bsty, btitle in bossbar_defs:
+        bb_tick_lines += [
+            f"execute if score @s aur_model matches {mid} store result bossbar aurelion:{bbid} value run data get entity @s Health 10",
+            f"execute if score @s aur_model matches {mid} store result bossbar aurelion:{bbid} max run attribute @s minecraft:max_health get 10",
+            f"execute if score @s aur_model matches {mid} run bossbar set aurelion:{bbid} players @a[distance=..70]",
+            f"execute if score @s aur_model matches {mid} run bossbar set aurelion:{bbid} visible true",
+        ]
+
     write(F + "base_tick.mcfunction", """# executado AS base AT @s, todo tick
 execute if data entity @s {Health:0.0f} run return run function aurelion:base_dead
 scoreboard players operation #cur aur_id = @s aur_id
 execute as @e[tag=aur_part,tag=!aur_dying,distance=..30] if score @s aur_id = #cur aur_id run function aurelion:part_follow
+# atualização em tempo real da barra de vida do boss (20x por segundo)
+""" + "\n".join(bb_tick_lines) + """
 # detecção de movimento (centésimos de bloco por tick)
 execute store result score #nx aur_tmp run data get entity @s Pos[0] 100
 execute store result score #nz aur_tmp run data get entity @s Pos[2] 100
@@ -541,7 +581,32 @@ particle minecraft:poof ~ ~ ~ 0.3 0.3 0.3 0.02 4
 scoreboard players set @s aur_ttl 20
 tag @s remove aur_new
 """)
-    write(F + "remover_todos.mcfunction", "kill @e[tag=aur_part]\ntag @e[tag=aur_base] remove aur_base\n")
+    remover_lines = ["kill @e[tag=aur_part]", "tag @e[tag=aur_base] remove aur_base"]
+    for mid, bbid, bcol, bsty, btitle in bossbar_defs:
+        remover_lines.append(f"bossbar set aurelion:{bbid} visible false")
+        remover_lines.append(f"bossbar set aurelion:{bbid} players")
+    write(F + "remover_todos.mcfunction", "\n".join(remover_lines) + "\n")
+
+    # Funções de atualização de fase e escudo nas Bossbars dos 5 Guardiões
+    bb_map = {mid: (bbid, bcol, bsty, btitle) for mid, bbid, bcol, bsty, btitle in bossbar_defs}
+    for mid in range(1, 6):
+        bbid, bcol, bsty, btitle = bb_map[mid]
+        write(F + f"bossbar/fase1_{mid}.mcfunction",
+              f'bossbar set aurelion:{bbid} color {bcol}\n'
+              f'bossbar set aurelion:{bbid} style {bsty}\n'
+              f'bossbar set aurelion:{bbid} name "{btitle} §7[Fase I]"\n')
+        write(F + f"bossbar/fase2_{mid}.mcfunction",
+              f'bossbar set aurelion:{bbid} color {bcol}\n'
+              f'bossbar set aurelion:{bbid} name "{btitle} §e[Fase II - Despertar]"\n')
+        write(F + f"bossbar/fase3_{mid}.mcfunction",
+              f'bossbar set aurelion:{bbid} color {bcol}\n'
+              f'bossbar set aurelion:{bbid} name "{btitle} §c[Fase III - Fúria]"\n')
+        write(F + f"bossbar/escudo_on_{mid}.mcfunction",
+              f'bossbar set aurelion:{bbid} color yellow\n'
+              f'bossbar set aurelion:{bbid} name "§e§l🛡 [ESCUDO ATIVO: DESTRUA OS PILARES] {btitle}"\n')
+        write(F + f"bossbar/escudo_off_{mid}.mcfunction",
+              f'bossbar set aurelion:{bbid} color {bcol}\n'
+              f'bossbar set aurelion:{bbid} name "{btitle} §e[Escudo Quebrado!]"\n')
 
     dispatch = []
     for m in MODELS:
@@ -557,6 +622,16 @@ tag @s remove aur_new
                  f"attribute @s minecraft:scale base set {m['scale']}",
                  "item replace entity @s weapon.mainhand with minecraft:air",
                  "item replace entity @s weapon.offhand with minecraft:air"]
+        if m["id"] in bb_map:
+            bbid, bcol, bsty, btitle = bb_map[m["id"]]
+            suf = " §7[Fase I]" if m["id"] <= 5 else " §7[Caçada]"
+            lines += [
+                f'bossbar add aurelion:{bbid} "{btitle}{suf}"',
+                f'bossbar set aurelion:{bbid} color {bcol}',
+                f'bossbar set aurelion:{bbid} style {bsty}',
+                f'bossbar set aurelion:{bbid} name "{btitle}{suf}"',
+                f'bossbar set aurelion:{bbid} visible true',
+            ]
         for part in m["parts"]:
             tr = compile_part(part, {})
             tags = f'["aur_part","aur_new","{tag(m, part)}"]'
@@ -587,10 +662,34 @@ tag @s remove aur_new
           '"§6§lCRÔNICAS DE AURELION§r\\n§8Por Valdric, Alquimista-Rei\\n\\nHá mil anos, o reino brilhava sob a §6Chama-Coração§r. Um cristal vivo que nutria colheitas, erguia cidades e gerava prosperidade. Nós, a Ordem do Fio de Ouro, éramos seus guardiões juramentados.",'
           '"§6§lOS GÊMEOS§r\\n\\nCriei dois aprendizes como meus filhos legítimos:\\n\\nO §2Cartógrafo (Pedro)§r: desbravador de horizontes, construtor de lares, alma ligada à terra e aos animais.\\n\\nO §1Estrategista (Ellias)§r: mestre do combate, artífice de armas e guardião das finanças imperiais.",'
           '"§6§lA RUPTURA§r\\n\\nQuando a doença tocou meu peito, tentei drenar a Chama para viver. Meus filhos entraram em desespero.\\n\\nO Cartógrafo puxou a lâmina para §cdestruir o cristal§r.\\nO Estrategista ergueu o escudo para §asalvar meu corpo§r.\\n\\nA Chama explodiu. O reino ruiu em cinzas.",'
-          '"§6§lO SONO DE PEDRA§r\\n\\nO mundo se partiu em cinco fragmentos, corrompendo nossos 5 Guardiões.\\n\\nCada irmão achou que havia sido traído pelo outro. Selados em sono de pedra por mil anos, acordais agora com a §6marca de ouro§r nas palmas. O mundo vos espera.",'
-          '"§6§lO DILEMA FINAL§r\\n\\nApós vencerem o Eclipse, tereis de escolher o destino do mundo em comum acordo:\\n\\n§6§l1. RESTAURAR A CHAMA§r\\nReerguer o Império de Aurelion. Purificar a Chama e governar como Novos Imperadores. Caminho da ordem, civilização e prosperidade eterna.",'
-          '"§5§l2. LIBERTAR O MUNDO§r\\nDestruir o cristal no Vazio. Reconhecer que o poder imperial corrompe os homens. A magia volta aos rios, florestas e animais livres.\\n\\nSereis lendas errantes em uma terra sem tronos.\\n\\n§8Use /final restaurar ou /final libertar quando chegar a hora."'
+          '"§6§lOS RITUAIS DOS GUARDIÕES§r\\n\\nSegure uma §6Bússola§r e clique com botão direito para achar os Santuários:\\n§21. Verdelith§r: Ateie fogo na mata ou sacrifique um animal.\\n§32. Thalassa§r: Lance Coração do Mar, Concha ou Diamante na água.\\n§43. Korvan§r: Jogue Bloco de Ouro/Ferro na lava ou bata na Bigorna.",'
+          '"§6§lSACRIFÍCIOS FINAIS§r\\n\\n§54. Seraphel§r: Nos Picos Congelados, salte para a morte (o Oráculo absorverá seu sacrifício!) ou lance uma Pérola/Ametista.\\n\\n§85. O Eclipse§r: Nas profundezas do Deep Dark, um irmão deve §cderramar seu sangue (morrer)§r no Santuário para despertar a sombra!",'
+          '"§6§lO DILEMA FINAL§r\\n\\nAo derrotar o Eclipse, segurem o §6Coração da Chama§r e cliquem com o botão direito para decidir em consenso:\\n\\n§6§l1. RESTAURAR A CHAMA§r\\nReerguer o Império como Novos Reis.\\n\\n§5§l2. LIBERTAR O MUNDO§r\\nDespedaçar o cristal e viver como Lendas Livres."'
           ']}] 1\n')
+    # Funções de partículas para ataques e rituais
+    write(F + "fx/ritual_despertar.mcfunction",
+          "particle minecraft:totem_of_undying ~ ~1.2 ~ 1.2 1.5 1.2 0.25 80 force\n"
+          "particle minecraft:soul_fire_flame ~ ~0.5 ~ 1.5 0.5 1.5 0.08 50 force\n"
+          "particle minecraft:end_rod ~ ~2.0 ~ 1.0 2.0 1.0 0.1 40 force\n")
+    write(F + "fx/espinhos_verdelith.mcfunction",
+          "particle minecraft:spore_blossom_air ~ ~1.5 ~ 2.5 1.2 2.5 0.05 45 force\n"
+          "particle minecraft:happy_villager ~ ~1.0 ~ 2.0 1.0 2.0 0.1 25 force\n")
+    write(F + "fx/jato_thalassa.mcfunction",
+          "particle minecraft:splash ~ ~1.2 ~ 2.5 1.0 2.5 0.2 60 force\n"
+          "particle minecraft:bubble_pop ~ ~1.2 ~ 2.0 1.0 2.0 0.1 35 force\n"
+          "particle minecraft:snowflake ~ ~1.5 ~ 2.0 1.0 2.0 0.05 25 force\n")
+    write(F + "fx/chamas_korvan.mcfunction",
+          "particle minecraft:flame ~ ~1.0 ~ 2.5 0.8 2.5 0.08 50 force\n"
+          "particle minecraft:lava ~ ~1.2 ~ 1.8 1.0 1.8 0.1 25 force\n"
+          "particle minecraft:large_smoke ~ ~1.8 ~ 2.0 1.2 2.0 0.05 30 force\n")
+    write(F + "fx/luz_seraphel.mcfunction",
+          "particle minecraft:end_rod ~ ~1.5 ~ 2.5 1.5 2.5 0.12 45 force\n"
+          "particle minecraft:snowflake ~ ~1.2 ~ 2.5 1.0 2.5 0.08 35 force\n"
+          "particle minecraft:enchant ~ ~2.0 ~ 2.0 1.5 2.0 0.5 50 force\n")
+    write(F + "fx/vazio_eclipse.mcfunction",
+          "particle minecraft:sculk_soul ~ ~1.2 ~ 2.5 1.2 2.5 0.08 45 force\n"
+          "particle minecraft:soul_fire_flame ~ ~0.8 ~ 2.5 0.8 2.5 0.06 40 force\n"
+          "particle minecraft:sonic_boom ~ ~1.5 ~ 0 0 0 0 1 force\n")
     # Feixe Sônico direcional (Fus-Ro-Dah / Ataque Sonar do Warden) lançado na direção exata do olhar (^ ^ ^dist)
     fus_lines = [
         "# Executado AS jogador AT @s ANCHORED EYES",
